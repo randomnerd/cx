@@ -11,10 +11,9 @@ Cx.TradePairRoute = Ember.Route.extend
 
   setupController: (c, pair) ->
     uid = @controllerFor('auth').get('content.id')
-    console.log uid
-    c.set 'content', pair
+    c.set 'model', pair
     c.set 'orders', @store.find('order', {tradePair: pair.get('id')})
-    c.set 'ownOrders', @store.find('order', {tradePair: pair.get('id')})
+    c.set 'ownOrders', @store.findQuery('order', {tradePair: pair.get('id')})
     # @store.find('order', {tradePair: pair.get('id')}).then (orders) =>
     #   c.set 'content', pair
     #   c.set 'orders', orders
