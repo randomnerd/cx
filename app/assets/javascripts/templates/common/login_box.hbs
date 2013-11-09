@@ -1,0 +1,11 @@
+<form action="/users/sign_in" method="post">
+  <input id="login-email" type="email" name="user[email]" placeholder="Email" class="form-control">
+  <input id="login-password" type="password" name="user[password]" placeholder="Password" class="form-control">
+  <button class="btn btn-primary btn-block" id="login-buttons-password" {{action 'login'}}>
+    Sign in
+  </button>
+  <div id="login-other-options">
+    <a href="#" id="forgot-password-link" class="pull-left">Forgot password?</a>
+    <a href="#" id="signup-link" class="pull-right">Create account</a>
+  </div>
+</form>

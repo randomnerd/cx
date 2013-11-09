@@ -1,0 +1,43 @@
+<!-- volume ticker -->
+{{volume-ticker pair=model}}
+
+<!-- chart -->
+<div class="panel panel-default nopadding" id="chart" style="height: 200px">
+  chart here
+</div>
+
+<!-- buy/sell forms -->
+{{#if currentUser.isSignedIn}}
+<div class="row">
+  <div class="col-sm-6">
+    {{trade-form buy=true pair=model user=currentUser}}
+  </div>
+  <div class="col-sm-6">
+    {{trade-form buy=false pair=model user=currentUser}}
+  </div>
+</div>
+{{/if}}
+
+<!-- order books -->
+<div class="row">
+  <div class="col-sm-6">
+    {{order-book buy=false pair=model user=currentUser}}
+  </div>
+  <div class="col-sm-6">
+    {{order-book buy=true pair=model user=currentUser}}
+  </div>
+</div>
+
+<!-- own orders -->
+{{#if currentUser.isSignedIn}}
+{{own-orders pair=model user=currentUser orders=ownOrders}}
+{{/if}}
+
+
+<!-- recent trades -->
+{{recent-trades pair=model own=false}}
+
+<!-- recent own trades -->
+{{#if currentUser.isSignedIn}}
+{{recent-trades pair=model own=true}}
+{{/if}}

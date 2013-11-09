@@ -1,0 +1,68 @@
+<div {{bind-attr class=":panel :panel-big-heading :tradeColumn buy:panel-success:panel-danger"}}>
+  <div class="panel-heading clearfix">
+    {{#if buy}}Buy{{else}}Sell{{/if}}
+    {{pair.currency.name}}
+    <div class="pull-right">
+      {{#if buy}}
+        <a {{action 'setTotal' pair.market.balance.amount}}>{{orZero pair.market.balance.amount}}</a>
+        {{pair.market.name}}
+      {{else}}
+        <a {{action 'setTotal' pair.currency.balance.amount}}>{{orZero pair.currency.balance.amount}}</a>
+        {{pair.currency.name}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="row inputs">
+    <div class="col-sm-4">
+      <label for="buyAmount">Amount</label>
+    </div>
+    <div class="col-sm-8">
+      <div class="input-group pull-right">
+        {{input type="text" class="form-control" value=amount}}
+        <span class="input-group-addon monospace">{{pair.currency.name}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row inputs">
+    <div class="col-sm-4">
+      <label for="buyPrice">Price</label>
+    </div>
+    <div class="col-sm-8">
+      <div class="input-group pull-right">
+        {{input type="text" class="form-control" value=rate}}
+        <span class="input-group-addon monospace">{{pair.market.name}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-4">Total</div>
+    <div class="col-sm-8">
+      <strong>
+        {{total}} {{pair.market.name}}
+      </strong>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-4">Fee</div>
+    <div class="col-sm-8">
+      <strong>
+        {{fee}}
+        {{#if buy}}
+          {{pair.currency.name}}
+        {{else}}
+          {{pair.market.name}}
+        {{/if}}
+      </strong>
+    </div>
+  </div>
+
+  <button {{bind-attr class=":btn buy:btn-success:btn-danger :btn-block"}} {{action 'submit'}}>
+    {{#if buy}}Buy{{else}}Sell{{/if}}
+    {{pair.currency.name}}
+  </button>
+
+</div>

@@ -1,0 +1,31 @@
+<div class="panel panel-default panel-big-heading">
+  <div class="panel-heading">Your open orders</div>
+
+  <table class="table table-condensed table-striped nomargin">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Price ({{pair.market.name}})</th>
+        <th>{{pair.currency.name}}</th>
+        <th>{{pair.market.name}}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each orders}}
+      <tr>
+        <td>{{#if bid}}Buy{{else}}Sell{{/if}}</td>
+        <td>{{round rate}}</td>
+        <td>{{round unmatchedAmount}}</td>
+        <td>{{noExp marketAmount}}</td>
+        <td class="actions">
+          <span class="pull-right">
+            <button class="btn btn-danger btn-xs" {{action 'cancel' this}}>Cancel</button>
+          </span>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+</div>

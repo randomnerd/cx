@@ -1,0 +1,21 @@
+{{#if balances}}
+<div class="panel panel-default panel-small">
+  <div class="panel-heading">Balances</div>
+  <ul class="nav nav-pills nav-stacked">
+  {{#each balance in balances}}
+    {{#if balance.amount}}
+    <li class="">
+      <a href="#">
+        <span class="monospace">
+          {{balance.currency.name}}
+        </span>
+        <span class="pull-right">
+          <strong>{{balance.amount}}</strong>
+        </span>
+      </a>
+    </li>
+    {{/if}}
+  {{/each}}
+  </ul>
+</div>
+{{/if}}

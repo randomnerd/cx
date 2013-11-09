@@ -1,0 +1,6 @@
+<div id="sidebar">
+  {{render tradePairsSidebar}}
+  {{#if currentUser.isSignedIn}}
+    {{render balancesSidebar}}
+  {{/if}}
+</div>

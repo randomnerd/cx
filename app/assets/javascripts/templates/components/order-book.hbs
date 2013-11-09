@@ -1,0 +1,28 @@
+<div class="panel panel-default panel-big-heading">
+  <div class="panel-heading">
+    {{#if buy}}Buy{{else}}Sell{{/if}}
+    orders
+  </div>
+  <div class="content scrollY">
+
+    <table class="table table-condensed table-striped nomargin">
+      <thead>
+        <tr>
+          <th>Price</th>
+          <th>{{pair.currency.name}}</th>
+          <th>{{pair.market.name}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each asks}}
+          <tr class="sellOrder clickRow {{#if ownOrder}}success{{/if}}">
+            <td>{{round rate}}</td>
+            <td>{{round amount}}</td>
+            <td>{{marketAmount}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+  </div>
+</div>

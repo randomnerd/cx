@@ -1,0 +1,32 @@
+<div class="panel panel-default panel-big-heading">
+  <div class="panel-heading">
+    {{#if own}}
+      Your last
+    {{else}}
+      Last market
+    {{/if}}
+     trades
+  </div>
+
+  <table class="table table-condensed table-striped nomargin">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Price ({{pair.market.name}})</th>
+        <th>{{pair.currency.name}}</th>
+        <th>{{pair.market.name}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each trades}}
+      <tr class="">
+        <td><span rel="timeago" title=""></span></td>
+        <td>{{round rate}}</td>
+        <td>{{round amount}}</td>
+        <td>{{noExp logAmount}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+</div>

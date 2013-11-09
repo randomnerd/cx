@@ -1,0 +1,17 @@
+<div class="panel panel-default panel-small">
+  <div class="panel-heading">Exchange / BTC</div>
+  <ul class="nav nav-pills nav-stacked">
+  {{#each pair in tradePairs}}
+    <li class="">
+      {{#link-to 'tradePair' pair title=pair.currency.desc}}
+        <span class="monospace">
+          {{pair.currency.name}}
+        </span>
+        <span class="pull-right">
+          <strong>{{pair.lastPrice}}</strong>
+        </span>
+      {{/link-to}}
+    </li>
+  {{/each}}
+  </ul>
+</div>
