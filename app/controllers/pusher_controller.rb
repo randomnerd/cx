@@ -3,6 +3,12 @@ class PusherController < ApplicationController
 
   def auth
     if current_user
+      cuid = params[:channel_name].match(/private-.*-(\d)/)[1]
+      if cuid && current_user.id != cuid.to_i
+        render text: "Forbidden", status: '403'
+        return
+      end
+
       response = Pusher[params[:channel_name]].authenticate(params[:socket_id], {
         user_id: current_user.id,
         user_info: {
