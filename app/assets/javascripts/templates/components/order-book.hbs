@@ -14,8 +14,8 @@
         </tr>
       </thead>
       <tbody>
-        {{#each asks}}
-          <tr class="sellOrder clickRow {{#if ownOrder}}success{{/if}}">
+        {{#each orderBook}}
+          <tr {{bind-attr class=":sellOrder :clickRow own:success"}} {{action 'setForms' this}}>
             <td>{{round rate}}</td>
             <td>{{round amount}}</td>
             <td>{{marketAmount}}</td>

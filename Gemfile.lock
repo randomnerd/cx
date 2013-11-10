@@ -12,6 +12,12 @@ GIT
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
 
+GIT
+  remote: git://github.com/turgu1/yaml_db.git
+  revision: bd632c7d64940665524af4441580e3c6e96ee359
+  specs:
+    yaml_db (0.2.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -50,6 +56,7 @@ GEM
     bcrypt-ruby (3.1.2)
     builder (3.1.4)
     cancan (1.6.10)
+    coderay (1.0.9)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -93,11 +100,17 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    method_source (0.8.1)
     mime-types (1.25)
     minitest (4.7.5)
     multi_json (1.8.2)
+    mysql (2.9.1)
     orm_adapter (0.4.0)
     polyglot (0.3.3)
+    pry (0.9.12.2)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
     pusher (0.12.0)
       httpclient (~> 2.3.0)
       multi_json (~> 1.0)
@@ -143,6 +156,7 @@ GEM
       json (>= 1.1.3)
       rdoc (~> 3.10)
     signature (0.1.7)
+    slop (3.4.5)
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -184,6 +198,8 @@ DEPENDENCIES
   inherited_resources
   jbuilder (~> 1.2)
   jquery-rails
+  mysql
+  pry
   pusher
   quiet_assets
   rails (= 4.0.1)
@@ -193,3 +209,4 @@ DEPENDENCIES
   sqlite3
   uglifier (>= 1.3.0)
   unicorn
+  yaml_db!

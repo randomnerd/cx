@@ -55,3 +55,10 @@ gem 'factory_girl'
 
 gem 'inherited_resources'
 gem 'has_scope'
+
+gem 'mysql'
+
+group :development do
+  gem 'pry'
+  gem 'yaml_db', github: 'turgu1/yaml_db'
+end

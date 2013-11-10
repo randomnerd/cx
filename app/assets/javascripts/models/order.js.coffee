@@ -1,28 +1,30 @@
 Cx.Order = DS.Model.extend
   user: DS.belongsTo('user')
+  userId: DS.attr('number')
   tradePair: DS.belongsTo('tradePair')
+  tradePairId: DS.attr('number')
   amount: DS.attr('number')
+  cancelled: DS.attr('boolean')
+  complete: DS.attr('boolean')
   filled: DS.attr('number')
   bid:    DS.attr('boolean')
   rate: DS.attr('number')
-  created_at: DS.attr('date')
+  updatedAt: DS.attr('date')
+  createdAt: DS.attr('date')
   unmatchedAmount: (->
-    @get('amount') - @get('filled')
+    @get('amount') - (@get('filled') || 0)
   ).property('amount', 'filled')
 
   marketAmount: (->
-    h.nn2f(@get('unmatchedAmount') * @get('rate'))
+    h.nn2f((@get('unmatchedAmount') || 0) * (@get('rate') || 0))
   ).property('unmatchedAmount', 'rate')
 
   cancel: (cb) ->
-    console.log 'cancel', @
     $.ajax
       url: "/api/v1/orders/#{@get 'id'}/cancel"
       type: "POST"
       success: (data) =>
-        window.order = @
-        @deleteRecord()
-        console.log 'cancel succeeded'
+        @transitionTo('deleted.saved')
       error: (jqXHR, textStatus, errorThrown) ->
         console.log 'cancel failed'
 

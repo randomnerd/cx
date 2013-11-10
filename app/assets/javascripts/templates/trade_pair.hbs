@@ -21,10 +21,10 @@
 <!-- order books -->
 <div class="row">
   <div class="col-sm-6">
-    {{order-book buy=false pair=model user=currentUser}}
+    {{order-book buy=false pair=model user=currentUser orders=askOrders}}
   </div>
   <div class="col-sm-6">
-    {{order-book buy=true pair=model user=currentUser}}
+    {{order-book buy=true pair=model user=currentUser orders=bidOrders}}
   </div>
 </div>
 

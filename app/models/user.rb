@@ -15,4 +15,8 @@ class User < ActiveRecord::Base
     name += rand(10).to_s while !!User.find_by_nickname(name)
     update_attribute :nickname, name
   end
+
+  def balance_for(cid)
+    balances.find_by_currency_id(cid)
+  end
 end

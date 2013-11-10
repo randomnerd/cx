@@ -4,10 +4,10 @@
     {{pair.currency.name}}
     <div class="pull-right">
       {{#if buy}}
-        <a {{action 'setTotal' pair.market.balance.amount}}>{{orZero pair.market.balance.amount}}</a>
+        <a {{action 'setTotal' pair.market.balance.amount}}>{{round pair.market.balance.amount}}</a>
         {{pair.market.name}}
       {{else}}
-        <a {{action 'setTotal' pair.currency.balance.amount}}>{{orZero pair.currency.balance.amount}}</a>
+        <a {{action 'setTotal' pair.currency.balance.amount}}>{{round pair.currency.balance.amount}}</a>
         {{pair.currency.name}}
       {{/if}}
     </div>
@@ -19,7 +19,7 @@
     </div>
     <div class="col-sm-8">
       <div class="input-group pull-right">
-        {{input type="text" class="form-control" value=amount}}
+        {{input type="text" class="form-control amount-input" value=amount}}
         <span class="input-group-addon monospace">{{pair.currency.name}}</span>
       </div>
     </div>
@@ -31,7 +31,7 @@
     </div>
     <div class="col-sm-8">
       <div class="input-group pull-right">
-        {{input type="text" class="form-control" value=rate}}
+        {{input type="text" class="form-control rate-input" value=rate}}
         <span class="input-group-addon monospace">{{pair.market.name}}</span>
       </div>
     </div>

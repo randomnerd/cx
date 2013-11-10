@@ -14,8 +14,9 @@ Cx.Currency = DS.Model.extend
   lastBlockAtISO: (-> @get('lastBlockAt')?.toISOString()).property('lastBlockAt')
   balance: (->
     proxy = Ember.ObjectProxy.create()
-    @store.find('balance', {currency: @get('id')}).then (data) ->
-      proxy.set('content', data.get('firstObject'))
+    data = @store.filter 'balance', (b) => b.get('currency.id') == @get('id')
+    # @store.find('balance', {currency: @get('id')}).then (data) ->
+    proxy.set('content', data.get('firstObject'))
     proxy
   ).property()
 

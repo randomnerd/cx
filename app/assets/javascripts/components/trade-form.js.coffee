@@ -8,10 +8,10 @@ Cx.TradeFormComponent = Ember.Component.extend
   fee: (->
     if @get('buy')
       t = h.f2n @get 'amount'
-      f = @get('pair')?.get('sellFee') / 100
+      f = @get('pair.sellFee') / 100
     else
       t = h.f2n @get 'total'
-      f = @get('pair')?.get('buyFee') / 100
+      f = @get('pair.buyFee') / 100
     h.round(h.n2f(t * f)) || 0
   ).property('total', 'amount')
 

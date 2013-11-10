@@ -5,6 +5,7 @@ Cx::Application.routes.draw do
     post '/users/sign_in', to: 'sessions#create'
     post '/users', to: 'devise/registrations#create'
   end
+  post '/pusher/auth', to: 'pusher#auth'
   root 'chat#index'
   namespace :api do
     namespace :v1 do

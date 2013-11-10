@@ -1,3 +1,3 @@
 class OrderSerializer < ActiveModel::Serializer
-  attributes :id, :user_id, :trade_pair_id, :amount, :filled, :bid, :rate, :created_at, :complete, :cancelled
+  attributes :id, :user_id, :trade_pair_id, :amount, :filled, :bid, :rate, :created_at, :complete, :cancelled, :updated_at
 end
