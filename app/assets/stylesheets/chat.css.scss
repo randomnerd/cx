@@ -1,3 +1,64 @@
 // Place all the styles related to the chat controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#chat {
+  &.chat-hide {
+    height: 30px; width: 150px;
+    .panel-heading { text-align: center; }
+  }
+
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,.175);
+  position: fixed;
+  height: 400px;
+  left: -2px;
+  bottom: -2px;
+  margin-bottom: 0;
+
+  .content {
+    position: relative;
+
+    .well-small { position: relative; bottom: 2px; }
+    .messages {
+      .message:last-of-type { margin-bottom: 0; }
+      height: 310px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      margin-bottom: 10px;
+    }
+
+    .chatInput {
+      position: relative;
+      width: 100%;
+    }
+
+    .message {
+      padding: 0.2em 0.6em;
+      margin-bottom: 5px;
+      &.withPic {
+        padding-left: 60px;
+        position: relative;
+        img {
+          max-width: 47px;
+          max-height: 47px;
+          position: absolute;
+          top: 5px;
+          left: 5px;
+        }
+      }
+      .nickname {
+        font-weight: bold;
+        padding-right: 1em;
+      }
+      .deleteMessage:hover {
+        text-decoration: none;
+      }
+
+      &.system    { background-color: #fcf8e3; }
+      &.own       { background-color: #dff0d8; }
+      &.highlight { background-color: #d9edf7; }
+    }
+
+  }
+
+}

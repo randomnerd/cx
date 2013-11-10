@@ -1,0 +1,46 @@
+<div id="chat" {{bind-attr class=":col-sm-3 :panel :panel-default :panel-big-heading hide:chat-hide"}}>
+  <div class="panel-heading">
+    <a class="nodecor" {{action 'toggle'}}>Chat box</a>
+  </div>
+  <div class="content">
+
+    <div class="messages" id="messageList">
+      {{#each controller.arrangedContent}}
+      <div class="message panel panel-default nopadding {{msgClass}} {{#if picUrl}}withPic{{/if}}">
+        <div class="text-muted pull-right">
+          {{view Cx.TimeagoView title=time}}
+        </div>
+        <div class="nickname">
+          <a class="appendNickname">{{name}}</a>
+        </div>
+        {{#if moderator}}
+          <a class="deleteMessage pull-right">
+            <i class="icon-trash"></i>
+          </a>
+        {{/if}}
+        {{body}}
+      </div>
+      {{else}}
+      <div class="text-muted">No messages yet</div>
+      {{/each}}
+    </div>
+
+    <div {{bind-attr class=":nomargin signedIn::well signedIn::well-small"}}>
+      {{#if currentUser.isSignedIn}}
+      <form class="nomargin">
+        <div class="input-group">
+          {{input type="text" value=msg autocomplete="off" class="form-control" placeholder="Type your message here..."}}
+          <span class="input-group-btn">
+            <button class="btn btn-primary" {{action 'submit'}}>
+              Send
+            </button>
+          </span>
+        </div>
+      </form>
+      {{else}}
+        <a id="loginPlease">Log in or sign up</a> to post a message
+      {{/if}}
+    </div>
+
+  </div>
+</div>

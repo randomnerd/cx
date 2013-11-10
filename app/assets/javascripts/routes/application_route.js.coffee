@@ -7,6 +7,8 @@ Cx.ApplicationRoute = Ember.Route.extend
     }).then (data) -> Ember.Object.create(data)
   setupController: (c, m) ->
     c.set 'model', m
+    @controllerFor('commonChat').set('model', @store.findAll('message'))
+
     user = @controllerFor('auth').get('content.content')
     return unless user
     balancesChannel = pusher.subscribe("private-balances-#{user.get('id')}")
