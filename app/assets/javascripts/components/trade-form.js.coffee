@@ -5,6 +5,17 @@ Cx.TradeFormComponent = Ember.Component.extend
     h.round(h.nn2f(a*r)) || 0
   ).property('amount', 'rate')
 
+  allowSubmit: (->
+    if @get 'buy'
+      t = h.f2n @get 'total'
+      b = @get('pair.market.balance.amount')
+    else
+      t = h.f2n @get 'amount'
+      b = @get('pair.currency.balance.amount')
+    return false unless t
+    b >= t
+  ).property('total', 'amount', 'pair.currency.balance.amount', 'pair.market.balance.amount')
+
   fee: (->
     if @get('buy')
       t = h.f2n @get 'amount'

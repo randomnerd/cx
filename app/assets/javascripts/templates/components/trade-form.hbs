@@ -60,7 +60,7 @@
     </div>
   </div>
 
-  <button {{bind-attr class=":btn buy:btn-success:btn-danger :btn-block"}} {{action 'submit'}}>
+  <button {{bind-attr class=":btn buy:btn-success:btn-danger :btn-block allowSubmit::disabled"}} {{action 'submit'}}>
     {{#if buy}}Buy{{else}}Sell{{/if}}
     {{pair.currency.name}}
   </button>
