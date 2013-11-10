@@ -27,7 +27,7 @@
           <a href="/mining/pools">
             Mining
             {{#if currentUser.isSignedIn}}
-              <span class="badge badge-info">hashrate</span>
+              <span class="badge badge-info">100 Gh/s</span>
             {{/if}}
           </a>
         </li>
@@ -39,38 +39,12 @@
           <a href="/news">
             News
             {{#if currentUser.isSignedIn}}
-              <span class="badge badge-info">news count</span>
+              <span class="badge badge-info">2</span>
             {{/if}}
           </a>
         </li>
 
         {{#if currentUser.isSignedIn}}
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown">
-            Account
-            <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li class="">
-              <a href="/balances">Balances</a>
-            </li>
-            <li class="">
-              <a href="/workers">
-                Workers
-              </a>
-            </li>
-            <li class="">
-              <a href="/account">Settings</a>
-            </li>
-              <li class="">
-                <a href="/admin">Admin</a>
-              </li>
-              <li class="">
-                <a href="/admin_audit">Site audit</a>
-              </li>
-          </ul>
-        </li>
-
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown">
             Notifications

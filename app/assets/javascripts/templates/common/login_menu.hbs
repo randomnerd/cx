@@ -4,9 +4,28 @@
       {{currentUser.email}}
       <b class="caret"></b>
     </a>
-    <div class="dropdown-menu pull-right shadow" id="login-dropdown-list">
-      <a {{action 'logout'}} class="btn btn-primary btn-block">Sign out</a>
-    </div>
+    <ul class="dropdown-menu">
+      <li class="">
+        <a href="/balances">Balances</a>
+      </li>
+      <li class="">
+        <a href="/workers">
+          Workers
+        </a>
+      </li>
+      <li class="">
+        <a href="/account">Settings</a>
+      </li>
+        <li class="">
+          <a href="/admin">Admin</a>
+        </li>
+        <li class="">
+          <a href="/admin_audit">Site audit</a>
+        </li>
+        <li>
+          <a {{action 'logout'}}>Log out</a>
+        </li>
+    </ul>
   </li>
 {{else}}
   <li class="dropdown">
