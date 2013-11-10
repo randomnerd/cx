@@ -30,17 +30,22 @@ Cx.TradePairRoute = Ember.Route.extend
       c.set 'bidOrders', bidOrders
       c.set 'ownOrders', ownOrders
 
-    ordersChannel = pusher.subscribe("orders-#{pair.get 'id'}")
+    @ordersChannel?.unsubscribe()
+    @ordersChannel = pusher.subscribe("orders-#{pair.get 'id'}")
 
-    ordersChannel.bind 'order#new', (order) =>
+    @ordersChannel.bind 'order#new', (order) =>
       found = @store.getById('order', order.id)
       unless found
         @store.pushPayload 'order', orders: [order]
 
-    ordersChannel.bind 'order#update', (order) =>
+    @ordersChannel.bind 'order#update', (order) =>
       o = @store.getById('order', order.id)
       return if o?.get('updatedAt') > new Date(order.updated_at)
       @store.pushPayload 'order', orders: [order]
 
-    ordersChannel.bind 'order#delete', (order) =>
+    @ordersChannel.bind 'order#delete', (order) =>
       @store.getById('order', order.id)?.deleteRecord()
+
+  deactivate: ->
+    @ordersChannel?.unsubscribe()
+    @ordersChannel = undefined
