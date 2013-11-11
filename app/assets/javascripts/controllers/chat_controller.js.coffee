@@ -1,7 +1,7 @@
 Cx.CommonChatController = Ember.ArrayController.extend
   sortProperties: ['createdAt']
   sortAscending: true
-  hide: false
+  hide: true
   msg: ''
   needs: ['auth']
   signedIn: (->

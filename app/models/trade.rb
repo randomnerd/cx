@@ -9,7 +9,7 @@ class Trade < ActiveRecord::Base
   delegate :currency, to: :trade_pair
   delegate :market,   to: :trade_pair
 
-  after_create :process, :push_update
+  after_create :process, :update_chart_items, :push_update
 
   def market_amount
     rate * amount / 10 ** 8
@@ -85,5 +85,23 @@ class Trade < ActiveRecord::Base
 
   def ask_fee
     (amount / 100 * (ask_order.fee || 0)).round
+  end
+
+  def update_chart_items
+    int  = ChartItem.group_interval
+    time = Time.at((self.created_at.to_i/(int*60)).floor * int*60)
+    rec  = ChartItem.where(time: time, trade_pair_id: self.trade_pair_id).first_or_create
+    rec.o ||= 0
+    rec.h ||= 0
+    rec.l ||= 0
+    rec.o = rec.o == 0 ? self.rate : rec.o
+    rec.h = rec.h > self.rate ? rec.h : self.rate
+    rec.l = (rec.l > 0 && rec.l < self.rate) ? rec.l : self.rate
+    rec.c = self.rate
+    rec.v += self.amount
+    rec.save
+
+    Pusher["chartItems-#{trade_pair_id}"].trigger_async('chartItem#update',
+      ChartItemSerializer.new(rec, root: false))
   end
 end

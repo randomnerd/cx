@@ -12,7 +12,7 @@ class CreateTrades < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :trades, :trade_pair_id
+    add_index :trades, [:trade_pair_id, :created_at]
     add_index :trades, :ask_id
     add_index :trades, :bid_id
     add_index :trades, :bid_user_id

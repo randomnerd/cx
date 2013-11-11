@@ -26,6 +26,16 @@ Cx.ApplicationRoute = Ember.Route.extend
     balancesChannel.bind 'balance#delete', (balance) =>
       @store.getById('balance', balance.id)?.deleteRecord()
 
+    @presenceChannel = pusher.subscribe("presence-users")
+
+    @presenceChannel.bind 'pusher:member_added', (data) =>
+      user = data.info
+      user.id = data.id
+      @store.pushPayload 'user', users: [user]
+
+    @presenceChannel.bind 'pusher:member_removed', (data) =>
+      @store.getById('user', data.id)?.deleteRecord()
+
   actions:
     login: -> @controllerFor("auth").login()
     logout: -> @controllerFor("auth").logout()

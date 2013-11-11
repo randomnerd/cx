@@ -7,12 +7,14 @@ Cx::Application.routes.draw do
   end
   post '/pusher/auth', to: 'pusher#auth'
   root 'chat#index'
-  namespace :api do
+  namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
       resources :currencies, only: [:index, :show]
       resources :balances, only: [:index]
       resources :messages, only: [:create, :update, :destroy, :index]
-      resources :trade_pairs, only: [:create, :update, :destroy, :index]
+      resources :trade_pairs, only: [:create, :update, :destroy, :index] do
+        resources :chart_items, only: [:index]
+      end
       resources :orders, only: [:create, :update, :destroy, :index] do
         post :cancel, to: 'orders#cancel'
       end

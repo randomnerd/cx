@@ -2,9 +2,7 @@
 {{volume-ticker pair=model}}
 
 <!-- chart -->
-<div class="panel panel-default nopadding" id="chart" style="height: 200px">
-  chart here
-</div>
+{{chart-box items=chartItems pair=model}}
 
 <!-- buy/sell forms -->
 {{#if currentUser.isSignedIn}}

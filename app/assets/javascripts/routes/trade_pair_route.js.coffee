@@ -5,9 +5,22 @@ Cx.TradePairRoute = Ember.Route.extend
     pair = tps.get('firstObject')
 
   setupController: (c, pair) ->
-    uid = @controllerFor('auth').get('content.id')
+    window.store = @store
+    window.pair = pair
+    window.points = []
+    $.ajax
+      url: "/api/v1/trade_pairs/#{pair.get 'id'}/chart_items"
+      type: 'GET'
+      success: (data) => @store.pushPayload 'chartItem', data
+
     uid = parseInt @controllerFor('auth').get('content.id')
     c.set 'model', pair
+
+    chartItems = @store.filter 'chartItem', (ci) ->
+      parseInt(ci.get('tradePair.id')) == parseInt(pair.get('id'))
+
+    c.set 'chartItems', chartItems
+
     askOrders = @store.filter 'order', (o) ->
       o.get('trade_pair_id') == parseInt(pair.get('id')) &&
       o.get('cancelled') == false &&
@@ -46,6 +59,13 @@ Cx.TradePairRoute = Ember.Route.extend
 
     @ordersChannel.bind 'order#delete', (order) =>
       @store.getById('order', order.id)?.deleteRecord()
+
+    @chart_itemsChannel?.unsubscribe()
+    @chart_itemsChannel = pusher.subscribe("chartItems-#{pair.get 'id'}")
+
+    @chart_itemsChannel.bind 'chartItem#update', (chart_item) =>
+      console.log chart_item
+      @get('store').pushPayload 'chartItem', chart_items: [chart_item]
 
   deactivate: ->
     @ordersChannel?.unsubscribe()

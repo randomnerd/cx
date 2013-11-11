@@ -1,4 +1,5 @@
 class TradePair < ActiveRecord::Base
+  has_many :chart_items
   has_many :trades
   has_many :orders
   belongs_to :currency
