@@ -13,7 +13,7 @@ Cx.TradeFormComponent = Ember.Component.extend
       t = h.f2n @get 'amount'
       b = @get('pair.currency.balance.amount')
     return false unless t
-    b >= t
+    b >= t && @get('total') > 0
   ).property('total', 'amount', 'pair.currency.balance.amount', 'pair.market.balance.amount')
 
   fee: (->
@@ -28,7 +28,7 @@ Cx.TradeFormComponent = Ember.Component.extend
 
   actions:
     setTotal: (balance) ->
-      @set 'amount', balance
+      @set 'amount', h.n2f(balance)
     submit: ->
       store = @get('targetObject.store')
       order = store.createRecord 'order',
