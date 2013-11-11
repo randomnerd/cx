@@ -10,3 +10,6 @@
 # for more details see: http://emberjs.com/guides/application/
 window.Cx = Ember.Application.create()
 
+Ember.RSVP.configure 'onerror', (error) ->
+  Ember.Logger.assert(false, error)
+
