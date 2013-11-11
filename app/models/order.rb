@@ -31,6 +31,7 @@ class Order < ActiveRecord::Base
 
   def process
     self.with_lock do
+      return if complete? or cancelled
       unless lock_funds
         self.cancel(true)
         return false

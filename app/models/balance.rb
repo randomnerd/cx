@@ -20,8 +20,8 @@ class Balance < ActiveRecord::Base
   end
 
   def lock_funds(lock_amount, subject)
-    return false if amount < lock_amount
     self.with_lock do
+      return false if self.amount < lock_amount
       decrement :amount, lock_amount
       increment :held,    lock_amount
       balance_changes.create(
@@ -33,8 +33,8 @@ class Balance < ActiveRecord::Base
   end
 
   def unlock_funds(unlock_amount, subject, move = true)
-    return false if held < unlock_amount
     self.with_lock do
+      return false if self.held < unlock_amount
       increment :amount, unlock_amount if move
       decrement :held,    unlock_amount
       balance_changes.create(
