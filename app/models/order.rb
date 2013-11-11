@@ -2,6 +2,7 @@ class Order < ActiveRecord::Base
   validate :enough_balance, on: :create
   validate :filled_in_bound, on: :update
   validate :check_order_count, on: :create
+  validate :check_amounts, on: :create
 
   belongs_to :user
   belongs_to :trade_pair
@@ -144,5 +145,11 @@ class Order < ActiveRecord::Base
   def check_order_count
     return if Order.active.bid(self.bid).count < 20
     errors.add(:id, "too%20much%20open%20orders")
+  end
+
+  def check_amounts
+    return if market_amount > 0
+    return if amount.to_f / 10 ** 8 > 0.01
+    errors.add(:amount, "too%20low")
   end
 end
