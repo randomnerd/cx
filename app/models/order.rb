@@ -128,7 +128,7 @@ class Order < ActiveRecord::Base
   def cancel(force = false)
     self.with_lock do
       cid = bid ? trade_pair.market_id : trade_pair.currency_id
-      amt = bid ? market_amount : unmatched_amount
+      amt = bid ? unmatched_market_amount : unmatched_amount
       return false unless user.balance_for(cid).unlock_funds(amt, self)
       update_attribute :cancelled, true
     end
