@@ -1,6 +1,7 @@
 class Order < ActiveRecord::Base
   validate :enough_balance, on: :create
   validate :filled_in_bound, on: :update
+  validate :check_order_count, on: :create
 
   belongs_to :user
   belongs_to :trade_pair
@@ -137,5 +138,10 @@ class Order < ActiveRecord::Base
   def filled_in_bound
     return unless filled > amount
     errors.add(:filled, "cant%20fill%20more%20than%20amount")
+  end
+
+  def check_order_count
+    return if Order.active.bid(self.bid).count < 20
+    errors.add(:id, "too%20much%20open%20orders")
   end
 end
