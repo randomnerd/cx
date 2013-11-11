@@ -1,4 +1,4 @@
 Cx.User = DS.Model.extend
+  email:    DS.attr('string')
   nickname: DS.attr('string')
-  email: DS.attr('string')
-  created_at: DS.attr('date')
+  createdAt: DS.attr('date')

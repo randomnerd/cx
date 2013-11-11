@@ -11,7 +11,7 @@ Cx.OrderBookComponent = Ember.Component.extend
       book[order.get('rate')] ||= {amount: 0, marketAmount: 0}
       book[order.get('rate')].amount += order.get('unmatchedAmount') || 0
       book[order.get('rate')].marketAmount += order.get('marketAmount') || 0
-      book[order.get('rate')].own ||= order.get('userId') == parseInt(@user.get('id'))
+      book[order.get('rate')].own ||= order.get('user_id') == parseInt(@user.get('id'))
 
     for rate, order of book
       ret.push

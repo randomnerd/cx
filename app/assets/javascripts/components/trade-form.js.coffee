@@ -33,7 +33,7 @@ Cx.TradeFormComponent = Ember.Component.extend
       store = @get('targetObject.store')
       order = store.createRecord 'order',
         user:      @get('user').get('content').get('content')
-        tradePair: @get('pair')
+        trade_pair_id: @get('pair.id')
         rate:      h.f2n(@get('rate'))
         amount:    h.f2n(@get('amount'))
         bid:       !!@get('buy')

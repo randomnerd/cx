@@ -1,8 +1,6 @@
 Cx.Order = DS.Model.extend
-  user: DS.belongsTo('user')
-  userId: DS.attr('number')
-  tradePair: DS.belongsTo('tradePair')
-  tradePairId: DS.attr('number')
+  user_id: DS.attr('number')
+  trade_pair_id: DS.attr('number')
   amount: DS.attr('number')
   cancelled: DS.attr('boolean')
   complete: DS.attr('boolean')

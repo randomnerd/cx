@@ -7,21 +7,21 @@ Cx.TradePairRoute = Ember.Route.extend
   setupController: (c, pair) ->
     uid = @controllerFor('auth').get('content.id')
     c.set 'model', pair
-    askOrders =  @store.filter 'order', (o) ->
-      o.get('tradePairId') == parseInt(pair.get('id')) &&
+    askOrders = @store.filter 'order', (o) ->
+      o.get('trade_pair_id') == parseInt(pair.get('id')) &&
       o.get('cancelled') == false &&
       o.get('complete') == false &&
       !o.get('bid')
 
-    bidOrders =  @store.filter 'order', (o) ->
-      o.get('tradePairId') == parseInt(pair.get('id')) &&
+    bidOrders = @store.filter 'order', (o) ->
+      o.get('trade_pair_id') == parseInt(pair.get('id')) &&
       o.get('cancelled') == false &&
       o.get('complete') == false &&
       !!o.get('bid')
 
     ownOrders = @store.filter 'order', (o) ->
-      o.get('tradePairId') == parseInt(pair.get('id')) &&
-      o.get('userId') == parseInt(uid) &&
+      o.get('trade_pair_id') == parseInt(pair.get('id')) &&
+      o.get('user_id') == uid &&
       o.get('cancelled') == false &&
       o.get('complete') == false
 
