@@ -97,6 +97,7 @@ class Trade < ActiveRecord::Base
     rec.o ||= 0
     rec.h ||= 0
     rec.l ||= 0
+    rec.v ||= 0
     rec.o = rec.o == 0 ? self.rate : rec.o
     rec.h = rec.h > self.rate ? rec.h : self.rate
     rec.l = (rec.l > 0 && rec.l < self.rate) ? rec.l : self.rate
