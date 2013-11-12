@@ -4,8 +4,6 @@ Cx.TradeIndexRoute = Ember.Route.extend
   actions:
     openPair: (pair) ->
       @router.transitionTo 'tradePair', pair
-    openLoginMenu: ->
-      Ember.run.later -> h.openLoginMenu()
 
 Cx.TradePairRoute = Ember.Route.extend
   model: (params) ->

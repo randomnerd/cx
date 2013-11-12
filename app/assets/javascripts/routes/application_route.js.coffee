@@ -37,5 +37,7 @@ Cx.ApplicationRoute = Ember.Route.extend
       @store.getById('user', data.id)?.deleteRecord()
 
   actions:
+    openLoginMenu: ->
+      Ember.run.later -> h.openLoginMenu()
     login: -> @controllerFor("auth").login()
     logout: -> @controllerFor("auth").logout()
