@@ -15,6 +15,7 @@ Cx.TradePairRoute = Ember.Route.extend
     window.store = @store
     window.pair = pair
     window.points = []
+    window.vpoints = []
     $.ajax
       url: "/api/v1/trade_pairs/#{pair.get 'id'}/chart_items"
       type: 'GET'

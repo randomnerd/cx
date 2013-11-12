@@ -9,6 +9,7 @@ Cx.ChartBoxComponent = Ember.Component.extend
       ['year',null]
     ]
 
+    Highcharts.setOptions({global: {useUTC: false}})
     $('#chart').highcharts('StockChart', {
       rangeSelector:
         buttons : [
@@ -21,18 +22,49 @@ Cx.ChartBoxComponent = Ember.Component.extend
         ]
         selected : 2
         inputEnabled : false
-      tooltip: { valueDecimals: 8 }
+      tooltip: {
+        valueDecimals: 8
+      }
       plotOptions:
         candlestick: { color: '#b94a48', upColor: '#468847' }
-      series: [
+        column: {
+          color: '#EEE'
+          tooltip:
+            pointFormat: "<div>{series.name}: {point.y}</div>"
+        }
+      yAxis: [{
+          min: 0
+          labels: { style: { color: '#b94a48' } },
+          title: { text: 'Rate', style: { color: '#CC3300' }
+          }
+        }, {
+          min: 0
+          title: { text: 'Volume', style: { color: '#4572A7' } },
+          labels: { style: { color: '#4572A7' } },
+          opposite: true
+      }],
+      series: [{
+        animation: false,
         type: 'candlestick'
         name: 'Exchange rate'
         data: [[0,0,0,0,0]]
         dataGrouping: { units: groupingUnits }
-      ]})
+        zIndex: 2
+      }, {
+        animation: false,
+        name  : 'Volume',
+        type  : 'column',
+        marker: { enabled: false },
+        yAxis : 1,
+        dataGrouping: {units: groupingUnits},
+        data  : [0,0]
+        zIndex: 1
+      }]})
     @chart = $('#chart').highcharts()
     @series = @chart.series[0]
+    @vseries = @chart.series[1]
     @series.setData([], false)
+    @vseries.setData([], false)
 
   fill: ->
     $('#chart').highcharts()?.destroy()
@@ -41,8 +73,10 @@ Cx.ChartBoxComponent = Ember.Component.extend
     for citem in items
       item = citem._data
       points.push [ item.id, item.o, item.h, item.l, item.c ]
+      vpoints.push [ item.id, item.v ]
 
     @series.addPoint(point, false, false, false) for point in points
+    @vseries.addPoint(point, false, false, false) for point in vpoints
     @chart.redraw()
 
   updater: (->
