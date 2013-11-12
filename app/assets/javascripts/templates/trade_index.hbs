@@ -1,0 +1,36 @@
+{{#unless currentUser.isSignedIn}}
+<div class="jumbotron">
+  <h1>CoinEX</h1>
+  <p>
+    Realtime exchange for the sake of alternative cryptocurrencies.
+  </p>
+  <p>
+    <button class="btn btn-lg btn-primary" {{action 'openLoginMenu'}}>
+      Sign in to start rocking
+    </button>
+  </p>
+</div>
+{{/unless}}
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Trade pair</th>
+      <th>Last price</th>
+      <th>24h volume</th>
+      <th>24h min price</th>
+      <th>24h max price</th>
+    </tr>
+  </thead>
+  <tbody>
+  {{#each}}
+    <tr class="clickRow" {{action 'openPair' this}}>
+      <td class="monospace">{{name}}</td>
+      <td>{{round lastPrice}}</td>
+      <td>{{round currency_volume}} / {{round market_volume}}</td>
+      <td>{{round rate_min}}</td>
+      <td>{{round rate_max}}</td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>

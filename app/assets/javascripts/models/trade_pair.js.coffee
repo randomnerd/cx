@@ -10,6 +10,9 @@ Cx.TradePair = DS.Model.extend
   market_volume: DS.attr('number')
   rate_min: DS.attr('number')
   rate_max: DS.attr('number')
+  name: (->
+    "#{@get 'currency.name'} / #{@get 'market.name'}"
+  ).property('currency.name', 'market.name')
 
 Cx.TradePair.FIXTURES = [
   {

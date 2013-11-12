@@ -1,3 +1,12 @@
+Cx.TradeIndexRoute = Ember.Route.extend
+  model: -> @store.findAll('tradePair')
+  setupController: (c, pairs) -> c.set 'model', pairs
+  actions:
+    openPair: (pair) ->
+      @router.transitionTo 'tradePair', pair
+    openLoginMenu: ->
+      Ember.run.later -> h.openLoginMenu()
+
 Cx.TradePairRoute = Ember.Route.extend
   model: (params) ->
     tps = @store.filter 'tradePair', (tp) ->

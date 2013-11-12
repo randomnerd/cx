@@ -8,6 +8,8 @@
 @h.round = (amount, precision = 8) ->
   Math.floor(amount * Math.pow(10, precision)) / Math.pow(10, precision)
 
+@h.openLoginMenu = -> $('#login-menu-link').dropdown('toggle')
+
 Ember.Handlebars.helper 'round', (amount) ->
   return 0 unless amount
   h.n2f(amount).noExponents()
