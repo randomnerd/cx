@@ -9,7 +9,10 @@ class Trade < ActiveRecord::Base
   delegate :currency, to: :trade_pair
   delegate :market,   to: :trade_pair
 
-  after_create :process, :update_chart_items, :push_update
+  after_create :process, :update_chart_items, :push_create
+  after_update :push_update
+  after_destroy :push_delete
+  scope :user, -> uid { where('ask_user_id = ? or bid_user_id = ?', uid, uid) }
 
   def market_amount
     rate * amount / 10 ** 8
@@ -34,8 +37,19 @@ class Trade < ActiveRecord::Base
     notify_users
   end
 
+  def push_create
+    Pusher["trades-#{trade_pair_id}"].trigger_async('trade#new',
+      TradeSerializer.new(self, root: false))
+  end
+
   def push_update
-    #stub
+    Pusher["trades-#{trade_pair_id}"].trigger_async('trade#update',
+      TradeSerializer.new(self, root: false))
+  end
+
+  def push_delete
+    Pusher["trades-#{trade_pair_id}"].trigger_async('trade#delete',
+      TradeSerializer.new(self, root: false))
   end
 
   def process_funds

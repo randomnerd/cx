@@ -46,10 +46,23 @@ Cx.TradePairRoute = Ember.Route.extend
       o.get('cancelled') == false &&
       o.get('complete') == false
 
+    pairTrades = @store.filter 'trade', (o) ->
+      o.get('trade_pair_id') == parseInt(pair.get('id'))
+
+    ownTrades = @store.filter 'trade', (o) ->
+      o.get('trade_pair_id') == parseInt(pair.get('id')) &&
+      (o.get('ask_user_id') == uid || o.get('bid_user_id') == uid)
+
+    @store.find('trade', {tradePair: pair.get('id')}).then (d) ->
+      c.set 'pairTrades', pairTrades
+      c.set 'ownTrades', ownTrades
+
     @store.find('order', {tradePair: pair.get('id')}).then ->
       c.set 'askOrders', askOrders
       c.set 'bidOrders', bidOrders
       c.set 'ownOrders', ownOrders
+
+    @store.find('trade', {tradePair: pair.get('id'), user: uid}) if uid
 
     @ordersChannel?.unsubscribe()
     @ordersChannel = pusher.subscribe("orders-#{pair.get 'id'}")
@@ -67,11 +80,26 @@ Cx.TradePairRoute = Ember.Route.extend
     @ordersChannel.bind 'order#delete', (order) =>
       @store.getById('order', order.id)?.deleteRecord()
 
+    @tradesChannel?.unsubscribe()
+    @tradesChannel = pusher.subscribe("trades-#{pair.get 'id'}")
+
+    @tradesChannel.bind 'trade#new', (trade) =>
+      found = @store.getById('trade', trade.id)
+      unless found
+        @store.pushPayload 'trade', trades: [trade]
+
+    @tradesChannel.bind 'trade#update', (trade) =>
+      o = @store.getById('trade', trade.id)
+      return if o?.get('updatedAt') > new Date(trade.updated_at)
+      @store.pushPayload 'trade', trades: [trade]
+
+    @tradesChannel.bind 'trade#delete', (trade) =>
+      @store.getById('trade', order.id)?.deleteRecord()
+
     @chart_itemsChannel?.unsubscribe()
     @chart_itemsChannel = pusher.subscribe("chartItems-#{pair.get 'id'}")
 
     @chart_itemsChannel.bind 'chartItem#update', (chart_item) =>
-      console.log chart_item
       @get('store').pushPayload 'chartItem', chart_items: [chart_item]
 
     @tradePairsChannel?.unsubscribe()

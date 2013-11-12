@@ -13,6 +13,7 @@ Cx.TradePair = DS.Model.extend
   name: (->
     "#{@get 'currency.name'} / #{@get 'market.name'}"
   ).property('currency.name', 'market.name')
+  trades: DS.hasMany('trade')
 
 Cx.TradePair.FIXTURES = [
   {

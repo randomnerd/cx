@@ -8,10 +8,10 @@ Cx.OrderBookComponent = Ember.Component.extend
       o.get('cancelled') == false &&
       o.get('complete') == false
     orders.forEach (order) =>
-      book[order.get('rate')] ||= {amount: 0, marketAmount: 0}
-      book[order.get('rate')].amount += order.get('unmatchedAmount') || 0
-      book[order.get('rate')].marketAmount += order.get('marketAmount') || 0
-      book[order.get('rate')].own ||= order.get('user_id') == parseInt(@user.get('id'))
+      b = book[order.get('rate')] ||= {amount: 0, marketAmount: 0}
+      b.amount = Math.floor(b.amount + order.get('unmatchedAmount')) || 0
+      b.marketAmount = Math.floor(b.marketAmount + order.get('marketAmount')) || 0
+      b.own ||= order.get('user_id') == parseInt(@user.get('id'))
 
     for rate, order of book
       ret.push

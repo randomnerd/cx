@@ -8,25 +8,27 @@
      trades
   </div>
 
-  <table class="table table-condensed table-striped nomargin">
-    <thead>
-      <tr>
-        <th>Time</th>
-        <th>Price ({{pair.market.name}})</th>
-        <th>{{pair.currency.name}}</th>
-        <th>{{pair.market.name}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each trades}}
-      <tr class="">
-        <td><span rel="timeago" title=""></span></td>
-        <td>{{round rate}}</td>
-        <td>{{round amount}}</td>
-        <td>{{noExp logAmount}}</td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
+  <div class="content scrollY">
+    <table class="table table-condensed table-striped nomargin">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Price ({{pair.market.name}})</th>
+          <th>{{pair.currency.name}}</th>
+          <th>{{pair.market.name}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each sortedTrades}}
+        <tr {{bind-attr class="bid:success:danger"}}>
+          <td>{{view Cx.TimeagoView title=time}}</td>
+          <td>{{round rate}}</td>
+          <td>{{round amount}}</td>
+          <td>{{round marketAmount}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 
 </div>

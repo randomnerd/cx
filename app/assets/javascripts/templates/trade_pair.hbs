@@ -31,11 +31,10 @@
 {{own-orders pair=model user=currentUser orders=ownOrders}}
 {{/if}}
 
-
 <!-- recent trades -->
-{{recent-trades pair=model own=false}}
+{{recent-trades pair=model trades=pairTrades}}
 
 <!-- recent own trades -->
 {{#if currentUser.isSignedIn}}
-{{recent-trades pair=model own=true}}
+{{recent-trades pair=model trades=ownTrades}}
 {{/if}}
