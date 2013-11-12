@@ -21,7 +21,7 @@ Cx.OrderBookComponent = Ember.Component.extend
         marketAmount: h.round(order.marketAmount)
 
     if @buy then ret.reverse() else ret
-  ).property('orders.@each.filled')
+  ).property('orders.@each.filled', 'user.id')
   actions:
     setForms: (o) ->
       $('.tradeColumn .rate-input').val(h.n2f(o.rate)).trigger('keyup')
