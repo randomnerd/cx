@@ -6,6 +6,10 @@ Cx.TradePair = DS.Model.extend
   market: DS.belongsTo('currency')
   public: DS.attr('boolean')
   urlSlug: DS.attr('string')
+  currency_volume: DS.attr('number')
+  market_volume: DS.attr('number')
+  rate_min: DS.attr('number')
+  rate_max: DS.attr('number')
 
 Cx.TradePair.FIXTURES = [
   {

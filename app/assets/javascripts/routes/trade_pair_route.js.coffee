@@ -67,6 +67,23 @@ Cx.TradePairRoute = Ember.Route.extend
       console.log chart_item
       @get('store').pushPayload 'chartItem', chart_items: [chart_item]
 
+    @tradePairsChannel?.unsubscribe()
+    @tradePairsChannel = pusher.subscribe("tradePairs")
+
+    @tradePairsChannel.bind 'tradePair#new', (tradePair) =>
+      found = @store.getById('tradePair', tradePair.id)
+      unless found
+        @store.pushPayload 'tradePair', tradePairs: [tradePair]
+
+    @tradePairsChannel.bind 'tradePair#update', (tradePair) =>
+      o = @store.getById('tradePair', tradePair.id)
+      return if o?.get('updatedAt') > new Date(tradePair.updated_at)
+      @store.pushPayload 'tradePair', tradePairs: [tradePair]
+
+    @tradePairsChannel.bind 'tradePair#delete', (tradePair) =>
+      @store.getById('tradePair', tradePair.id)?.deleteRecord()
+
+
   deactivate: ->
     @ordersChannel?.unsubscribe()
     @ordersChannel = undefined

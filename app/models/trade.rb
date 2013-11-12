@@ -75,7 +75,19 @@ class Trade < ActiveRecord::Base
   end
 
   def update_stats
-    #stub
+    tp = self.trade_pair
+    s = tp.trades.where('created_at between ? and ?', 1.day.ago, Time.now)
+    s = s.select('sum(amount) as currency_volume')
+    s = s.select('sum(amount*rate)/POW(10,8) as market_volume')
+    s = s.select('min(rate) as rate_min')
+    s = s.select('max(rate) as rate_max').first
+    tp.update_attributes(
+      rate_max:        s.rate_max,
+      rate_min:        s.rate_min,
+      last_price:      self.rate,
+      market_volume:   s.market_volume,
+      currency_volume: s.currency_volume,
+    )
   end
 
   def notify_users
