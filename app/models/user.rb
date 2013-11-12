@@ -17,6 +17,6 @@ class User < ActiveRecord::Base
   end
 
   def balance_for(cid)
-    balances.find_by_currency_id(cid)
+    balances.where(currency_id: cid).first_or_create
   end
 end
