@@ -121,7 +121,7 @@ class Order < ActiveRecord::Base
     self.filled += update_amount
     self.complete = complete?
     save
-    cancel(true) if !complete? && market_amount <= 0
+    cancel(true) if !complete? && unmatched_market_amount <= 0
   end
 
   def complete?
@@ -148,8 +148,7 @@ class Order < ActiveRecord::Base
   end
 
   def check_amounts
-    return if market_amount > 0
-    return if amount.to_f / 10 ** 8 > 0.01
+    return if amount.to_f / 10 ** 8 >= 0.01 && market_amount > 0
     errors.add(:amount, "too%20low")
   end
 end

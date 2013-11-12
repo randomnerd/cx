@@ -25,6 +25,9 @@ class Trade < ActiveRecord::Base
 
   def process
     self.destroy and return false if bid_order.complete? || ask_order.complete?
+    self.destroy and return false unless amount > 0
+    self.destroy and return false unless market_amount > 0
+    self.destroy and return false unless bid_market_amount > 0
     process_funds
     update_orders
     update_stats
