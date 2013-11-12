@@ -2,4 +2,4 @@ Cx.TimeagoView = Ember.View.extend
   tagName: 'small'
   classNames: ['timeago']
   attributeBindings: ['title', 'name']
-  didInsertElement: -> setTimeout (=>@.$().timeago()), 50
+  didInsertElement: -> setTimeout (=>@.$()?.timeago()), 50
