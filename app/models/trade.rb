@@ -9,9 +9,13 @@ class Trade < ActiveRecord::Base
   delegate :currency, to: :trade_pair
   delegate :market,   to: :trade_pair
 
-  after_create :process, :update_chart_items, :push_create
-  after_update :push_update
-  after_destroy :push_delete
+  after_create :process, :update_chart_items
+
+  include PusherSync
+  def pusher_channel
+    "trades-#{self.trade_pair_id}"
+  end
+
   scope :user, -> uid { where('ask_user_id = ? or bid_user_id = ?', uid, uid) }
 
   def market_amount
@@ -35,21 +39,6 @@ class Trade < ActiveRecord::Base
     update_orders
     update_stats
     notify_users
-  end
-
-  def push_create
-    Pusher["trades-#{trade_pair_id}"].trigger_async('trade#new',
-      TradeSerializer.new(self, root: false))
-  end
-
-  def push_update
-    Pusher["trades-#{trade_pair_id}"].trigger_async('trade#update',
-      TradeSerializer.new(self, root: false))
-  end
-
-  def push_delete
-    Pusher["trades-#{trade_pair_id}"].trigger_async('trade#delete',
-      TradeSerializer.new(self, root: false))
   end
 
   def process_funds
@@ -131,7 +120,7 @@ class Trade < ActiveRecord::Base
     rec.v += self.amount
     rec.save
 
-    Pusher["chartItems-#{trade_pair_id}"].trigger_async('chartItem#update',
+    Pusher["chartItems-#{self.trade_pair_id}"].trigger_async('chartItem#update',
       ChartItemSerializer.new(rec, root: false))
   end
 end

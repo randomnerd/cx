@@ -8,9 +8,7 @@ class Order < ActiveRecord::Base
   belongs_to :trade_pair
 
   before_save :set_fee
-  after_create :push_create, :process
-  after_update :push_update
-  after_destroy :push_delete
+  after_create :process
 
   scope :recent,   ->     { order('created_at desc').limit(50) }
   scope :active,   ->     { where(complete: false).where(cancelled: false) }
@@ -25,6 +23,11 @@ class Order < ActiveRecord::Base
     s = active.tp(o.trade_pair_id).bid_rate(o.bid, o.rate)
     return s.bid(!o.bid).bid_sort(o.bid)
   }
+
+  include PusherSync
+  def pusher_channel
+    "orders-#{self.trade_pair_id}"
+  end
 
   def set_fee
     self.fee = bid ? trade_pair.buy_fee : trade_pair.sell_fee
@@ -79,21 +82,6 @@ class Order < ActiveRecord::Base
     else
       Trade.where(ask_id: id)
     end
-  end
-
-  def push_create
-    Pusher["orders-#{trade_pair_id}"].trigger_async('order#new',
-      OrderSerializer.new(self, root: false))
-  end
-
-  def push_update
-    Pusher["orders-#{trade_pair_id}"].trigger_async('order#update',
-      OrderSerializer.new(self, root: false))
-  end
-
-  def push_delete
-    Pusher["orders-#{trade_pair_id}"].trigger_async('order#delete',
-      OrderSerializer.new(self, root: false))
   end
 
   def market_amount

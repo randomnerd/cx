@@ -3,9 +3,10 @@ class Balance < ActiveRecord::Base
   belongs_to :currency
   has_many :balance_changes
 
-  after_create :push_create
-  after_update :push_update
-  after_destroy :push_delete
+  include PusherSync
+  def pusher_channel
+    "private-balances-#{self.user_id}"
+  end
 
   scope :currency, -> id { where(currency_id: id) }
 
@@ -48,21 +49,6 @@ class Balance < ActiveRecord::Base
         held:    -unlock_amount
       ) if save
     end
-  end
-
-  def push_create
-    Pusher["private-balances-#{user_id}"].trigger_async('balance#new',
-      BalanceSerializer.new(self, root: false))
-  end
-
-  def push_update
-    Pusher["private-balances-#{user_id}"].trigger_async('balance#update',
-      BalanceSerializer.new(self, root: false))
-  end
-
-  def push_delete
-    Pusher["private-balances-#{user_id}"].trigger_async('balance#delete',
-      BalanceSerializer.new(self, root: false))
   end
 
   def verify(detailed = false)

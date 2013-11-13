@@ -3,18 +3,15 @@ class Message < ActiveRecord::Base
   belongs_to :user, touch: true
   after_create :push_create
 
+  include PusherSync
+  def pusher_channel
+    "messages"
+  end
+
   scope :recent, -> { includes(:user).order('created_at desc').limit(50) }
 
   def name
     user.nickname
-  end
-
-  def broadcast
-    Pusher['chat'].trigger_async('msg', {
-      time: created_at.to_i,
-      name: name,
-      body: body
-    })
   end
 
   def valid_msg
@@ -22,8 +19,4 @@ class Message < ActiveRecord::Base
     errors.add(:body, 'empty')
   end
 
-  def push_create
-    Pusher["messages"].trigger_async('message#new',
-      MessageSerializer.new(self, root: false))
-  end
 end
