@@ -88,12 +88,11 @@ Cx.ChartBoxComponent = Ember.Component.extend
   ).observes('pair.id')
 
   watchForUpdates: (pairId) ->
-    @pusherChannel?.unsubscribe()
-    @pusherChannel = pusher.subscribe("chartItems-#{pairId}")
-    @pusherChannel.callbacks._callbacks = {}
-    window.pc = @pusherChannel
-    @pusherChannel.unbind 'chartItem#update'
-    @pusherChannel.bind 'chartItem#update', (item) =>
+    h.chartPusher?.unsubscribe()
+    h.chartPusher = pusher.subscribe("chartItems-#{pairId}")
+    h.chartPusher.callbacks._callbacks = {}
+    h.chartPusher.unbind 'chartItem#update'
+    h.chartPusher.bind 'chartItem#update', (item) =>
       point = [ item.id, item.o, item.h, item.l, item.c ]
       vpoint = [ item.id, item.v ]
       if p = _.find(@series.points, (d) -> d.category == item.id)
