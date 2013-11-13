@@ -100,6 +100,7 @@ class Order < ActiveRecord::Base
     cid = bid ? trade_pair.market_id : trade_pair.currency_id
     amt = bid ? market_amount : amount
     balance = user.balances.find_by_currency_id(cid)
+    balance.verify!
     if balance.amount < amt
       errors.add(:amount, "insufficient%20funds,%20amount(#{amt})%20balance(#{balance.amount})")
     end

@@ -23,7 +23,6 @@ class Balance < ActiveRecord::Base
 
   def lock_funds(lock_amount, subject)
     self.with_lock do
-      self.verify!
       return false if self.amount < lock_amount
       decrement :amount,  lock_amount
       increment :held,    lock_amount
@@ -38,7 +37,6 @@ class Balance < ActiveRecord::Base
 
   def unlock_funds(unlock_amount, subject, move = true)
     self.with_lock do
-      self.verify!
       return false if self.held < unlock_amount
       increment :amount,  unlock_amount if move
       decrement :held,    unlock_amount
@@ -70,7 +68,9 @@ class Balance < ActiveRecord::Base
   end
 
   def verify!
-    v = self.verify(true)
-    update_attributes(amount: v[:amount], held: v[:held]) unless v[:valid]
+    self.with_lock do
+      v = self.verify(true)
+      update_attributes(amount: v[:amount], held: v[:held]) unless v[:valid]
+    end
   end
 end
