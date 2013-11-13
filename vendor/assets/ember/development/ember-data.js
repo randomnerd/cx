@@ -1,5 +1,5 @@
 // Fetched from: http://builds.emberjs.com/canary/ember-data.js
-// Fetched on: 2013-11-11T21:32:18Z
+// Fetched on: 2013-11-13T11:57:53Z
 // ==========================================================================
 // Project:   Ember Data
 // Copyright: Copyright 2011-2013 Tilde Inc. and contributors.
