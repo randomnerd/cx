@@ -5,7 +5,7 @@ Cx.TradePair = DS.Model.extend
   currency: DS.belongsTo('currency')
   market: DS.belongsTo('currency')
   public: DS.attr('boolean')
-  urlSlug: DS.attr('string')
+  url_slug: DS.attr('string')
   currency_volume: DS.attr('number')
   market_volume: DS.attr('number')
   rate_min: DS.attr('number')

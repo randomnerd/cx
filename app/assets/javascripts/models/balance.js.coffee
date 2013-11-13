@@ -3,7 +3,7 @@ Cx.Balance = DS.Model.extend
   held: DS.attr('number')
   user: DS.belongsTo('user')
   currency: DS.belongsTo('currency')
-  updatedAt: DS.attr('date')
+  updated_at: DS.attr('date')
 
 Cx.Balance.FIXTURES = [
   {

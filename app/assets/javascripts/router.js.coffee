@@ -2,7 +2,7 @@
 
 Cx.Router.map () ->
   @route 'tradeIndex', {path: '/'}
-  @route 'tradePair', {path: '/trade/:urlSlug'}
+  @route 'tradePair', {path: '/trade/:url_slug'}
 
 # Cx.Router.reopen
 #   location: 'history'

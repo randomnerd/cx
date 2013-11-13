@@ -7,8 +7,8 @@ Cx.Order = DS.Model.extend
   filled: DS.attr('number')
   bid:    DS.attr('boolean')
   rate: DS.attr('number')
-  updatedAt: DS.attr('date')
-  createdAt: DS.attr('date')
+  updated_at: DS.attr('date')
+  created_at: DS.attr('date')
   unmatchedAmount: (->
     @get('amount') - (@get('filled') || 0)
   ).property('amount', 'filled')
