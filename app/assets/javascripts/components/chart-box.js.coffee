@@ -94,6 +94,7 @@ Cx.ChartBoxComponent = Ember.Component.extend
 
     item = items[items.length-1]._data
     points.push [ item.id, item.o, item.h, item.l, item.c ]
+    vpoints.push [ item.id, item.v ]
 
     @timer = setTimeout ( =>
       for point in points
@@ -101,6 +102,11 @@ Cx.ChartBoxComponent = Ember.Component.extend
           p.update(point, false, false, false)
         else
           @series.addPoint(point, false, false, false)
+      for point in vpoints
+        if p = _.find(@vseries.points, (d) -> d.category == item.id)
+          p.update(point, false, false, false)
+        else
+          @vseries.addPoint(point, false, false, false)
       @chart.redraw()
     ), 100
   ).observes('items.@each.v')
