@@ -4,7 +4,12 @@ class Api::V1::OrdersController < Api::V1::BaseController
   # has_scope :active, default: true
 
   def index
-    render json: collection.active
+    respond_with collection.active
+  end
+
+  def create
+    order = current_user.orders.create(permitted_params[:order])
+    render json: {orders: [OrderSerializer.new(order, root: false),]}
   end
 
   def cancel

@@ -8,6 +8,7 @@ class CreateChartItems < ActiveRecord::Migration
       t.integer  :c, limit: 8, default: 0
       t.integer  :v, limit: 8, default: 0
       t.integer  :trade_pair_id
+      t.timestamps
     end
     add_index :chart_items, [:trade_pair_id, :time]
   end
