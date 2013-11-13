@@ -1,7 +1,6 @@
 class Api::V1::OrdersController < Api::V1::BaseController
   belongs_to :trade_pair, param: :tradePair, optional: true
   custom_actions resource: [:cancel]
-  # has_scope :active, default: true
 
   def index
     respond_with collection.active
