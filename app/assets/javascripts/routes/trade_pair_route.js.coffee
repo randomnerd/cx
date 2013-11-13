@@ -12,22 +12,8 @@ Cx.TradePairRoute = Ember.Route.extend
     pair = tps.get('firstObject')
 
   setupController: (c, pair) ->
-    window.store = @store
-    window.pair = pair
-    window.points = []
-    window.vpoints = []
-    $.ajax
-      url: "/api/v1/trade_pairs/#{pair.get 'id'}/chart_items"
-      type: 'GET'
-      success: (data) => @store.pushPayload 'chartItem', data
-
     uid = parseInt @controllerFor('auth').get('content.id')
     c.set 'model', pair
-
-    chartItems = @store.filter 'chartItem', (ci) ->
-      parseInt(ci.get('tradePair.id')) == parseInt(pair.get('id'))
-
-    c.set 'chartItems', chartItems
 
     askOrders = @store.filter 'order', (o) ->
       o.get('trade_pair_id') == parseInt(pair.get('id')) &&
@@ -70,9 +56,6 @@ Cx.TradePairRoute = Ember.Route.extend
 
     @tradesChannel?.unsubscribe()
     @tradesChannel = h.setupPusher(@store, 'trade', "trades-#{pair.get 'id'}")
-
-    @chartItemsChannel?.unsubscribe()
-    @chartItemsChannel = h.setupPusher(@store, 'chartItem', "chartItems-#{pair.get 'id'}")
 
     @tradePairsChannel?.unsubscribe()
     @tradePairsChannel = h.setupPusher(@store, 'tradePair', "tradePairs")

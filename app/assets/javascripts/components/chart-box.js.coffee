@@ -1,4 +1,6 @@
 Cx.ChartBoxComponent = Ember.Component.extend
+  defaultButton: 2
+  init: -> Ember.run.later => @initChart() if @get('pair.id')
   initChart: ->
     groupingUnits = [
       ['minute',[5, 10, 15, 30]]
@@ -20,7 +22,7 @@ Cx.ChartBoxComponent = Ember.Component.extend
           { type : 'month', count : 1, text : '1M' }
           { type : 'all', count : 1, text : 'All' }
         ]
-        selected : 2
+        selected : @defaultButton
         inputEnabled : false
       tooltip: {
         valueDecimals: 8
@@ -57,62 +59,49 @@ Cx.ChartBoxComponent = Ember.Component.extend
         marker: { enabled: false },
         yAxis : 1,
         dataGrouping: {units: groupingUnits},
-        data  : [0,0]
+        data  : [[0,0]]
         zIndex: 1
       }]})
     @chart = $('#chart').highcharts()
     @series = @chart.series[0]
     @vseries = @chart.series[1]
+    @fillChart()
+
+  fillChart: (->
     @series.setData([], false)
     @vseries.setData([], false)
-
-  fill: ->
-    $('#chart').highcharts()?.destroy()
-    @initChart()
-    items = @get('items.content')
-    for citem in items
-      item = citem._data
-      points.push [ item.id, item.o, item.h, item.l, item.c ]
-      vpoints.push [ item.id, item.v ]
-
-    @series.addPoint(point, false, false, false) for point in points
-    @vseries.addPoint(point, false, false, false) for point in vpoints
-    @chart.redraw()
-
-  updater: (->
-    if @filltimer || !points.length
-      clearTimeout(@filltimer)
-      @filltimer = setTimeout ( =>
-        @fill()
-        @filltimer = undefined
-      ), 100
-      return
-
-    clearTimeout(@timer)
-    items = @get('items.content')
-    return unless items.length
-
-    item = items[items.length-1]._data
-    points.push [ item.id, item.o, item.h, item.l, item.c ]
-    vpoints.push [ item.id, item.v ]
-
-    @timer = setTimeout ( =>
-      for point in points
-        if p = _.find(@series.points, (d) -> d.category == item.id)
-          p.update(point, false, false, false)
-        else
+    @watchForUpdates(@get 'pair.id')
+    $.ajax
+      url: "/api/v1/trade_pairs/#{@get 'pair.id'}/chart_items"
+      type: 'GET'
+      success: (data) =>
+        for item in data.chart_items
+          point = [ item.id, item.o, item.h, item.l, item.c ]
+          vpoint = [ item.id, item.v ]
           @series.addPoint(point, false, false, false)
-      for point in vpoints
-        if p = _.find(@vseries.points, (d) -> d.category == item.id)
-          p.update(point, false, false, false)
-        else
-          @vseries.addPoint(point, false, false, false)
-      @chart.redraw()
-    ), 100
-  ).observes('items.@each.v')
+          @vseries.addPoint(vpoint, false, false, false)
 
-  lastOne: (->
-    # FIXME: workaround for observer not working
-    @get('items.lastObject.v')
-    return ''
-  ).property('items.@each.v')
+        rs = @chart.rangeSelector
+        sel = rs.selected || @defaultButton
+        @chart.redraw()
+        rs.clickButton(sel, rs.buttonOptions[sel], true)
+  ).observes('pair.id')
+
+  watchForUpdates: (pairId) ->
+    @pusherChannel?.unsubscribe()
+    @pusherChannel = pusher.subscribe("chartItems-#{pairId}")
+    @pusherChannel.callbacks._callbacks = {}
+    window.pc = @pusherChannel
+    @pusherChannel.unbind 'chartItem#update'
+    @pusherChannel.bind 'chartItem#update', (item) =>
+      point = [ item.id, item.o, item.h, item.l, item.c ]
+      vpoint = [ item.id, item.v ]
+      if p = _.find(@series.points, (d) -> d.category == item.id)
+        p.update(point, false, false, false)
+      else
+        @series.addPoint(point, false, false, false)
+      if p = _.find(@vseries.points, (d) -> d.category == item.id)
+        p.update(vpoint, false, false, false)
+      else
+        @vseries.addPoint(point, false, false, false)
+      @chart.redraw()
