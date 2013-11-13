@@ -1,8 +1,8 @@
 Cx.Message = DS.Model.extend
   name: DS.attr('string')
   body: DS.attr('string')
-  createdAt: DS.attr('date')
-  time: (-> @get('createdAt')?.toISOString()).property('createdAt')
+  created_at: DS.attr('date')
+  time: (-> @get('created_at')?.toISOString()).property('created_at')
 
 Cx.Message.FIXTURES = [
   {
