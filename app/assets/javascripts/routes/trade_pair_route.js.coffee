@@ -66,59 +66,16 @@ Cx.TradePairRoute = Ember.Route.extend
     @store.find('trade', {tradePair: pair.get('id'), user: uid}) if uid
 
     @ordersChannel?.unsubscribe()
-    @ordersChannel = pusher.subscribe("orders-#{pair.get 'id'}")
-
-    @ordersChannel.bind 'order#new', (order) =>
-      found = @store.getById('order', order.id)
-      unless found
-        @store.pushPayload 'order', orders: [order]
-
-    @ordersChannel.bind 'order#update', (order) =>
-      o = @store.getById('order', order.id)
-      return if o?.get('updatedAt') > new Date(order.updated_at)
-      @store.pushPayload 'order', orders: [order]
-
-    @ordersChannel.bind 'order#delete', (order) =>
-      @store.getById('order', order.id)?.deleteRecord()
+    @ordersChannel = h.setupPusher(@store, 'order', "orders-#{pair.get 'id'}")
 
     @tradesChannel?.unsubscribe()
-    @tradesChannel = pusher.subscribe("trades-#{pair.get 'id'}")
+    @tradesChannel = h.setupPusher(@store, 'trade', "trades-#{pair.get 'id'}")
 
-    @tradesChannel.bind 'trade#new', (trade) =>
-      found = @store.getById('trade', trade.id)
-      unless found
-        @store.pushPayload 'trade', trades: [trade]
-
-    @tradesChannel.bind 'trade#update', (trade) =>
-      o = @store.getById('trade', trade.id)
-      return if o?.get('updatedAt') > new Date(trade.updated_at)
-      @store.pushPayload 'trade', trades: [trade]
-
-    @tradesChannel.bind 'trade#delete', (trade) =>
-      @store.getById('trade', order.id)?.deleteRecord()
-
-    @chart_itemsChannel?.unsubscribe()
-    @chart_itemsChannel = pusher.subscribe("chartItems-#{pair.get 'id'}")
-
-    @chart_itemsChannel.bind 'chartItem#update', (chart_item) =>
-      @get('store').pushPayload 'chartItem', chart_items: [chart_item]
+    @chartItemsChannel?.unsubscribe()
+    @chartItemsChannel = h.setupPusher(@store, 'chartItem', "chartItems-#{pair.get 'id'}")
 
     @tradePairsChannel?.unsubscribe()
-    @tradePairsChannel = pusher.subscribe("tradePairs")
-
-    @tradePairsChannel.bind 'tradePair#new', (tradePair) =>
-      found = @store.getById('tradePair', tradePair.id)
-      unless found
-        @store.pushPayload 'tradePair', tradePairs: [tradePair]
-
-    @tradePairsChannel.bind 'tradePair#update', (tradePair) =>
-      o = @store.getById('tradePair', tradePair.id)
-      return if o?.get('updatedAt') > new Date(tradePair.updated_at)
-      @store.pushPayload 'tradePair', tradePairs: [tradePair]
-
-    @tradePairsChannel.bind 'tradePair#delete', (tradePair) =>
-      @store.getById('tradePair', tradePair.id)?.deleteRecord()
-
+    @tradePairsChannel = h.setupPusher(@store, 'tradePair', "tradePairs")
 
   deactivate: ->
     @ordersChannel?.unsubscribe()

@@ -10,6 +10,27 @@
 
 @h.openLoginMenu = -> $('#login-menu-link').dropdown('toggle')
 
+@h.setupPusher = (store, model, key) ->
+  manyHash = (d) ->
+    h = {}
+    h[model.pluralize()] = [d]
+    return h
+
+  c = pusher.subscribe(key)
+  c.bind "#{model}#new", (o) ->
+    return if store.getById(model, o.id)
+    store.pushPayload(model, manyHash(o))
+
+  c.bind "#{model}#update", (o) ->
+    f = store.getById(model, o.id)
+    return if f?.get('updatedAt') > new Date(o.updated_at)
+    store.pushPayload(model, manyHash(o))
+
+  c.bind "#{model}#delete", (o) ->
+    store.getById(model, o.id)?.deleteRecord()
+
+  return c
+
 Ember.Handlebars.helper 'round', (amount) ->
   return 0 unless amount
   h.n2f(amount).noExponents()
