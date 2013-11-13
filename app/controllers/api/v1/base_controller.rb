@@ -8,9 +8,4 @@ class Api::V1::BaseController < InheritedResources::Base
     @resource.user = current_user
     create!
   end
-
-  protected
-  def begin_of_association_chain
-    @current_user
-  end
 end
