@@ -1,7 +1,7 @@
 Cx.TradePair = DS.Model.extend
   buyFee: DS.attr('number')
   sellFee: DS.attr('number')
-  lastPrice: DS.attr('number')
+  last_price: DS.attr('number')
   currency: DS.belongsTo('currency')
   market: DS.belongsTo('currency')
   public: DS.attr('boolean')
