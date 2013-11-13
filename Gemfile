@@ -57,6 +57,7 @@ gem 'inherited_resources'
 gem 'has_scope'
 
 gem 'mysql'
+gem 'dalli'
 
 group :development do
   gem 'pry'

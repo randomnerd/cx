@@ -64,6 +64,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.6.3)
+    dalli (2.6.4)
     devise (3.1.1)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -191,6 +192,7 @@ PLATFORMS
 DEPENDENCIES
   cancan
   coffee-rails (~> 4.0.0)
+  dalli
   devise
   ember-rails!
   factory_girl
