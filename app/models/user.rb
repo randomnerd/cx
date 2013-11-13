@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :messages
   has_many :orders
   has_many :balances
+  has_many :notifications
   after_create :set_nickname
 
   def set_nickname(name = nil)

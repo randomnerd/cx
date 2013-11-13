@@ -1,0 +1,33 @@
+{{#if sortedItems.length}}
+<div class="list-group">
+  {{#if unack}}
+  <div class="list-group-item text-center">
+    <a class="nodecor" {{action 'ackAll' bubbles=false}}>&#10004; acknowledge all notifications</a>
+  </div>
+  {{/if}}
+  <div class="list-group-item text-center">
+    <a class="nodecor" {{action 'removeAll' bubbles=false}}><i class="icon-trash"></i> delete all notifications</a>
+  </div>
+</div>
+{{/if}}
+<div class="list-group scrollY">
+  {{#each sortedItems}}
+  <div {{bind-attr class=":list-group-item ack::no-ack"}}>
+    <div class="actions pull-right">
+      {{#unless ack}}
+      <span class="ack badge badge-success" {{action 'ack' this bubbles=false}}>&#10004;</span>
+      {{/unless}}
+      <span class="remove badge badge-danger" {{action 'remove' this bubbles=false}}>&times;</span>
+    </div>
+    <div class="notifyTitle">
+      <strong>{{title}}</strong>
+      {{view Cx.TimeagoView title=time class="text-muted"}}
+    </div>
+    <div class="notifyText">{{body}}</div>
+  </div>
+  {{else}}
+  <div class="list-group-item empty text-center text-muted">
+    You have no notifications yet.
+  </div>
+  {{/each}}
+</div>

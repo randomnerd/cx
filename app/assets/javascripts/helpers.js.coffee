@@ -25,7 +25,7 @@
   c.bind "#{model}#update", (o) ->
     if f = store.getById(model, o.id)
       return if new Date(f?.get('updated_at')) > new Date(o.updated_at)
-      f.set(key, value) for key, value of o
+      store.pushPayload(model, manyHash(o))
     else
       store.pushPayload(model, manyHash(o))
 
@@ -45,3 +45,5 @@ Ember.Handlebars.helper 'noExp', (amount) ->
 Ember.Handlebars.helper 'orZero', (v) ->
   if v then return v else return 0
 
+Ember.Handlebars.helper 'orEmpty', (v) ->
+  if v then return v else return ''

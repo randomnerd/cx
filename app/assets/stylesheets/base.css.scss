@@ -71,7 +71,7 @@ a { cursor: pointer; }
         margin-bottom: 0;
       }
       input.totp { width: 173px; }
-      .formRow:last-child { margin-bottom: 0; }
+      .formRow:last-of-type { margin-bottom: 0; }
     }
   }
 }
@@ -150,7 +150,7 @@ label.checkbox {
 
 #accountSettings {
   form {
-    .control-group:last-child { margin-bottom: 0; }
+    .control-group:last-of-type { margin-bottom: 0; }
     .googleQRcode { padding-right: 10px; margin: -8px; }
     .QRtitle { padding-bottom: 5px; }
     input.withQR { width: auto; }
@@ -170,16 +170,23 @@ label.checkbox {
     }
   }
   #notifyDropdown {
+    padding: 0px;
     width: 330px;
     overflow-x: hidden;
     overflow-y: auto;
   }
-  .dropdown-menu.list-group {
-    border: 0;
+  .dropdown-menu .list-group {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    &:first-of-type .list-group-item { border-radius: 0; }
+    &:last-of-type { max-height: 300px }
+    .list-group-item { margin: 0; }
+    border: 0 important;
+    margin: 0;
     padding: 0;
     .list-group-item {
       padding: 6px 10px;
-      &:first-child {
+      &:first-of-type {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
       }

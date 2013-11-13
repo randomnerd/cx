@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131111164114) do
+ActiveRecord::Schema.define(version: 20131113191805) do
 
   create_table "balance_changes", force: true do |t|
     t.integer  "amount",       limit: 8, default: 0
@@ -47,6 +47,8 @@ ActiveRecord::Schema.define(version: 20131111164114) do
     t.integer  "c",             limit: 8, default: 0
     t.integer  "v",             limit: 8, default: 0
     t.integer  "trade_pair_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "chart_items", ["trade_pair_id", "time"], name: "index_chart_items_on_trade_pair_id_and_time", using: :btree
@@ -95,6 +97,17 @@ ActiveRecord::Schema.define(version: 20131111164114) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "notifications", force: true do |t|
+    t.text     "body"
+    t.string   "title"
+    t.boolean  "ack"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notifications", ["user_id", "ack"], name: "index_notifications_on_user_id_and_ack", using: :btree
 
   create_table "orders", force: true do |t|
     t.integer  "amount",        limit: 8

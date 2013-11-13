@@ -12,6 +12,7 @@ Cx.ApplicationRoute = Ember.Route.extend
     user = @controllerFor('auth').get('content.content')
     return unless user
     balancesChannel = h.setupPusher(@store, 'balance', "private-balances-#{user.get('id')}")
+    notifChannel = h.setupPusher(@store, 'notification', "private-notifications-#{user.get('id')}")
     @presenceChannel = pusher.subscribe("presence-users")
 
     @presenceChannel.bind 'pusher:member_added', (data) =>
@@ -21,6 +22,13 @@ Cx.ApplicationRoute = Ember.Route.extend
 
     @presenceChannel.bind 'pusher:member_removed', (data) =>
       @store.getById('user', data.id)?.deleteRecord()
+
+    notifications = @store.filter 'notification', -> true
+    unAckNotif = @store.filter 'notification', (n) -> !n.get('ack')
+
+    @store.find('notification', {user: user.id}).then (d) =>
+      @controllerFor('commonNavbar').set 'notifications', notifications
+      @controllerFor('commonNavbar').set 'unAckNotif', unAckNotif
 
   actions:
     openLoginMenu: ->

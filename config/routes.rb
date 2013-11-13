@@ -11,6 +11,12 @@ Cx::Application.routes.draw do
     namespace :v1 do
       resources :currencies, only: [:index, :show]
       resources :balances, only: [:index]
+      resources :notifications, only: [:index, :update, :destroy] do
+        collection do
+          post :ack_all
+          post :del_all
+        end
+      end
       resources :messages, only: [:create, :update, :destroy, :index]
       resources :trade_pairs, only: [:create, :update, :destroy, :index] do
         resources :chart_items, only: [:index]
