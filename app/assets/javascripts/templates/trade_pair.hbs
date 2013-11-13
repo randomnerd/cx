@@ -36,5 +36,5 @@
 
 <!-- recent own trades -->
 {{#if currentUser.isSignedIn}}
-{{recent-trades pair=model trades=ownTrades}}
+{{recent-trades pair=model trades=ownTrades own=true}}
 {{/if}}

@@ -5,4 +5,4 @@ Cx.RecentTradesComponent = Ember.Component.extend
   sortedTrades: (->
     @ctrl.set('content', @get('trades'))
     @ctrl.get('arrangedContent')
-  ).property('trades')
+  ).property('trades.@each')
