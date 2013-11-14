@@ -14,6 +14,8 @@ Cx.ApplicationRoute = Ember.Route.extend
     balancesChannel = h.setupPusher(@store, 'balance', "private-balances-#{user.get('id')}")
     notifChannel = h.setupPusher(@store, 'notification', "private-notifications-#{user.get('id')}")
     addressBookChannel = h.setupPusher(@store, 'addressBookItem', "private-addressBook-#{user.get('id')}")
+    tradePairsChannel = h.setupPusher(@store, 'tradePair', "tradePairs")
+
     @presenceChannel = pusher.subscribe("presence-users")
 
     @presenceChannel.bind 'pusher:member_added', (data) =>

@@ -57,9 +57,6 @@ Cx.TradePairRoute = Ember.Route.extend
     @tradesChannel?.unsubscribe()
     @tradesChannel = h.setupPusher(@store, 'trade', "trades-#{pair.get 'id'}")
 
-    @tradePairsChannel?.unsubscribe()
-    @tradePairsChannel = h.setupPusher(@store, 'tradePair', "tradePairs")
-
   deactivate: ->
     @ordersChannel?.unsubscribe()
     @ordersChannel = undefined

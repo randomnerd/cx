@@ -8,6 +8,6 @@ class TradePair < ActiveRecord::Base
 
   include PusherSync
   def pusher_channel
-    "tradePair"
+    "tradePairs"
   end
 end
