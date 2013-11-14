@@ -54,7 +54,7 @@ gem 'quiet_assets'
 gem 'rspec'
 gem 'factory_girl'
 
-gem 'inherited_resources'
+gem 'inherited_resources', '~> 1.4.1'
 gem 'has_scope'
 
 gem 'mysql'
@@ -67,5 +67,4 @@ gem 'resque-pool'
 
 group :development do
   gem 'pry'
-  gem 'thin'
 end
