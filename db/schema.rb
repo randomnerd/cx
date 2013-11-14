@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131114130513) do
+ActiveRecord::Schema.define(version: 20131114204136) do
 
   create_table "address_book_items", force: true do |t|
     t.string   "name"
@@ -43,13 +43,15 @@ ActiveRecord::Schema.define(version: 20131114130513) do
   create_table "balances", force: true do |t|
     t.integer  "currency_id"
     t.integer  "user_id"
-    t.integer  "amount",      limit: 8, default: 0
-    t.integer  "held",        limit: 8, default: 0
+    t.integer  "amount",          limit: 8, default: 0
+    t.integer  "held",            limit: 8, default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "deposit_address"
   end
 
   add_index "balances", ["amount"], name: "index_balances_on_amount", using: :btree
+  add_index "balances", ["deposit_address"], name: "index_balances_on_deposit_address", using: :btree
   add_index "balances", ["user_id", "currency_id"], name: "index_balances_on_user_id_and_currency_id", using: :btree
 
   create_table "chart_items", force: true do |t|
@@ -90,6 +92,22 @@ ActiveRecord::Schema.define(version: 20131114130513) do
   end
 
   add_index "currencies", ["name", "public"], name: "index_currencies_on_name_and_public", using: :btree
+
+  create_table "deposits", force: true do |t|
+    t.integer  "confirmations",           default: 0
+    t.integer  "amount",        limit: 8,                 null: false
+    t.integer  "wallet_id",                               null: false
+    t.integer  "user_id",                                 null: false
+    t.integer  "currency_id",                             null: false
+    t.string   "txid",                                    null: false
+    t.boolean  "processed",               default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "deposits", ["processed", "confirmations"], name: "index_deposits_on_processed_and_confirmations", using: :btree
+  add_index "deposits", ["txid"], name: "index_deposits_on_txid", using: :btree
+  add_index "deposits", ["user_id", "wallet_id", "currency_id"], name: "index_deposits_on_user_id_and_wallet_id_and_currency_id", using: :btree
 
   create_table "incomes", force: true do |t|
     t.integer  "amount",       limit: 8
@@ -197,5 +215,32 @@ ActiveRecord::Schema.define(version: 20131114130513) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["nickname"], name: "index_users_on_nickname", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "wallets", force: true do |t|
+    t.integer  "user_id",     null: false
+    t.integer  "currency_id", null: false
+    t.string   "address",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "wallets", ["address"], name: "index_wallets_on_address", using: :btree
+  add_index "wallets", ["user_id", "currency_id"], name: "index_wallets_on_user_id_and_currency_id", using: :btree
+
+  create_table "withdrawals", force: true do |t|
+    t.integer  "amount",      limit: 8,                 null: false
+    t.integer  "user_id",                               null: false
+    t.integer  "currency_id",                           null: false
+    t.string   "txid"
+    t.string   "address",                               null: false
+    t.boolean  "processed",             default: false
+    t.boolean  "failed",                default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "withdrawals", ["processed"], name: "index_withdrawals_on_processed", using: :btree
+  add_index "withdrawals", ["txid"], name: "index_withdrawals_on_txid", using: :btree
+  add_index "withdrawals", ["user_id", "currency_id"], name: "index_withdrawals_on_user_id_and_currency_id", using: :btree
 
 end

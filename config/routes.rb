@@ -1,4 +1,8 @@
 Cx::Application.routes.draw do
+  require 'resque/server'
+  require 'resque_scheduler'
+  require 'resque_scheduler/server'
+  mount Resque::Server => "/hq/resque"
   devise_for :users, skip: :all
   devise_scope :user do
     match '/users/sign_out', to: 'sessions#destroy', via: [:delete]

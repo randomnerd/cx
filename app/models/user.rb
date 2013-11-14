@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
 
   has_many :messages
   has_many :orders
+  has_many :wallets
   has_many :balances
   has_many :notifications
   has_many :address_book_items
@@ -20,5 +21,9 @@ class User < ActiveRecord::Base
 
   def balance_for(cid)
     balances.where(currency_id: cid).first_or_create
+  end
+
+  def admin?
+    email == 'erundook@gmail.com'
   end
 end

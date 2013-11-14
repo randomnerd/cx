@@ -62,7 +62,8 @@ gem 'dalli'
 
 gem 'httparty'
 gem 'resque'
-gem 'resque-scheduler'
+gem 'resque-scheduler', :require => 'resque_scheduler'
+gem 'resque-pool'
 
 group :development do
   gem 'pry'

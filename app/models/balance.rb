@@ -2,10 +2,15 @@ class Balance < ActiveRecord::Base
   belongs_to :user
   belongs_to :currency
   has_many :balance_changes
+  has_many :wallets
 
   include PusherSync
   def pusher_channel
     "private-balances-#{self.user_id}"
+  end
+
+  def rpc_account
+    "user-#{self.user_id}"
   end
 
   scope :currency, -> id { where(currency_id: id) }

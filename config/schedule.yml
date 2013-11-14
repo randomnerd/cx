@@ -1,0 +1,13 @@
+process_currencies:
+  every: ['30s']
+  class: ProcessCurrencies
+  queue: currencies
+  args:
+  description: Process deposits
+
+process_pools:
+  every: ['1m']
+  class: ProcessPools
+  queue: pools
+  args:
+  description: Process pool updates and rewards

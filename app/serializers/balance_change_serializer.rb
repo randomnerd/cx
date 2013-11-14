@@ -6,11 +6,11 @@ class BalanceChangeSerializer < ActiveModel::Serializer
 
   def vs_currency
     return nil unless object.subject
-    object.subject.trade_pair.currency.name
+    object.subject.try(:trade_pair).try(:currency).try(:name)
   end
 
   def vs_rate
     return nil unless object.subject
-    object.subject.rate
+    object.subject.try(:rate)
   end
 end
