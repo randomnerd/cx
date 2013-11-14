@@ -59,6 +59,8 @@ gem 'has_scope'
 gem 'mysql'
 gem 'dalli'
 
+gem 'httparty'
+
 group :development do
   gem 'pry'
   gem 'yaml_db', github: 'turgu1/yaml_db'
