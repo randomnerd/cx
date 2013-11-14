@@ -12,6 +12,7 @@ Cx.ApplicationRoute = Ember.Route.extend
     user = @controllerFor('auth').get('content.content')
     return unless user
     balancesChannel = h.setupPusher(@store, 'balance', "private-balances-#{user.get('id')}")
+    balanceChangesChannel = h.setupPusher(@store, 'balanceChange', "private-balanceChanges-#{user.get('id')}")
     notifChannel = h.setupPusher(@store, 'notification', "private-notifications-#{user.get('id')}")
     addressBookChannel = h.setupPusher(@store, 'addressBookItem', "private-addressBook-#{user.get('id')}")
     tradePairsChannel = h.setupPusher(@store, 'tradePair', "tradePairs")

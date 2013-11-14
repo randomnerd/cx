@@ -16,7 +16,9 @@ class Balance < ActiveRecord::Base
       balance_changes.create(
         subject:  subject,
         comment:  comment || "add_funds",
-        amount:   amount
+        amount:   amount,
+        t_amount: self.amount,
+        t_held:   self.held
       ) if save
     end
   end
@@ -30,7 +32,9 @@ class Balance < ActiveRecord::Base
         comment: "lock_funds",
         subject:  subject,
         amount:  -lock_amount,
-        held:     lock_amount
+        held:     lock_amount,
+        t_amount: self.amount,
+        t_held:   self.held
       ) if save
     end
   end
@@ -44,7 +48,9 @@ class Balance < ActiveRecord::Base
         comment: "unlock_funds(move=#{move})",
         subject:  subject,
         amount:   move ? unlock_amount : 0,
-        held:    -unlock_amount
+        held:    -unlock_amount,
+        t_amount: self.amount,
+        t_held:   self.held
       ) if save
     end
   end

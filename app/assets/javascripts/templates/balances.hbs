@@ -25,7 +25,9 @@
         <button
           {{bind-attr class="balance.allowWithdraw::disabled :btn :btn-primary :btn-xs"}}
           {{action 'withdraw' this}}>Withdraw</button>
-        <button class="btn btn-xs btn-default">Balance history</button>
+        {{#link-to 'balanceHistory' this class="btn btn-xs btn-default"}}
+          Balance history
+        {{/link-to}}
       </td>
     </tr>
   {{/each}}

@@ -1,0 +1,33 @@
+<div class="alert alert-info">
+  <strong>Notice:</strong> held balance is amount that is put on hold while your open orders
+  are active.
+</div>
+<div class="panel panel-default panel-big-heading">
+  <div class="panel-heading">{{currency.name}} balance history</div>
+  <div class="content">
+    <table class="table table-condensed table-striped nomargin">
+      <thead>
+        <th>ID</th>
+        <th>Time</th>
+        <th>Source</th>
+        <th class="text-right">Held change</th>
+        <th class="text-right">Total Held</th>
+        <th class="text-right">Balance change</th>
+        <th class="text-right">Total balance</th>
+      </thead>
+      <tbody>
+        {{#each item in sortedItems}}
+        <tr {{bind-attr class="item.positive:success:danger"}}>
+          <td>{{item.id}}</td>
+          <td>{{view Cx.TimeagoView title=item.time}}</td>
+          <td>{{item.source}}</td>
+          <td class="text-right monospace">{{round item.held}} {{currency.name}}</td>
+          <td class="text-right monospace">{{round item.t_held}} {{currency.name}}</td>
+          <td class="text-right monospace">{{round item.amount}} {{currency.name}}</td>
+          <td class="text-right monospace">{{round item.t_amount}} {{currency.name}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>

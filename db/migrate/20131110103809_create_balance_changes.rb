@@ -3,6 +3,8 @@ class CreateBalanceChanges < ActiveRecord::Migration
     create_table :balance_changes do |t|
       t.integer :amount, default: 0, limit: 8
       t.integer :held,   default: 0, limit: 8
+      t.integer :t_amount, default: 0, limit: 8
+      t.integer :t_held, default: 0, limit: 8
       t.integer :balance_id
       t.integer :subject_id
       t.string  :subject_type

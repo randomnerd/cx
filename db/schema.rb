@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(version: 20131114130513) do
   create_table "balance_changes", force: true do |t|
     t.integer  "amount",       limit: 8, default: 0
     t.integer  "held",         limit: 8, default: 0
+    t.integer  "t_amount",     limit: 8, default: 0
+    t.integer  "t_held",       limit: 8, default: 0
     t.integer  "balance_id"
     t.integer  "subject_id"
     t.string   "subject_type"

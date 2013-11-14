@@ -11,6 +11,7 @@ Cx::Application.routes.draw do
     namespace :v1 do
       resources :currencies, only: [:index, :show]
       resources :balances, only: [:index]
+      resources :balance_changes, only: [:index]
       resources :address_book_items, only: [:index, :create, :update, :destroy]
       resources :notifications, only: [:index, :update, :destroy] do
         collection do
