@@ -18,18 +18,18 @@
 
   c = pusher.subscribe(key)
   c.callbacks._callbacks = {}
-  c.bind "#{model}#new", (o) ->
+  c.bind "#{model.toLowerCase()}#new", (o) ->
     return if store.getById(model, o.id)
     store.pushPayload(model, manyHash(o))
 
-  c.bind "#{model}#update", (o) ->
+  c.bind "#{model.toLowerCase()}#update", (o) ->
     if f = store.getById(model, o.id)
       return if new Date(f?.get('updated_at')) > new Date(o.updated_at)
       store.pushPayload(model, manyHash(o))
     else
       store.pushPayload(model, manyHash(o))
 
-  c.bind "#{model}#delete", (o) ->
+  c.bind "#{model.toLowerCase()}#delete", (o) ->
     store.getById(model, o.id)?.deleteRecord()
 
   return c

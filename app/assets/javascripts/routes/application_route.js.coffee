@@ -13,6 +13,7 @@ Cx.ApplicationRoute = Ember.Route.extend
     return unless user
     balancesChannel = h.setupPusher(@store, 'balance', "private-balances-#{user.get('id')}")
     notifChannel = h.setupPusher(@store, 'notification', "private-notifications-#{user.get('id')}")
+    addressBookChannel = h.setupPusher(@store, 'addressBookItem', "private-addressBook-#{user.get('id')}")
     @presenceChannel = pusher.subscribe("presence-users")
 
     @presenceChannel.bind 'pusher:member_added', (data) =>
@@ -25,6 +26,8 @@ Cx.ApplicationRoute = Ember.Route.extend
 
     notifications = @store.filter 'notification', -> true
     unAckNotif = @store.filter 'notification', (n) -> !n.get('ack')
+
+    @store.findAll('addressBookItem')
 
     @store.find('notification', {user: user.id}).then (d) =>
       @controllerFor('commonNavbar').set 'notifications', notifications

@@ -1,0 +1,151 @@
+<div id="withdrawal-box" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 id="confirmLabel" class="modal-title">
+          {{#if showAddressBook}}
+            {{currency.name}} address book
+          {{else}}
+            Withdraw {{currency.name}}
+          {{/if}}
+        </h4>
+      </div>
+      <div class="modal-body clearfix">
+        {{#if showAddressBook}}
+        <div class="scrollY">
+          <table class="table table-condensed nomargin">
+            <thead>
+              <th>Name</th>
+              <th>Address</th>
+              <th></th>
+            </thead>
+            <tbody>
+              {{#each bookItems}}
+              <tr>
+                <td>{{name}}</td>
+                <td>
+                  <small class="monospace">
+                    {{address}}
+                  </small>
+                </td>
+                <td>
+                  <div class="pull-right btn-group">
+                    <button class="btn btn-primary btn-xs"
+                      {{action 'pickBookAddress' this.address}}>
+                      Pick
+                    </button>
+                    <button class="btn btn-default btn-xs"
+                      {{action 'editBookEntry' this}}>
+                      Edit
+                    </button>
+                    <button class="btn btn-danger btn-xs"
+                      {{action 'deleteBookEntry' this}}>
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              {{/each}}
+              <tr>
+                <td>CoinEx donations</td>
+                <td>
+                  <small class="monospace">
+                    1EDf1HHaKfcfiVnWgbSRYQbaYqqDnt1JqY
+                  </small>
+                </td>
+                <td>
+                  <div class="pull-right btn-group">
+                    <button class="btn btn-primary btn-xs"
+                      {{action 'pickBookAddress' '1EDf1HHaKfcfiVnWgbSRYQbaYqqDnt1JqY'}}>
+                      Pick
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <form id="address-book">
+          <fieldset>
+            <legend>
+              {{#if bookEdit}}Edit{{else}}New{{/if}} address
+            </legend>
+            <div class="form-group">
+              <label for="book-name-input" class="control-label">Name</label>
+              {{input type="text" value=bookName
+                class="form-control" id="book-name-input"
+                placeholder="Type name here"}}
+            </div>
+
+            <div class="form-group">
+              <label for="book-address-input" class="control-label">Address</label>
+              {{input type="text" value=bookAddress
+                class="form-control" id="book-address-input"
+                placeholder="Type address here"}}
+            </div>
+          </fieldset>
+        </form>
+        {{else}}
+        <div class="alert alert-info">
+          Withdrawal fee of {{currency.tx_fee}} {{currency.name}} will be
+          deducted from your withdrawal amount.
+        </div>
+        <div class="alert alert-success">
+          Your balance:
+          <strong>{{round currency.balance.amount}} {{currency.name}}</strong>
+          <span class="pull-right">
+            Minimal withdrawal:
+            <strong>{{min_withdraw}} {{currency.name}}</strong>
+          </span>
+        </div>
+        <form id="withdrawal-form">
+          <div class="form-group">
+            <label for="amount-input" class="control-label">Amount</label>
+            <div class="input-group">
+              {{input type="text" value=amount
+                class="form-control" id="amount-input"
+                placeholder="0.0000000"}}
+              <span class="input-group-btn">
+                <button class="btn btn-default" {{action 'setFullAmount'}}>
+                  Withdraw all
+                </button>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="address-input" class="control-label">Address</label>
+            <div class="input-group">
+              {{input type="text" value=address
+                class="form-control" id="address-input"
+                placeholder="Type address here or seleft from address book"}}
+              <span class="input-group-btn">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" {{action 'toggleAddressBook'}}>
+                  Address book
+                </button>
+              </span>
+            </div>
+          </div>
+        </form>
+        {{/if}}
+      </div>
+      <div class="modal-footer">
+        {{#if showAddressBook}}
+          <button class="btn btn-default" {{action 'cancelBookEntry'}}>
+            Cancel
+          </button>
+          <button {{bind-attr class=":pull-right :btn :btn-primary allowSaveEntry::disabled" }}
+            {{action 'saveBookEntry'}}>
+            Save
+          </button>
+        {{else}}
+          <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+          <button {{bind-attr class=":btn :btn-primary allowWithdraw::disabled" }}
+            {{action 'submit'}}>
+            Withdraw {{currency.name}}
+          </button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

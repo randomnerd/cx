@@ -1,7 +1,6 @@
 class Message < ActiveRecord::Base
   validate :valid_msg
   belongs_to :user, touch: true
-  after_create :push_create
 
   include PusherSync
   def pusher_channel

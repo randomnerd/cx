@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131113191805) do
+ActiveRecord::Schema.define(version: 20131114130513) do
+
+  create_table "address_book_items", force: true do |t|
+    t.string   "name"
+    t.string   "address"
+    t.integer  "user_id"
+    t.integer  "currency_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "address_book_items", ["user_id", "currency_id"], name: "index_address_book_items_on_user_id_and_currency_id", using: :btree
 
   create_table "balance_changes", force: true do |t|
     t.integer  "amount",       limit: 8, default: 0

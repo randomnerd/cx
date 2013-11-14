@@ -1,0 +1,35 @@
+<table class="table table-striped balances">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Coin</th>
+      <th class="text-center">Deposit address</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {{#each currencies}}
+    <tr {{bind-attr class="balance.negative:danger"}}>
+      <td class="text-right monospace">{{round balance.amount}}</td>
+      <td class="monospace">{{name}}</td>
+      <td class="text-center">
+        {{#if addr}}
+        <span class="monospace">
+          {{addr}}
+        </span>
+        {{else}}
+          <button class="btn btn-primary btn-xs">Generate</button>
+        {{/if}}
+      </td>
+      <td class="text-right">
+        <button
+          {{bind-attr class="balance.allowWithdraw::disabled :btn :btn-primary :btn-xs"}}
+          {{action 'withdraw' this}}>Withdraw</button>
+        <button class="btn btn-xs btn-default">Balance history</button>
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+
+{{withdrawal-box user=currentUser currency=selectedCurrency store=store}}

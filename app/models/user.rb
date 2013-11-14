@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   has_many :orders
   has_many :balances
   has_many :notifications
+  has_many :address_book_items
   after_create :set_nickname
 
   def set_nickname(name = nil)

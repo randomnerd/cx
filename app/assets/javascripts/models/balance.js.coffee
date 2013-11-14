@@ -4,6 +4,8 @@ Cx.Balance = DS.Model.extend
   user: DS.belongsTo('user')
   currency: DS.belongsTo('currency')
   updated_at: DS.attr('date')
+  negative: (-> @get('amount') < 0 ).property('amount')
+  allowWithdraw: (-> @get('amount') > 0.01 * Math.pow(10,8)).property('amount')
 
 Cx.Balance.FIXTURES = [
   {
