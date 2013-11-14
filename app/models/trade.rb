@@ -93,8 +93,15 @@ class Trade < ActiveRecord::Base
     )
   end
 
+  include ApplicationHelper
   def notify_users
-    #stub
+    amt   = n2f(self.amount)
+    mamt  = n2f(self.market_amount)
+    rate  = n2f(self.rate)
+    title = 'Trade occured'
+    text  = "#{amt} #{currency.name} @ #{rate} #{market.name} for #{mamt} #{market.name}"
+    bid_user.notifications.create(title: title, body: "Bought #{text}")
+    ask_user.notifications.create(title: title, body: "Sold #{text}")
   end
 
   def bid_fee

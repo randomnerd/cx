@@ -9,8 +9,8 @@ Cx.OrderBookComponent = Ember.Component.extend
       o.get('complete') == false
     orders.forEach (order) =>
       b = book[order.get('rate')] ||= {amount: 0, marketAmount: 0}
-      b.amount = Math.floor(b.amount + order.get('unmatchedAmount')) || 0
-      b.marketAmount = Math.floor(b.marketAmount + order.get('marketAmount')) || 0
+      b.amount = b.amount + order.get('unmatchedAmount') || 0
+      b.marketAmount = b.marketAmount + order.get('marketAmount') || 0
       b.own ||= order.get('user_id') == parseInt(@user.get('id'))
 
     for rate, order of book
@@ -24,6 +24,6 @@ Cx.OrderBookComponent = Ember.Component.extend
   ).property('orders.@each.filled', 'user.id')
   actions:
     setForms: (o) ->
-      $('.tradeColumn .rate-input').val(h.n2f(o.rate)).trigger('keyup')
-      $('.tradeColumn .amount-input').val(h.n2f(o.amount)).trigger('keyup')
+      $('.tradeColumn .rate-input').val(h.n2f(o.rate).noExponents()).trigger('keyup')
+      $('.tradeColumn .amount-input').val(h.n2f(o.amount).noExponents()).trigger('keyup')
 
