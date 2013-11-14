@@ -47,6 +47,7 @@ gem 'unicorn'
 gem 'devise'
 gem 'cancan'
 gem 'pusher'
+gem 'em-http-request'
 gem "ember-rails", github: "emberjs/ember-rails"
 gem 'quiet_assets'
 
@@ -60,8 +61,10 @@ gem 'mysql'
 gem 'dalli'
 
 gem 'httparty'
+gem 'resque'
+gem 'resque-scheduler'
 
 group :development do
   gem 'pry'
-  gem 'yaml_db', github: 'turgu1/yaml_db'
+  gem 'thin'
 end
