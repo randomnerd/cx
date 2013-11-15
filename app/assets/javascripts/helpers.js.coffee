@@ -19,7 +19,9 @@
     return
   for d in h.pushedModels
     [model, data] = d
+    console.log 'qq', data
     store.pushPayload(model, data)
+  h.pushedModels = []
 
 @h.setupPusher = (store, model, key) ->
   manyHash = (d) ->
@@ -30,17 +32,21 @@
   c = pusher.subscribe(key)
   c.callbacks._callbacks = {}
   c.bind "#{model.toLowerCase()}#new", (o) ->
-    return if store.getById(model, o.id)
+    console.log 'new', manyHash(o)
+    # return if store.getById(model, o.id)
     h.pushedModels.push [model, manyHash(o)]
     h.flushPushedModels(store)
 
   c.bind "#{model.toLowerCase()}#update", (o) ->
     f = store.getById(model, o.id)
     return if +(new Date(f?.get('updated_at'))) > +(new Date(o.updated_at))
-    store.pushPayload(model, manyHash(o))
+    h.pushedModels.push [model, manyHash(o)]
+    h.flushPushedModels(store)
+    # store.pushPayload(model, manyHash(o))
 
   c.bind "#{model.toLowerCase()}#delete", (o) ->
-    store.getById(model, o.id)?.deleteRecord()
+    Ember.run.next ->
+      store.getById(model, o.id)?.deleteRecord()
 
   return c
 

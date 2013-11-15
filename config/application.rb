@@ -20,14 +20,14 @@ module Cx
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
-    Pusher.app_id = '30750'
-    Pusher.key = '339899db7460f58950bd'
-    Pusher.secret = 'd453d87791622c357d96'
+    if Rails.env.production?
+      Pusher.app_id = '30750'
+      Pusher.key = '339899db7460f58950bd'
+      Pusher.secret = 'd453d87791622c357d96'
+    else
+      Pusher.app_id = '59520'
+      Pusher.key = 'f432464ea002212eaf37'
+      Pusher.secret = 'ca07a14f43e87125afb7'
+    end
   end
 end
-
-PUSHER = Pusher::Client.new({
-  app_id: '30750',
-  key: '339899db7460f58950bd',
-  secret: 'd453d87791622c357d96'
-})

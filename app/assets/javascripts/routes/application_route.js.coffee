@@ -8,6 +8,7 @@ Cx.ApplicationRoute = Ember.Route.extend
   setupController: (c, m) ->
     c.set 'model', m
     @controllerFor('commonChat').set('model', @store.findAll('message'))
+    messagesChannel = h.setupPusher(@store, 'message', 'messages')
 
     user = @controllerFor('auth').get('content.content')
     return unless user
@@ -16,7 +17,6 @@ Cx.ApplicationRoute = Ember.Route.extend
     notifChannel = h.setupPusher(@store, 'notification', "private-notifications-#{user.get('id')}")
     addressBookChannel = h.setupPusher(@store, 'addressBookItem', "private-addressBook-#{user.get('id')}")
     tradePairsChannel = h.setupPusher(@store, 'tradePair', "tradePairs")
-    messagesChannel = h.setupPusher(@store, 'message', 'messages')
 
     @presenceChannel = pusher.subscribe("presence-users")
 
