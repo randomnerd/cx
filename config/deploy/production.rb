@@ -15,6 +15,7 @@ set :bundle_roles, :all
 # unless any hosts have the primary property set.
 role :app, %w{cx.internal}
 role :web, %w{cx.internal}
+role :db, %w{cx.internal}
 
 # Extended Server Syntax
 # ======================
