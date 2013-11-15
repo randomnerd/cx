@@ -27,7 +27,7 @@ SSHKit.config.command_map[:rails] = "bundle exec rails"
 namespace :deploy do
   desc "Start application"
   task :start do
-    on roles(:app), reject: no_release do
+    on roles(:app) do
       execute "cd #{current_path} && #{fetch(:unicorn_binary)} -c #{fetch(:unicorn_config)} -E #{fetch(:rails_env, "production")} -D"
     end
   end
@@ -60,6 +60,6 @@ namespace :deploy do
     invoke 'deploy:start'
   end
 
-  after :finishing, 'deploy:cleanup', 'bundle:install', 'deploy:restart'
+  after :finishing, 'deploy:cleanup', 'bundle:install'
 
 end
