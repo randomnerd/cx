@@ -15,7 +15,7 @@ set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid,    "#{shared_path}/tmp/pids/unicorn.pid"
 
 set :linked_files, %w{config/database.yml}
-# set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 # set :keep_releases, 5
@@ -35,21 +35,21 @@ namespace :deploy do
 
   desc "Stop application"
   task :stop do
-    on roles(:app), reject: no_release do
+    on roles(:app) do
       execute "kill `cat #{fetch(:unicorn_pid)}`"
     end
   end
 
   desc "Gracefully stop application"
   task :graceful_stop do
-    on roles(:app), reject: no_release do
+    on roles(:app) do
       execute "kill -s QUIT `cat #{fetch(:unicorn_pid)}`"
     end
   end
 
   desc "Reload the application"
   task :reload do
-    on roles(:app), reject: no_release do
+    on roles(:app) do
       execute "kill -s USR2 `cat #{fetch(:unicorn_pid)}`"
     end
   end
