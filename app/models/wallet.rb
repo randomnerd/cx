@@ -10,7 +10,7 @@ class Wallet < ActiveRecord::Base
   after_create :set_balance_address
 
   def generate_address
-    self.address = currency.rpc.getnewaddress "user-#{self.user_id}"
+    self.address ||= currency.rpc.getnewaddress "user-#{self.user_id}"
     return if self.address
     errors.add(:address, 'Empty')
   end

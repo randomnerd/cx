@@ -15,6 +15,8 @@ class ProcessCurrencies
           puts "[#{Time.now}] Processing #{currency.name}: invalid RPC URL"
         when Errno::ECONNREFUSED
           puts "[#{Time.now}] Processing #{currency.name}: connection refused"
+        when Errno::EHOSTDOWN
+          puts "[#{Time.now}] Processing #{currency.name}: host down"
         when Timeout::Error
           puts "[#{Time.now}] Processing #{currency.name}: failed to connect"
         else

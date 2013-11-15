@@ -13,7 +13,12 @@ Cx::Application.routes.draw do
   root 'chat#index'
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
-      resources :currencies, only: [:index, :show]
+      resources :currencies, only: [:index, :show] do
+        member do
+          post :generate_address
+          post :withdraw
+        end
+      end
       resources :balances, only: [:index]
       resources :balance_changes, only: [:index]
       resources :address_book_items, only: [:index, :create, :update, :destroy]

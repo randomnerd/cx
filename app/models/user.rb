@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
   has_many :orders
   has_many :wallets
   has_many :balances
+  has_many :deposits
+  has_many :withdrawals
   has_many :notifications
   has_many :address_book_items
   after_create :set_nickname

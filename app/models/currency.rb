@@ -1,6 +1,7 @@
 class Currency < ActiveRecord::Base
   include ApplicationHelper
   has_many :incomes
+  has_many :withdrawals
 
   def rpc
     @rpc ||= CryptoRPC.new(self)
@@ -49,20 +50,32 @@ class Currency < ActiveRecord::Base
   end
 
   def process_withdrawals
-    Withdrawal.unprocessed.each do |withdrawal|
+    withdrawals.unprocessed.each do |withdrawal|
       begin
-        account = withdrawal.balance.rpc_account
+        balance = withdrawal.balance
+        account = balance.rpc_account
         amount  = withdrawal.amount / 10 ** 8
         move    = self.rpc.move '', account, amount
         raise 'unable to move funds' unless move
-        txid    = self.rpc.sendfrom withdrawal.balance.rpc_account, amount
+        txid    = self.rpc.sendfrom account, withdrawal.address, amount
         raise 'sendfrom failed' unless txid
+        unlock  = balance.unlock_funds(withdrawal.amount, withdrawal, false)
+        raise 'unlock failed' unless unlock
         withdrawal.processed = true
-        added   = withdrawal.balance.add_funds(withdrwal.amount, withdrawal)
-        raise 'add_funds failed' unless added
         withdrawal.txid = txid
-      rescue
+        withdrawal.user.notifications.create(
+          title: "#{self.name} withdrawal processed",
+          body: "#{n2f withdrawal.amount} #{self.name} sent to #{withdrawal.address}"
+        )
+      rescue => e
+        unlock  = balance.unlock_funds(withdrawal.amount, withdrawal)
         withdrawal.failed = true
+        puts e.inspect
+        puts e.backtrace
+        withdrawal.user.notifications.create(
+          title: "#{self.name} withdrawal failed",
+          body: "#{n2f withdrawal.amount} #{self.name} were credited back to your account"
+        )
       ensure
         withdrawal.save
       end

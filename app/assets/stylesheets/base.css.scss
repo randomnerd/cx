@@ -171,7 +171,7 @@ label.checkbox {
   }
   #notifyDropdown {
     padding: 0px;
-    width: 350px;
+    width: 400px;
     overflow-x: hidden;
     overflow-y: auto;
   }
@@ -179,7 +179,7 @@ label.checkbox {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     &:first-of-type .list-group-item { border-radius: 0; }
-    &:last-of-type { max-height: 300px }
+    &:last-of-type { max-height: 350px }
     .list-group-item { margin: 0; }
     border: 0 important;
     margin: 0;

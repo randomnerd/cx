@@ -2,7 +2,6 @@ class Balance < ActiveRecord::Base
   belongs_to :user
   belongs_to :currency
   has_many :balance_changes
-  has_many :wallets
 
   include PusherSync
   def pusher_channel
