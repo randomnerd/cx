@@ -128,6 +128,7 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
+    newrelic_rpm (3.6.9.171)
     orm_adapter (0.5.0)
     polyglot (0.3.3)
     pry (0.9.12.3)
@@ -262,6 +263,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   mysql
+  newrelic_rpm
   pry
   pusher
   quiet_assets

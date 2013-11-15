@@ -67,6 +67,8 @@ gem 'capistrano'
 gem 'capistrano-rails'
 gem 'capistrano-bundler'
 
+gem 'newrelic_rpm'
+
 group :development do
   gem 'pry'
 end
