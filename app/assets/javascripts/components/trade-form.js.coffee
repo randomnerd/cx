@@ -13,7 +13,7 @@ Cx.TradeFormComponent = Ember.Component.extend
       t = h.f2n @get 'amount'
       b = @get('pair.currency.balance.amount')
     return false unless t
-    b >= t && @get('total') > 0
+    b >= t && @get('total') > 0 && parseFloat(@get 'amount') >= 0.01
   ).property('total', 'amount', 'pair.currency.balance.amount', 'pair.market.balance.amount')
 
   fee: (->
