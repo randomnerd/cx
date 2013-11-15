@@ -1,7 +1,7 @@
 class Api::V1::NotificationsController < Api::V1::BaseController
   has_scope :user
   def index
-    respond_with Notification.recent
+    respond_with end_of_association_chain.recent
   end
 
   def permitted_params

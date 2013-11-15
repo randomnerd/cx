@@ -32,7 +32,7 @@ Cx.ApplicationRoute = Ember.Route.extend
 
     @store.findAll('addressBookItem')
 
-    @store.find('notification', {user: user.id}).then (d) =>
+    @store.find('notification', {user_id: user.id}).then (d) =>
       @controllerFor('commonNavbar').set 'notifications', notifications
       @controllerFor('commonNavbar').set 'unAckNotif', unAckNotif
 
