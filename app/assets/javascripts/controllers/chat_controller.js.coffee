@@ -21,12 +21,10 @@ Cx.CommonChatController = Ember.ArrayController.extend
   ).observes('content.@each')
 
   init: ->
-    setTimeout (=>
+    Ember.run.later =>
       $('#chat .messages').on 'scroll', (e) =>
         el = e.currentTarget
-        @lock = el.scrollTop + $(el).height() * 1.5 < el.scrollHeight
-    ), 50
-
+        @lock = el.scrollTop + $(el).height() * 1.1 < el.scrollHeight
 
     @channel = pusher.subscribe('messages')
     @channel.bind 'message#new', (message) =>
