@@ -19,18 +19,18 @@
   c = pusher.subscribe(key)
   c.callbacks._callbacks = {}
   c.bind "#{model.toLowerCase()}#new", (o) ->
-    Ember.run.schedule 'sync', ->
+    Ember.run.next ->
       return if store.getById(model, o.id)
       store.pushPayload(model, manyHash(o))
 
   c.bind "#{model.toLowerCase()}#update", (o) ->
-    Ember.run.schedule 'sync', ->
-      if f = store.getById(model, o.id)
-        return if new Date(f?.get('updated_at')) > new Date(o.updated_at)
-        store.pushPayload(model, manyHash(o))
+    Ember.run.next ->
+      f = store.getById(model, o.id)
+      return if new Date(f?.get('updated_at')) > new Date(o.updated_at)
+      store.pushPayload(model, manyHash(o))
 
   c.bind "#{model.toLowerCase()}#delete", (o) ->
-    Ember.run.schedule 'sync', ->
+    Ember.run.next ->
       store.getById(model, o.id)?.deleteRecord()
 
   return c

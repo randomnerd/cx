@@ -53,6 +53,7 @@ class Order < ActiveRecord::Base
 
   def fill_matches
     Order.matches_for(self).each do |o|
+      self.reload
       break if complete?
       o_amt  = unmatched_amount
       t_amt  = o.unmatched_amount
