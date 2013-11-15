@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   has_many :withdrawals
   has_many :notifications
   has_many :address_book_items
+  has_many :balance_changes, through: :balances
   after_create :set_nickname
 
   def set_nickname(name = nil)
