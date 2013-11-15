@@ -37,5 +37,6 @@ Cx.TradeFormComponent = Ember.Component.extend
         rate:      h.f2n(@get('rate'))
         amount:    h.f2n(@get('amount'))
         bid:       !!@get('buy')
-      order.save()
+      h.postInProgress = true
+      order.save().then(h.postDone, h.postDone)
 

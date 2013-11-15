@@ -9,6 +9,17 @@
   amount * Math.pow(10, precision) / Math.pow(10, precision)
 
 @h.openLoginMenu = -> $('#login-menu-link').dropdown('toggle')
+@h.postInProgress ||= false
+@h.pushedModels ||= []
+@h.postDone = -> h.postInProgress = false
+@h.flushPushedModels = (store) ->
+  return unless h.pushedModels?.length
+  if h.postInProgress
+    setTimeout (-> h.flushPushedModels(store)), 50
+    return
+  for d in h.pushedModels
+    [model, data] = d
+    store.pushPayload(model, data)
 
 @h.setupPusher = (store, model, key) ->
   manyHash = (d) ->
@@ -19,19 +30,17 @@
   c = pusher.subscribe(key)
   c.callbacks._callbacks = {}
   c.bind "#{model.toLowerCase()}#new", (o) ->
-    Ember.run.next ->
-      return if store.getById(model, o.id)
-      store.pushPayload(model, manyHash(o))
+    return if store.getById(model, o.id)
+    h.pushedModels.push [model, manyHash(o)]
+    h.flushPushedModels(store)
 
   c.bind "#{model.toLowerCase()}#update", (o) ->
-    Ember.run.next ->
-      f = store.getById(model, o.id)
-      return if new Date(f?.get('updated_at')) > new Date(o.updated_at)
-      store.pushPayload(model, manyHash(o))
+    f = store.getById(model, o.id)
+    return if +(new Date(f?.get('updated_at'))) > +(new Date(o.updated_at))
+    store.pushPayload(model, manyHash(o))
 
   c.bind "#{model.toLowerCase()}#delete", (o) ->
-    Ember.run.next ->
-      store.getById(model, o.id)?.deleteRecord()
+    store.getById(model, o.id)?.deleteRecord()
 
   return c
 
