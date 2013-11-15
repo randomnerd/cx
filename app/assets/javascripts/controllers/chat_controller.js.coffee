@@ -19,6 +19,9 @@ Cx.CommonChatController = Ember.ArrayController.extend
       c.scrollTop c[0]?.scrollHeight
     ), 100
   ).observes('content.@each')
+  allowSend: (->
+    !!@get('msg')
+  ).property('msg')
 
   init: ->
     Ember.run.later =>
@@ -35,7 +38,8 @@ Cx.CommonChatController = Ember.ArrayController.extend
   actions:
     toggle: -> @set 'hide', !@get 'hide'
     submit: ->
-      return unless @get('msg')
+      return unless @get('allowSend')
+      @lock = false
       message = @store.createRecord 'message',
         name: @get('user.nickname')
         body: @get('msg')

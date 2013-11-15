@@ -19,11 +19,11 @@
   c = pusher.subscribe(key)
   c.callbacks._callbacks = {}
   c.bind "#{model.toLowerCase()}#new", (o) ->
-    return if store.getById(model, o.id.toString())
+    return if store.getById(model, o.id)
     store.pushPayload(model, manyHash(o))
 
   c.bind "#{model.toLowerCase()}#update", (o) ->
-    if f = store.getById(model, o.id.toString())
+    if f = store.getById(model, o.id)
       return if new Date(f?.get('updated_at')) > new Date(o.updated_at)
       store.pushPayload(model, manyHash(o))
 

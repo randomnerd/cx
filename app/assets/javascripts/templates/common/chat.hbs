@@ -31,7 +31,7 @@
         <div class="input-group">
           {{input type="text" value=msg autocomplete="off" class="form-control" placeholder="Type your message here..."}}
           <span class="input-group-btn">
-            <button class="btn btn-primary" {{action 'submit'}}>
+            <button {{bind-attr class=":btn :btn-primary allowSend::disabled"}} {{action 'submit'}}>
               Send
             </button>
           </span>
