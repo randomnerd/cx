@@ -3,9 +3,6 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.1'
 
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
-
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
@@ -64,6 +61,11 @@ gem 'httparty'
 gem 'resque'
 gem 'resque-scheduler', :require => 'resque_scheduler'
 gem 'resque-pool'
+
+# gem 'sshkit', github: 'leehambley/sshkit'
+gem 'capistrano'
+gem 'capistrano-rails'
+gem 'capistrano-bundler'
 
 group :development do
   gem 'pry'
