@@ -4,11 +4,11 @@ set :repo_url, 'git@github.com:erundook/cx.git'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
 set :deploy_to, '/var/www/cx'
-# set :scm, :git
+set :scm, :git
 
 # set :format, :pretty
 # set :log_level, :debug
-# set :pty, true
+set :pty, true
 
 set :unicorn_binary, "#{shared_path}/bin/unicorn"
 set :unicorn_config, "#{current_path}/config/unicorn.rb"

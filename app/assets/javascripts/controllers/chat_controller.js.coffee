@@ -2,7 +2,6 @@ Cx.CommonChatController = Ember.ArrayController.extend
   sortProperties: ['created_at']
   sortAscending: true
   lock: false
-  hide: false
   msg: ''
   needs: ['auth']
   signedIn: (->
@@ -24,19 +23,17 @@ Cx.CommonChatController = Ember.ArrayController.extend
   ).property('msg')
 
   init: ->
+    @set 'hide', $.cookie('hideChat') == 'true'
     Ember.run.later =>
       $('#chat .messages').on 'scroll', (e) =>
         el = e.currentTarget
         @lock = el.scrollTop + $(el).height() * 1.1 < el.scrollHeight
 
-    @channel = pusher.subscribe('messages')
-    @channel.bind 'message#new', (message) =>
-      found = @store.getById('message', message.id)
-      unless found
-        @store.pushPayload 'message', messages: [message]
-
   actions:
-    toggle: -> @set 'hide', !@get 'hide'
+    toggle: ->
+      hide = !@get 'hide'
+      $.cookie('hideChat', hide)
+      @set 'hide', hide
     submit: ->
       return unless @get('allowSend')
       @lock = false
@@ -45,5 +42,4 @@ Cx.CommonChatController = Ember.ArrayController.extend
         body: @get('msg')
         createdAt: new Date()
       message.save()
-
       @set 'msg', ''
