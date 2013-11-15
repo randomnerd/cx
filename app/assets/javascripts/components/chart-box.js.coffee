@@ -1,6 +1,6 @@
 Cx.ChartBoxComponent = Ember.Component.extend
   defaultButton: 2
-  init: -> Ember.run.later => @initChart() if @get('pair.id')
+  init: -> Ember.run.later => @fillChart() if @get('pair.id')
   initChart: ->
     groupingUnits = [
       ['minute',[5, 10, 15, 30]]
@@ -12,6 +12,7 @@ Cx.ChartBoxComponent = Ember.Component.extend
     ]
 
     Highcharts.setOptions({global: {useUTC: false}})
+    $('#chart').highcharts()?.destroy()
     $('#chart').highcharts('StockChart', {
       rangeSelector:
         buttons : [
@@ -65,9 +66,9 @@ Cx.ChartBoxComponent = Ember.Component.extend
     @chart = $('#chart').highcharts()
     @series = @chart.series[0]
     @vseries = @chart.series[1]
-    @fillChart()
 
   fillChart: (->
+    @initChart()
     @series.setData([], false)
     @vseries.setData([], false)
     @watchForUpdates(@get 'pair.id')
