@@ -1,7 +1,8 @@
 Cx.CommonChatController = Ember.ArrayController.extend
-  sortProperties: ['createdAt']
+  sortProperties: ['created_at']
   sortAscending: true
-  hide: true
+  lock: false
+  hide: false
   msg: ''
   needs: ['auth']
   signedIn: (->
@@ -13,11 +14,11 @@ Cx.CommonChatController = Ember.ArrayController.extend
 
   scroller: (->
     c = $('#chat .messages')
+    return if @lock
     setTimeout (=>
-      return if @lock
       c.scrollTop c[0]?.scrollHeight
-    ), 50
-  ).observes('content.@each.body')
+    ), 100
+  ).observes('content.@each')
 
   init: ->
     setTimeout (=>
