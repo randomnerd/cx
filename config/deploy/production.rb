@@ -1,4 +1,5 @@
 set :stage, :production
+set :rails_env, 'production'
 
 set :bundle_gemfile, -> { release_path.join('Gemfile') }
 set :bundle_dir, -> { shared_path.join('bundle') }
