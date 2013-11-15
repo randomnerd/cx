@@ -14,7 +14,7 @@
       <div class="modal-body clearfix">
         {{#if showAddressBook}}
         <div class="scrollY">
-          <table class="table table-condensed nomargin">
+          <table class="table table-condensed nomargin address-book">
             <thead>
               <th>Name</th>
               <th>Address</th>
@@ -23,7 +23,7 @@
             <tbody>
               {{#each bookItems}}
               <tr>
-                <td>{{name}}</td>
+                <td class="name"><small>{{name}}</small></td>
                 <td>
                   <small class="monospace">
                     {{address}}
@@ -48,7 +48,7 @@
               </tr>
               {{/each}}
               <tr>
-                <td>CoinEx donations</td>
+                <td><small>CoinEx donations</small></td>
                 <td>
                   <small class="monospace">
                     1EDf1HHaKfcfiVnWgbSRYQbaYqqDnt1JqY

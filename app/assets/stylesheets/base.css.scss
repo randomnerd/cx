@@ -297,6 +297,13 @@ body.modal-open {
 #withdrawal-box {
   .scrollY { max-height: 200px; }
   .modal-body { padding-bottom: 0px; margin-bottom: -15px; }
+  table.address-book {
+    td {
+      overflow: hidden;
+      &.name { max-width: 170px; }
+      text-overflow: ellipsis;
+    }
+  }
   #address-book {
     legend { margin-bottom: 5px; }
   }
