@@ -56,8 +56,7 @@ namespace :deploy do
 
   desc 'Restart application'
   task :restart do
-    invoke 'deploy:stop'
-    invoke 'deploy:start'
+    invoke 'deploy:reload'
   end
 
   after :finishing, 'deploy:cleanup', 'bundle:install'

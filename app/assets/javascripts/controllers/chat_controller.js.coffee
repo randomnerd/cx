@@ -14,9 +14,8 @@ Cx.CommonChatController = Ember.ArrayController.extend
   scroller: (->
     c = $('#chat .messages')
     return if @lock
-    setTimeout (=>
+    Ember.run.schedule 'afterRender', ->
       c.scrollTop c[0]?.scrollHeight
-    ), 100
   ).observes('content.@each')
   allowSend: (->
     !!@get('msg')
