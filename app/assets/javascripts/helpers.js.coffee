@@ -6,7 +6,7 @@
 @h.nn2f = (n) -> n / Math.pow(10,16)
 
 @h.round = (amount, precision = 8) ->
-  amount * Math.pow(10, precision) / Math.pow(10, precision)
+  Math.round(amount * Math.pow(10, precision)) / Math.pow(10, precision)
 
 @h.openLoginMenu = -> $('#login-menu-link').dropdown('toggle')
 @h.postInProgress ||= false
