@@ -17,7 +17,7 @@
   if h.postInProgress
     setTimeout (-> h.flushPushedModels(store)), 50
     return
-  Ember.schedule 'sync', ->
+  Ember.run.schedule 'sync', ->
     for d in h.pushedModels
       [model, data] = d
       console.log 'qq', data
