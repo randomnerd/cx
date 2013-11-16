@@ -21,6 +21,7 @@
     for d in h.pushedModels
       [model, data] = d
       console.log 'qq', data
+      continue if store.getById(model, data.id)
       store.pushPayload(model, data)
     h.pushedModels = []
 
@@ -41,9 +42,7 @@
   c.bind "#{model.toLowerCase()}#update", (o) ->
     f = store.getById(model, o.id)
     return if +(new Date(f?.get('updated_at'))) > +(new Date(o.updated_at))
-    h.pushedModels.push [model, manyHash(o)]
-    h.flushPushedModels(store)
-    # store.pushPayload(model, manyHash(o))
+    store.pushPayload(model, manyHash(o))
 
   c.bind "#{model.toLowerCase()}#delete", (o) ->
     Ember.run.next ->
