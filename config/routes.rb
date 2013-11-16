@@ -7,7 +7,10 @@ Cx::Application.routes.draw do
   devise_scope :user do
     match '/users/sign_out', to: 'sessions#destroy', via: [:delete]
     post '/users/sign_in', to: 'sessions#create'
-    post '/users', to: 'devise/registrations#create'
+    post '/users', to: 'registrations#create'
+    post '/users/confirmation', to: 'devise/confirmations#create'
+    get '/users/confirmation', to: 'devise/confirmations#show'
+    get '/users/confirmation/new', to: 'devise/confirmations#new'
   end
   post '/pusher/auth', to: 'pusher#auth'
   root 'chat#index'

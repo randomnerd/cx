@@ -1,16 +1,13 @@
 Cx.ApplicationRoute = Ember.Route.extend
-  model: (controller) ->
-    Ember.RSVP.hash({
-      tradePairs: @store.findAll('tradePair')
-      currencies: @store.findAll('currency')
-      balances:   @store.findAll('balance')
-    }).then (data) -> Ember.Object.create(data)
+  model: ->
+    @store.findAll('tradePair')
+    @store.findAll('currency')
+
   setupController: (c, m) ->
-    c.set 'model', m
     @controllerFor('commonChat').set('model', @store.findAll('message'))
     messagesChannel = h.setupPusher(@store, 'message', 'messages')
 
-    user = @controllerFor('auth').get('content.content')
+    user = @controllerFor('auth').get('model.content')
     return unless user
     balancesChannel = h.setupPusher(@store, 'balance', "private-balances-#{user.get('id')}")
     balanceChangesChannel = h.setupPusher(@store, 'balanceChange', "private-balanceChanges-#{user.get('id')}")
@@ -36,9 +33,9 @@ Cx.ApplicationRoute = Ember.Route.extend
     @store.find('notification', {user_id: user.id}).then (d) =>
       @controllerFor('commonNavbar').set 'notifications', notifications
       @controllerFor('commonNavbar').set 'unAckNotif', unAckNotif
-
   actions:
     openLoginMenu: ->
       Ember.run.later -> h.openLoginMenu()
-    login: -> @controllerFor("auth").login()
-    logout: -> @controllerFor("auth").logout()
+    login: -> @get("controllers.auth").login(@)
+    logout: -> @get("controllers.auth").logout(@)
+

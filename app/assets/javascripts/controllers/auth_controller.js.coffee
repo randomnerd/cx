@@ -2,10 +2,11 @@
 ## They are grouped together here for ease of exposition
 
 Cx.AuthController = Ember.ObjectController.extend
+  needs: ['commonLoginBox']
   isSignedIn: Em.computed.notEmpty("content.email")
   model: null
   content: null
-  login: (route) ->
+  login: (r) ->
     $.ajax
       url: '/users/sign_in'
       type: "POST"
@@ -19,28 +20,28 @@ Cx.AuthController = Ember.ObjectController.extend
         user = @store.find(Cx.User, object.id)
         @set 'content', user
         @set 'model', user
-      error: (jqXHR, textStatus, errorThrown) ->
-        if jqXHR.status==401
-          route.controllerFor('login').set "errorMsg", "That email/password combo didn't work.  Please try again"
-        else if jqXHR.status==406
-          route.controllerFor('login').set "errorMsg", "Request not acceptable (406):  make sure Devise responds to JSON."
-        else
-          p "Login Error: #{jqXHR.status} | #{errorThrown}"
+        @get('controllers.commonLoginBox').set "loginErrorMsg", null
+      error: (jqXHR, textStatus, errorThrown) =>
+        @get('controllers.commonLoginBox').set "loginErrorMsg", "Incorrect email/password"
 
-  register: (route) -> # FIXME
+  register: (r) -> # FIXME
     $.ajax
-      url: Cx.urls.register
+      url: '/users'
       type: "POST"
       data:
-        "user[name]": route.currentModel.name
-        "user[email]": route.currentModel.email
-        "user[password]": route.currentModel.password
-        "user[password_confirmation]": route.currentModel.password_confirmation
+        "user[email]": @get('controllers.commonLoginBox.email')
+        "user[password]": @get('controllers.commonLoginBox.password')
+        "user[password_confirmation]": @get('controllers.commonLoginBox.password')
       success: (data) =>
-        @set 'currentUser', data.user
-        route.transitionTo 'home'
-      error: (jqXHR, textStatus, errorThrown) ->
-        route.controllerFor('registration').set "errorMsg", "That email/password combo didn't work.  Please try again"
+        $('meta[name="csrf-token"]').attr('content', data.token)
+        object = @store.push(Cx.User, data.user)
+        user = @store.find(Cx.User, object.id)
+        @set 'content', user
+        @set 'model', user
+        @get('controllers.commonLoginBox').set "loginErrorMsg", null
+        @get('controllers.commonLoginBox').set "regMode", false
+      error: (jqXHR, textStatus, errorThrown) =>
+        @get('controllers.commonLoginBox').set "loginErrorMsg", "Error registering, please try again"
 
   logout: ->
     $.ajax

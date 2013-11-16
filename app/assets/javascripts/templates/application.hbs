@@ -8,6 +8,15 @@
     </div>
 
     <div class="col-sm-9">
+      {{#if currentUser.isSignedIn}}
+        {{#unless currentUser.confirmed_at}}
+        <div class="alert alert-danger">
+          Please confirm your email address before
+          <strong>{{currentUser.confirmBefore}}</strong>
+          or your account will get locked.<br/>
+        </div>
+        {{/unless}}
+      {{/if}}
       {{outlet}}
     </div>
 

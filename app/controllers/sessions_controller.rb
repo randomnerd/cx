@@ -1,9 +1,13 @@
 class SessionsController < Devise::SessionsController
   def create
-    render json: {
-      user: UserSerializer.new(current_user, root: false),
-      token: form_authenticity_token
-    }
+    if current_user
+      render json: {
+        user: UserSerializer.new(current_user, root: false),
+        token: form_authenticity_token
+      }
+    else
+      head :unauthorized
+    end
   end
 
   def destroy
