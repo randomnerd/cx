@@ -17,11 +17,12 @@
   if h.postInProgress
     setTimeout (-> h.flushPushedModels(store)), 50
     return
-  for d in h.pushedModels
-    [model, data] = d
-    console.log 'qq', data
-    store.pushPayload(model, data)
-  h.pushedModels = []
+  Ember.schedule 'sync', ->
+    for d in h.pushedModels
+      [model, data] = d
+      console.log 'qq', data
+      store.pushPayload(model, data)
+    h.pushedModels = []
 
 @h.setupPusher = (store, model, key) ->
   manyHash = (d) ->
