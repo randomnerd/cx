@@ -40,6 +40,7 @@ Cx.CommonChatController = Ember.ArrayController.extend
         name: @get('user.nickname')
         body: @get('msg')
         created_at: new Date()
+      h.postInProgress = true
       message.save().then(h.postDone, h.postDone)
       @set 'msg', ''
       Ember.run.next -> $('#chat input').focus()

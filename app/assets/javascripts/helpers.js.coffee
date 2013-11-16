@@ -20,29 +20,27 @@
   Ember.run.schedule 'sync', ->
     for d in h.pushedModels
       [model, data] = d
-      console.log 'qq', data
       continue if store.getById(model, data.id)
-      store.pushPayload(model, data)
+      store.pushPayload(model, h.manyHash(model, data))
     h.pushedModels = []
 
-@h.setupPusher = (store, model, key) ->
-  manyHash = (d) ->
-    h = {}
-    h[model.pluralize()] = [d]
-    return h
+@h.manyHash = (model, d) ->
+  h = {}
+  h[model.pluralize()] = [d]
+  return h
 
+@h.setupPusher = (store, model, key) ->
   c = pusher.subscribe(key)
   c.callbacks._callbacks = {}
   c.bind "#{model.toLowerCase()}#new", (o) ->
-    console.log 'new', manyHash(o)
-    # return if store.getById(model, o.id)
-    h.pushedModels.push [model, manyHash(o)]
+    return if store.getById(model, o.id)
+    h.pushedModels.push [model, o]
     h.flushPushedModels(store)
 
   c.bind "#{model.toLowerCase()}#update", (o) ->
     f = store.getById(model, o.id)
     return if +(new Date(f?.get('updated_at'))) > +(new Date(o.updated_at))
-    store.pushPayload(model, manyHash(o))
+    store.pushPayload(model, h.manyHash(model, o))
 
   c.bind "#{model.toLowerCase()}#delete", (o) ->
     Ember.run.next ->
