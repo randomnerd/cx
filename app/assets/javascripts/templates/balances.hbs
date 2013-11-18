@@ -8,14 +8,14 @@
     </tr>
   </thead>
   <tbody>
-  {{#each currencies}}
+  {{#each controllers.currencies}}
     <tr {{bind-attr class="balance.negative:danger"}}>
-      <td class="text-right monospace">{{round balance.amount}}</td>
+      <td class="text-right monospace">{{round balance.firstObject.amount}}</td>
       <td class="monospace">{{name}}</td>
       <td class="text-center">
-        {{#if balance.deposit_address}}
+        {{#if balance.firstObject.deposit_address}}
         <span class="monospace">
-          {{balance.deposit_address}}
+          {{balance.firstObject.deposit_address}}
         </span>
         {{else}}
           <button {{bind-attr class=":btn :btn-primary :btn-xs generating:disabled"}}
@@ -24,9 +24,9 @@
       </td>
       <td class="text-right">
         <button
-          {{bind-attr class="balance.allowWithdraw::disabled :btn :btn-primary :btn-xs"}}
+          {{bind-attr class="balance.firstObject.allowWithdraw::disabled :btn :btn-primary :btn-xs"}}
           {{action 'withdraw' this}}>Withdraw</button>
-        {{#link-to 'balanceHistory' this class="btn btn-xs btn-default"}}
+        {{#link-to 'balanceChanges' this class="btn btn-xs btn-default"}}
           Balance history
         {{/link-to}}
       </td>

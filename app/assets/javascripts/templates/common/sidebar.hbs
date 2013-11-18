@@ -1,6 +1,43 @@
 <div id="sidebar">
-  {{render tradePairsSidebar}}
+  <div class="panel panel-default panel-small">
+    <div class="panel-heading">Exchange / BTC</div>
+    <ul class="nav nav-pills nav-stacked">
+    {{#each pair in controllers.tradePairs}}
+      <li class="">
+        {{#link-to 'tradePair' pair title=pair.currency.desc}}
+          <span class="monospace">
+            {{pair.currency.name}}
+          </span>
+          <span class="pull-right">
+            <strong>{{round pair.last_price}}</strong>
+          </span>
+        {{/link-to}}
+      </li>
+    {{/each}}
+    </ul>
+  </div>
+
   {{#if currentUser.isSignedIn}}
-    {{render balancesSidebar}}
+    {{#if controllers.balances}}
+    <div class="panel panel-default panel-small">
+      <div class="panel-heading">Balances</div>
+      <ul class="nav nav-pills nav-stacked">
+      {{#each balance in controllers.balances}}
+        {{#if balance.amount}}
+        <li class="">
+          {{#link-to 'balanceChanges' balance.currency}}
+            <span class="monospace">
+              {{balance.currency.name}}
+            </span>
+            <span class="pull-right">
+              <strong>{{round balance.amount}}</strong>
+            </span>
+          {{/link-to}}
+        </li>
+        {{/if}}
+      {{/each}}
+      </ul>
+    </div>
+    {{/if}}
   {{/if}}
 </div>

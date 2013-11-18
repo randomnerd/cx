@@ -2,6 +2,7 @@ class Currency < ActiveRecord::Base
   include ApplicationHelper
   has_many :incomes
   has_many :withdrawals
+  scope :by_name, -> name { where(name: name) }
 
   def rpc
     @rpc ||= CryptoRPC.new(self)
@@ -21,7 +22,6 @@ class Currency < ActiveRecord::Base
   def process_deposits(skip = 0, batch = 50)
     txs = rpc.listtransactions('*', batch, skip)
     return unless txs
-    # return if txs.try(:[], 'error')
     return if txs.try(:count) == 0
 
     txs.reverse.each do |tx|

@@ -8,6 +8,5 @@ Ember.Application.initializer
       object = store.push(Cx.User, JSON.parse(attributes))
       user = store.find(Cx.User, object.id)
 
-    container.lookup('controller:auth').set('content', user)
     container.lookup('controller:auth').set('model', user)
     container.typeInjection('controller', 'currentUser', 'controller:auth')

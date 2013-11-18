@@ -1,4 +1,5 @@
 class Api::V1::CurrenciesController < Api::V1::BaseController
+  has_scope :by_name, as: :name
   def generate_address
     return unless current_user
     current_user.wallets.create(currency_id: resource.id)

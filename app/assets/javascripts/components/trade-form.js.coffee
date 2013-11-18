@@ -8,13 +8,13 @@ Cx.TradeFormComponent = Ember.Component.extend
   allowSubmit: (->
     if @get 'buy'
       t = h.f2n @get 'total'
-      b = @get('pair.market.balance.amount')
+      b = @get('pair.market.balance.firstObject.amount')
     else
       t = h.f2n @get 'amount'
-      b = @get('pair.currency.balance.amount')
+      b = @get('pair.currency.balance.firstObject.amount')
     return false unless t
     b >= t && @get('total') > 0 && parseFloat(@get 'amount') >= 0.01
-  ).property('total', 'amount', 'pair.currency.balance.amount', 'pair.market.balance.amount')
+  ).property('total', 'amount', 'pair.currency.balance.firstObject.amount', 'pair.market.balance.firstObject.amount')
 
   fee: (->
     if @get('buy')

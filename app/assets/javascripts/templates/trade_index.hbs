@@ -23,7 +23,7 @@
     </tr>
   </thead>
   <tbody>
-  {{#each}}
+  {{#each controllers.tradePairs.arrangedContent}}
     <tr class="clickRow" {{action 'openPair' this}}>
       <td class="monospace">{{name}}</td>
       <td>{{round last_price}}</td>

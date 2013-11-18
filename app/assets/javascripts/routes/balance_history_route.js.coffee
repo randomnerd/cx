@@ -1,14 +1,16 @@
-Cx.BalanceHistoryRoute = Ember.Route.extend
+Cx.BalanceChangesRoute = Ember.Route.extend
   model: (params) ->
-    currency = @store.filter('currency',
-      (c) -> c.get('name') == params.name).get('firstObject')
+    Ember.RSVP.hash(
+      changes: @store.find 'balanceChange', {currency_name: params.name}
+      currency: @store.find 'currency', {name: params.name}
+    ).then (d) -> d
 
-  setupController: (c, currency) ->
-    @store.find 'balanceChange', {currency_id: currency.get('id')}
-    balance = @store.filter('balance',
-      (c) -> c.get('currency.id') == currency.get('id')).get('firstObject')
-    items = @store.filter 'balanceChange', (item) ->
-      item.get('balance.id') == balance.get('id')
-    uid = parseInt @controllerFor('auth').get('content.id')
-    c.set 'content', items
-    c.set 'currency', currency
+  setupController: (c, m) ->
+    if cname = m.get? 'name'
+      @store.find('balanceChange', {currency_name: cname}).then (bc) =>
+        c.set 'model', bc
+        c.set 'currency', m
+    else
+      console.log m
+      c.set 'model', m.changes
+      c.set 'currency', m.currency.get('content.firstObject')

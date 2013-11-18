@@ -5,7 +5,7 @@
   <div class="content">
 
     <div class="messages" id="messageList">
-      {{#each controller.arrangedContent}}
+      {{#each controllers.messages}}
       <div class="message panel panel-default nopadding {{msgClass}} {{#if picUrl}}withPic{{/if}}">
         <div class="text-muted pull-right">
           {{view Cx.TimeagoView title=time}}
@@ -25,7 +25,7 @@
       {{/each}}
     </div>
 
-    <div {{bind-attr class=":nomargin signedIn::well signedIn::well-small"}}>
+    <div {{bind-attr class=":nomargin currentUser.isSignedIn::well currentUser.isSignedIn::well-small"}}>
       {{#if currentUser.isSignedIn}}
       <form class="nomargin">
         <div class="input-group">

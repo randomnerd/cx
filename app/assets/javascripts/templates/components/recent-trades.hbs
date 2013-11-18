@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each sortedTrades}}
+        {{#each trades}}
         <tr {{bind-attr class="bid:success:danger"}}>
           <td>{{view Cx.TimeagoView title=time}}</td>
           <td>{{round rate}}</td>

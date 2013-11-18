@@ -19,22 +19,22 @@
 <!-- order books -->
 <div class="row">
   <div class="col-sm-6">
-    {{order-book buy=false pair=model user=currentUser orders=askOrders}}
+    {{order-book buy=false pair=model user=currentUser orders=controllers.orders.ask}}
   </div>
   <div class="col-sm-6">
-    {{order-book buy=true pair=model user=currentUser orders=bidOrders}}
+    {{order-book buy=true pair=model user=currentUser orders=controllers.orders.bid}}
   </div>
 </div>
 
 <!-- own orders -->
 {{#if currentUser.isSignedIn}}
-{{own-orders pair=model user=currentUser orders=ownOrders}}
+{{own-orders pair=model orders=controllers.orders.own}}
 {{/if}}
 
 <!-- recent trades -->
-{{recent-trades pair=model trades=pairTrades}}
+{{recent-trades pair=model trades=controllers.trades}}
 
 <!-- recent own trades -->
 {{#if currentUser.isSignedIn}}
-{{recent-trades pair=model trades=ownTrades own=true}}
+{{recent-trades pair=model trades=controllers.trades.own own=true}}
 {{/if}}

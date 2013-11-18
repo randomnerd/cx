@@ -4,10 +4,10 @@
     {{pair.currency.name}}
     <div class="pull-right">
       {{#if buy}}
-        <a {{action 'setTotal' pair.market.balance.amount}}>{{round pair.market.balance.amount}}</a>
+        <a {{action 'setTotal' pair.market.balance.firstObject.amount}}>{{round pair.market.balance.firstObject.amount}}</a>
         {{pair.market.name}}
       {{else}}
-        <a {{action 'setTotal' pair.currency.balance.amount}}>{{round pair.currency.balance.amount}}</a>
+        <a {{action 'setTotal' pair.currency.balance.firstObject.amount}}>{{round pair.currency.balance.firstObject.amount}}</a>
         {{pair.currency.name}}
       {{/if}}
     </div>

@@ -4,7 +4,7 @@
   <title>Cx</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <% if current_user %>
-    <meta name="current-user" content="<%= current_user.to_json %>" />
+    <meta name="current-user" content="<%= UserSerializer.new(current_user, root: false).to_json %>" />
   <% end %>
   <link rel="shortcut icon" href="/favicon.ico?v=2" type="image/x-icon">
   <script src="http://js.pusher.com/2.1/pusher.min.js" type="text/javascript"></script>

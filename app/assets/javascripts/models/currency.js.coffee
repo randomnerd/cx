@@ -13,11 +13,7 @@ Cx.Currency = DS.Model.extend
   mining_fee:      DS.attr('number')
   last_block_time: (-> @get('last_block_at')?.toISOString()).property('last_block_at')
   balance: (->
-    proxy = Ember.ObjectProxy.create()
-    data = @store.filter 'balance', (b) => b.get('currency.id') == @get('id')
-    # @store.find('balance', {currency: @get('id')}).then (data) ->
-    proxy.set('content', data.get('firstObject'))
-    proxy
+    @store.filter 'balance', (b) => b.get('currency.id') == @get('id')
   ).property()
 
 Cx.Currency.FIXTURES = [

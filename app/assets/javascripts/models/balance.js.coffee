@@ -8,6 +8,7 @@ Cx.Balance = DS.Model.extend
   allowWithdraw: (-> @get('amount') > 0.01 * Math.pow(10,8)).property('amount')
   balanceChanges: DS.hasMany('balanceChange', {async: true})
   deposit_address: DS.attr('string')
+  total: (-> @get('held') + @get('amount')).property('held', 'amount')
 
 Cx.Balance.FIXTURES = [
   {

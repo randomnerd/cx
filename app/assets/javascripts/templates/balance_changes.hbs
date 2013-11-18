@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-lg-4">
+    <div class="panel panel-default panel-big-heading text-center">
+      <div class="panel-heading">Available</div>
+      <h2>{{round currency.balance.firstObject.amount}} {{currency.name}}</h2>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel panel-default panel-big-heading text-center">
+      <div class="panel-heading">Held for orders</div>
+      <h2>{{round currency.balance.firstObject.held}} {{currency.name}}</h2>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel panel-default panel-big-heading text-center">
+      <div class="panel-heading">Total</div>
+      <h2>{{round currency.balance.firstObject.total}} {{currency.name}}</h2>
+    </div>
+  </div>
+</div>
+<div class="panel panel-default panel-big-heading">
+  <div class="panel-heading">{{currency.name}} balance history</div>
+  <div class="content">
+    <table class="table table-condensed table-striped nomargin">
+      <thead>
+        <th>ID</th>
+        <th>Time</th>
+        <th>Details</th>
+        <th class="text-right">Total balance</th>
+      </thead>
+      <tbody>
+        {{#each item in controller}}
+        <tr {{bind-attr class="item.positive:success:danger"}}>
+          <td>{{item.id}}</td>
+          <td>{{view Cx.TimeagoView title=item.time}}</td>
+          <td>
+            {{#if item.trade}}
+              {{#if item.positive}}Bought{{else}}Sold{{/if}}
+              {{round item.amount}} {{currency.name}}
+              @ {{round item.vs_rate}} {{item.vs_currency}} each
+            {{else}}
+              {{item.source}}: {{round item.amount}} {{currency.name}}
+            {{/if}}
+          </td>
+          <td class="text-right monospace">{{round item.total}} {{currency.name}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>

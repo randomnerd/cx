@@ -1,14 +1,7 @@
 Cx.NotificationsBoxComponent = Ember.Component.extend
-  ctrl: Ember.ArrayController.create
-    sortProperties: ['created_at']
-    sortAscending: false
   unack: (->
-    @get('items')?.any (n) -> !n.get('ack')
-  ).property('items.@each.ack')
-  sortedItems: (->
-    @get('ctrl').set('content', @get('items'))
-    @get('ctrl.arrangedContent')
-  ).property('items', 'items.@each')
+    @get('items.unAck.length') > 0
+  ).property('items.unAck.length')
 
   actions:
     ackAll: ->
@@ -16,7 +9,9 @@ Cx.NotificationsBoxComponent = Ember.Component.extend
         url: "/api/v1/notifications/ack_all"
         type: "POST"
         success: (data) =>
-          rec.set('ack', true) for rec in @get('items.content')
+          @get('items.unAck').forEach =>
+            rec = @get('items.unAck.firstObject')
+            rec?.set 'ack', true
 
     removeAll: ->
       $.ajax

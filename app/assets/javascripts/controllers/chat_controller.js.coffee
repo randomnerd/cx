@@ -1,32 +1,26 @@
 Cx.CommonChatController = Ember.ArrayController.extend
-  sortProperties: ['created_at']
-  sortAscending: true
   lock: false
   msg: ''
-  needs: ['auth']
-  signedIn: (->
-    @get('controllers.auth.isSignedIn')
-  ).property('controllers.auth.isSignedIn')
-  user: (->
-    @get('controllers.auth.content.content')
-  ).property('controllers.auth.content.content')
+  needs: ['auth', 'messages']
 
   scroller: (->
     c = $('#chat .messages')
     return if @lock
     Ember.run.schedule 'afterRender', ->
       c.scrollTop c[0]?.scrollHeight
-  ).observes('content.@each')
+  ).observes('controllers.messages.@each')
   allowSend: (->
     !!@get('msg')
   ).property('msg')
 
-  init: ->
+  onInit: (->
     @set 'hide', $.cookie('hideChat') == 'true'
     Ember.run.later =>
+      @scroller()
       $('#chat .messages').on 'scroll', (e) =>
         el = e.currentTarget
         @lock = el.scrollTop + $(el).height() * 1.1 < el.scrollHeight
+  ).on('init')
 
   actions:
     toggle: ->
@@ -37,7 +31,7 @@ Cx.CommonChatController = Ember.ArrayController.extend
       return unless @get('allowSend')
       @lock = false
       message = @store.createRecord 'message',
-        name: @get('user.nickname')
+        name: @get('controllers.auth.nickname')
         body: @get('msg')
         created_at: new Date()
       h.postInProgress = true

@@ -1,8 +1,9 @@
-Cx.BalanceHistoryController = Ember.Controller.extend
-  ctrl: Ember.ArrayController.create
-    sortProperties: ['num_id']
-    sortAscending: false
-  sortedItems: (->
-    @get('ctrl').set('content', @get('content'))
-    @get('ctrl.arrangedContent')
-  ).property('content', 'content.@each')
+Cx.BalanceChangesController = Em.ArrayController.extend
+  sortProperties: ['created_at']
+  sortAscending: false
+  needs: ['auth']
+  setupPusher: (->
+    return unless uid = @get 'controllers.auth.id'
+    @channel?.unsubscribe()
+    @channel = h.setupPusher @store, 'balanceChange', "private-balanceChanges-#{uid}"
+  ).on('init').observes('controllers.auth.id')

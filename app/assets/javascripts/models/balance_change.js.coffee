@@ -12,6 +12,10 @@ Cx.BalanceChange = DS.Model.extend
   vs_rate:     DS.attr('string')
   time: (-> @get('created_at')?.toISOString()).property('created_at')
   positive: (-> @get('amount') > 0).property('amount')
+  deposit: (-> @get('subject_type') == 'Deposit').property('subject_type')
+  withdrawal: (-> @get('subject_type') == 'Withdrawal').property('subject_type')
+  trade: (-> @get('subject_type') == 'Trade').property('subject_type')
+  total: (-> @get('t_held') + @get('t_amount')).property('t_held', 't_amount')
   source: (->
     s = @get('subject_type') || @get('comment')
     if @get('vs_currency') && @get('vs_rate')
