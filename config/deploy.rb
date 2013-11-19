@@ -78,7 +78,7 @@ namespace :deploy do
   desc 'Restart application'
   task :restart do
     invoke 'deploy:stop'
-    sleep 3
+    sleep 10
     invoke 'deploy:start'
   end
 
