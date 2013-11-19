@@ -77,4 +77,13 @@ Cx::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
+
+  config.action_mailer.smtp_settings = {
+     :address              => "smtp.mailgun.org",
+     :port                 => 587,
+     :domain               => 'coinex.pw',
+     :user_name            => 'postmaster@coinex.pw',
+     :password             => '5l-bcjpa-hl1',
+     :authentication       => :plain,
+     :enable_starttls_auto => true  }
 end
