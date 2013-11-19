@@ -3,15 +3,10 @@ Cx::Application.routes.draw do
   require 'resque_scheduler'
   require 'resque_scheduler/server'
   mount Resque::Server => "/hq/resque"
-  devise_for :users, skip: :all
-  devise_scope :user do
-    match '/users/sign_out', to: 'sessions#destroy', via: [:delete]
-    post '/users/sign_in', to: 'sessions#create'
-    post '/users', to: 'registrations#create'
-    post '/users/confirmation', to: 'devise/confirmations#create'
-    get '/users/confirmation', to: 'devise/confirmations#show'
-    get '/users/confirmation/new', to: 'devise/confirmations#new'
-  end
+  devise_for :users, controllers: {
+    sessions: 'sessions',
+    registrations: 'registrations'
+  }
   post '/pusher/auth', to: 'pusher#auth'
   root 'chat#index'
   namespace :api, defaults: { format: 'json' } do

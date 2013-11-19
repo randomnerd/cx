@@ -50,6 +50,7 @@ namespace :deploy do
   desc 'Restart resque pool'
   task :restart_resque do
     invoke 'deploy:stop_resque'
+    sleep 3
     invoke 'deploy:start_resque'
   end
 
@@ -77,6 +78,7 @@ namespace :deploy do
   desc 'Restart application'
   task :restart do
     invoke 'deploy:stop'
+    sleep 3
     invoke 'deploy:start'
   end
 
