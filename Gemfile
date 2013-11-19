@@ -45,6 +45,7 @@ gem 'devise'
 gem 'devise-async'
 gem 'cancan'
 gem 'pusher'
+gem 'pusher-async', github: "jdudek/pusher-async"
 gem 'em-http-request'
 gem "ember-rails", github: "emberjs/ember-rails"
 gem 'quiet_assets'
