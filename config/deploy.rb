@@ -32,6 +32,25 @@ namespace :deploy do
     end
   end
 
+  desc 'Stop resque pool'
+  task :stop_resque do
+    on roles(:resque) do
+      execute "cd #{current_path} && bundle exec resque-pool stop"
+    end
+  end
+
+  desc 'Start resque pool'
+  task :start_resque do
+    on roles(:resque) do
+      execute "cd #{current_path} && bundle exec resque-pool start"
+    end
+  end
+
+  desc 'Restart resque pool'
+  task :restart_resque do
+    invoke 'deploy:stop_resque'
+    invoke 'deploy:start_resque'
+  end
 
   desc "Stop application"
   task :stop do
@@ -60,6 +79,6 @@ namespace :deploy do
     invoke 'deploy:start'
   end
 
-  after :finishing, 'deploy:cleanup', 'bundle:install'
+  after :finishing, 'deploy:cleanup', 'bundle:install', 'deploy:restart_resque'
 
 end

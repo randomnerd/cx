@@ -78,6 +78,7 @@ Cx::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
+  # FIXME: insecure
   config.action_mailer.smtp_settings = {
      :address              => "smtp.mailgun.org",
      :port                 => 587,

@@ -42,6 +42,7 @@ gem 'unicorn'
 # gem 'debugger', group: [:development, :test]
 
 gem 'devise'
+gem 'devise-async'
 gem 'cancan'
 gem 'pusher'
 gem 'em-http-request'

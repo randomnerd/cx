@@ -20,6 +20,8 @@ module Cx
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+
+    # FIXME: insecure
     if Rails.env.production?
       Pusher.app_id = '30750'
       Pusher.key = '339899db7460f58950bd'

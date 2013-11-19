@@ -16,6 +16,8 @@ set :bundle_roles, :all
 role :app, %w{cx.internal}
 role :web, %w{cx.internal}
 role :db, %w{cx.internal}
+role :resque, %w{cx.internal}
+
 
 # Extended Server Syntax
 # ======================

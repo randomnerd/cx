@@ -5,6 +5,7 @@ class RegistrationsController  < ApplicationController
     user = User.new(user_params)
 
     if user.save
+      sign_in user
       render json: {
         user: UserSerializer.new(user, root: false),
         token: form_authenticity_token
