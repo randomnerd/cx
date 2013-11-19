@@ -13,6 +13,7 @@ set :pty, true
 set :unicorn_binary, "#{shared_path}/bin/unicorn"
 set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid,    "#{shared_path}/tmp/pids/unicorn.pid"
+set :resque_pid,     "#{shared_path}/tmp/pids/resque.pid"
 
 set :linked_files, %w{config/database.yml}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
@@ -35,14 +36,14 @@ namespace :deploy do
   desc 'Stop resque pool'
   task :stop_resque do
     on roles(:resque) do
-      execute "cd #{current_path} && bundle exec resque-pool stop"
+      execute "kill `cat #{fetch(:resque_pid)}`"
     end
   end
 
   desc 'Start resque pool'
   task :start_resque do
     on roles(:resque) do
-      execute "cd #{current_path} && bundle exec resque-pool start"
+      execute "cd #{current_path} && bundle exec resque-pool -E #{fetch(:rails_env, "production")} -p #{fetch(:resque_pid)} -d"
     end
   end
 
