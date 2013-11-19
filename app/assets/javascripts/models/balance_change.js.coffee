@@ -8,6 +8,7 @@ Cx.BalanceChange = DS.Model.extend
   subject_type: DS.attr('string')
   created_at: DS.attr('date')
   updated_at: DS.attr('date')
+  currency_id: DS.attr('number')
   vs_currency: DS.attr('string')
   vs_rate:     DS.attr('string')
   time: (-> @get('created_at')?.toISOString()).property('created_at')

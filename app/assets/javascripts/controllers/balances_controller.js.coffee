@@ -4,7 +4,7 @@ Cx.BalancesController = Ember.ArrayController.extend
   setupPusher: (->
     return unless uid = @get 'controllers.auth.id'
     @channel?.unsubscribe()
-    @channel = h.setupPusher @store, 'balance', "private-balances-#{uid}"
+    @channel = h.setupPusher @store, 'balance', "private-balances-#{uid}", @
   ).on('init').observes('controllers.auth.id')
   sortProperties: ['currency.name']
   selectedCurrency: Ember.ObjectProxy.create()

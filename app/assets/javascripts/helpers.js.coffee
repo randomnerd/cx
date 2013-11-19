@@ -29,13 +29,20 @@
   h[model.pluralize()] = [d]
   return h
 
-@h.setupPusher = (store, model, key) ->
+@h.sortedArray = (data, sortP, sortA) ->
+  Ember.ArrayProxy.createWithMixins Ember.SortableMixin,
+    content: data
+    sortProperties: sortP
+    sortAscending: sortA
+
+@h.setupPusher = (store, model, key, ctrl) ->
   c = pusher.subscribe(key)
   c.callbacks._callbacks = {}
   c.bind "#{model.toLowerCase()}#new", (o) ->
     return if store.getById(model, o.id)
-    h.pushedModels.push [model, o]
-    h.flushPushedModels(store)
+    store.pushPayload(model, h.manyHash(model, o))
+    obj = store.getById(model, o.id)
+    ctrl?.addObject(obj)
 
   c.bind "#{model.toLowerCase()}#update", (o) ->
     f = store.getById(model, o.id)
@@ -44,7 +51,10 @@
 
   c.bind "#{model.toLowerCase()}#delete", (o) ->
     Ember.run.next ->
-      store.getById(model, o.id)?.deleteRecord()
+      obj = store.getById(model, o.id)
+      return unless obj
+      ctrl?.removeObject(obj)
+      obj.deleteRecord()
 
   return c
 

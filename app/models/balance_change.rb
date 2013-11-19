@@ -14,4 +14,10 @@ class BalanceChange < ActiveRecord::Base
   def pusher_channel
     "private-balanceChanges-#{balance.user_id}"
   end
+
+  def pusher_create
+    return unless self.amount != 0
+    return if self.subject_type == 'Order'
+    Pusher[pusher_channel].trigger_async("#{pusher_name}#new", pusher_serialize)
+  end
 end

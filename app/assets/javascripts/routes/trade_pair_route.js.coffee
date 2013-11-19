@@ -6,12 +6,15 @@ Cx.TradePairRoute = Ember.Route.extend
 
   setupController: (c, pair) ->
     c.set 'model', pair
-    orders = @store.find('order', {tradePair: pair.get('id')})
-    trades = @store.find('trade', {tradePair: pair.get('id')})
-    @controllerFor('trades').set 'tradePairId', parseInt(pair.get('id'))
-    @controllerFor('orders').set 'tradePairId', parseInt(pair.get('id'))
-    @controllerFor('trades').set 'model', trades
-    @controllerFor('orders').set 'model', orders
+    @store.find('order', {tradePair: pair.get('id')}).then (d) =>
+      @controllerFor('orders').set 'model', @store.filter 'order', (o) ->
+        o.get('trade_pair_id') == parseInt(pair.get 'id')
+      @controllerFor('orders').set 'tradePairId', parseInt(pair.get('id'))
+
+    @store.find('trade', {tradePair: pair.get('id')}).then (d) =>
+      @controllerFor('trades').set 'model', @store.filter 'trade', (o) ->
+        o.get('trade_pair_id') == parseInt(pair.get 'id')
+      @controllerFor('trades').set 'tradePairId', parseInt(pair.get('id'))
 
   deactivate: ->
     @ordersChannel?.unsubscribe()

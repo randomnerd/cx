@@ -4,5 +4,5 @@ Cx.TradePairController = Ember.Controller.extend
 Cx.TradePairsController = Ember.ArrayController.extend
   sortProperties: ['url_slug']
   setupPusher: (->
-    h.setupPusher @store, 'tradePair', 'tradepairs'
+    h.setupPusher @store, 'tradePair', 'tradePairs'
   ).on('init')

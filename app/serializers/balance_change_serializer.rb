@@ -2,7 +2,8 @@ class BalanceChangeSerializer < ActiveModel::Serializer
   cached
   delegate :cache_key, to: :object
   attributes :id, :amount, :balance_id, :created_at, :updated_at, :held, :t_held,
-             :comment, :t_amount, :subject_type, :vs_currency, :vs_rate, :txid
+             :comment, :t_amount, :subject_type, :vs_currency, :vs_rate, :txid,
+             :currency_id
 
   def vs_currency
     return nil unless object.subject
@@ -19,5 +20,9 @@ class BalanceChangeSerializer < ActiveModel::Serializer
   def txid
     return nil unless object.subject
     object.subject.try(:txid)
+  end
+
+  def currency_id
+    object.balance.currency_id
   end
 end

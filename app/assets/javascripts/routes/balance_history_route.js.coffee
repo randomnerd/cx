@@ -8,9 +8,8 @@ Cx.BalanceChangesRoute = Ember.Route.extend
   setupController: (c, m) ->
     if cname = m.get? 'name'
       @store.find('balanceChange', {currency_name: cname}).then (bc) =>
-        c.set 'model', bc
+        c.set 'model', Em.ArrayProxy.create(bc)
         c.set 'currency', m
     else
-      console.log m
-      c.set 'model', m.changes
+      c.set 'model', Em.ArrayProxy.create(m.changes)
       c.set 'currency', m.currency.get('content.firstObject')
