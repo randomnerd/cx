@@ -1,5 +1,5 @@
 Cx.BalanceChangesController = Em.ArrayController.extend
-  sortProperties: ['created_at']
+  sortProperties: ['num_id']
   sortAscending: false
   needs: ['auth']
   setupPusher: (->
@@ -9,6 +9,5 @@ Cx.BalanceChangesController = Em.ArrayController.extend
   ).on('init').observes('controllers.auth.id')
   setFilter: (->
     @set 'model', @store.filter 'balanceChange', (o) =>
-      o.get('currency_id') == parseInt(@get('currency.id')) &&
-      o.get('amount') > 0
+      o.get('currency_id') == parseInt(@get('currency.id'))
   ).on('init').observes('currency.id')

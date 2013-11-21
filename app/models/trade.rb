@@ -46,8 +46,8 @@ class Trade < ActiveRecord::Base
     currency.incomes.create(amount:  bid_fee, subject: self) if bid_fee > 0
     ask_user.balance_for(currency_id).unlock_funds(amount, self, false)
     bid_user.balance_for(currency_id).add_funds(amount - bid_fee, self)
-    ask_user.balance_for(market_id).add_funds(market_amount - ask_fee, self)
     bid_user.balance_for(market_id).unlock_funds(market_amount, self, false)
+    ask_user.balance_for(market_id).add_funds(market_amount - ask_fee, self)
 
     return unless unused_amount > 0
     bid_user.balance_for(market_id).unlock_funds(unused_amount, self)

@@ -36,13 +36,14 @@
           <td>
             {{#if item.trade}}
               {{#if item.positive}}Bought{{else}}Sold{{/if}}
-              {{round item.amount}} {{currency.name}}
+              {{round item.abs_total}} {{currency.name}}
               @ {{round item.vs_rate}} {{item.vs_currency}} each
             {{else}}
-              {{item.source}}: {{round item.amount}} {{currency.name}}
+              {{item.source}}: {{round item.abs_amount}} {{currency.name}}
+              {{#if item.txid}}({{item.txid}}){{/if}}
             {{/if}}
           </td>
-          <td class="text-right monospace">{{round item.total}} {{currency.name}}</td>
+          <td class="text-right monospace">{{round item.t_total}} {{currency.name}}</td>
         </tr>
         {{/each}}
       </tbody>

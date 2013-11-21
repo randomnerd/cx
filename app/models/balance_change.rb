@@ -6,8 +6,7 @@ class BalanceChange < ActiveRecord::Base
     joins(:currency).where(currencies: {name: name})
   }
   scope :changes_total, -> {
-    where('balance_changes.amount != 0').
-    where('balance_changes.subject_type != "Order" or balance_changes.subject_type is null')
+    where('balance_changes.amount + balance_changes.held != 0')
   }
 
   include PusherSync
@@ -16,8 +15,7 @@ class BalanceChange < ActiveRecord::Base
   end
 
   def pusher_create
-    return unless self.amount != 0
-    return if self.subject_type == 'Order'
+    return unless self.amount + self.held != 0
     Pusher[pusher_channel].trigger_async("#{pusher_name}#new", pusher_serialize)
   end
 end

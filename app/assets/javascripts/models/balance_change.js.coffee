@@ -1,5 +1,6 @@
 Cx.BalanceChange = DS.Model.extend
   amount: DS.attr('number')
+  abs_amount: (-> Math.abs(@get 'amount')).property('amount')
   held: DS.attr('number')
   balance: DS.belongsTo('balance')
   t_held: DS.attr('number')
@@ -16,7 +17,9 @@ Cx.BalanceChange = DS.Model.extend
   deposit: (-> @get('subject_type') == 'Deposit').property('subject_type')
   withdrawal: (-> @get('subject_type') == 'Withdrawal').property('subject_type')
   trade: (-> @get('subject_type') == 'Trade').property('subject_type')
-  total: (-> @get('t_held') + @get('t_amount')).property('t_held', 't_amount')
+  total: (-> @get('held') + @get('amount')).property('held', 'amount')
+  abs_total: (-> Math.abs @get('total') ).property('total')
+  t_total: (-> @get('t_held') + @get('t_amount')).property('t_held', 't_amount')
   source: (->
     s = @get('subject_type') || @get('comment')
     if @get('vs_currency') && @get('vs_rate')
