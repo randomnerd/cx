@@ -1,13 +1,11 @@
-<div class="well well-small volume clearfix">
+<div class="well well-small volume">
   Last 24hrs trade volume:
   {{round pair.currency_volume}} {{pair.currency.name}} /
   {{round pair.market_volume}} {{pair.market.name}}
-  <div class="pull-right">
-    <div class="label label-danger">
-      Min: {{round pair.rate_min}} {{pair.market.name}}
-    </div>
-    <div class="label label-success">
+    <div class="label label-success pull-right">
       Max: {{round pair.rate_max}} {{pair.market.name}}
     </div>
-  </div>
+    <div class="label label-danger pull-right">
+      Min: {{round pair.rate_min}} {{pair.market.name}}
+    </div>
 </div>

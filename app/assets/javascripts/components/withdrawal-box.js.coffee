@@ -14,7 +14,7 @@ Cx.WithdrawalBoxComponent = Ember.Component.extend
         error: (data) =>
           console.log 'fail'
     setFullAmount: ->
-      @set 'amount', h.n2f @get('currency.balance.amount')
+      @set 'amount', h.n2f @get('currency.balance.firstObject.amount')
       $('#withdrawal-form #amount-input').focus()
     addBookEntry: ->
       @set 'bookAddress', @get('address')
@@ -66,9 +66,9 @@ Cx.WithdrawalBoxComponent = Ember.Component.extend
 
   allowWithdraw: (->
     a = parseFloat(@get('amount'))
-    ba = h.n2f @get('currency.balance.amount')
+    ba = h.n2f @get('currency.balance.firstObject.amount')
     a <= ba && a >= @get('min_withdraw')
-  ).property('amount', 'currency.balance.amount')
+  ).property('amount', 'currency.balance.firstObject.amount')
 
   allowSaveEntry: (->
     @get('bookAddress') && @get('bookName')

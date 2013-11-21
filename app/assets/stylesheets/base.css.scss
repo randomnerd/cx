@@ -52,7 +52,7 @@ a { cursor: pointer; }
   .content { display: none; }
 }
 
-.volume .label { margin-left: 5px; }
+.volume .label { margin-left: 5px; font-size: 12px; line-height: 14px; font-weight: normal; }
 
 .digits { text-align: right !important; }
 .popover { max-width: 100%; }

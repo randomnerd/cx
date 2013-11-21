@@ -4,7 +4,7 @@ Cx.OrdersController = Em.ArrayController.extend
   setupPusher: (->
     return unless tpId = @get 'tradePairId'
     @channel?.unsubscribe()
-    @channel = h.setupPusher @store, 'order', "orders-#{tpId}", @
+    @channel = h.setupPusher @store, 'order', "orders-#{tpId}"
   ).on('init').observes('tradePairId')
 
   own: (->
