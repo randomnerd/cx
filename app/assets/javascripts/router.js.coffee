@@ -6,5 +6,5 @@ Cx.Router.map () ->
   @route 'balances', {path: '/account/balances'}
   @route 'balanceChanges', {path: '/account/balances/:name/history'}
 
-# Cx.Router.reopen
-#   location: 'history'
+Cx.Router.reopen
+  location: 'history'
