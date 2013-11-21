@@ -4,6 +4,7 @@
 Cx.AuthController = Ember.ObjectController.extend
   needs: ['commonLoginBox']
   isSignedIn: Em.computed.notEmpty("content.email")
+  attemptedTransition: null
   login: (r) ->
     $.ajax
       url: '/users/sign_in'
@@ -19,6 +20,10 @@ Cx.AuthController = Ember.ObjectController.extend
         @set 'model', user
         @get('controllers.commonLoginBox').set "loginErrorMsg", null
         @target.send('loadUserData', user)
+        if attemptedTrans = @get 'attemptedTransition'
+          console.log attemptedTrans
+          attemptedTrans.retry()
+          @set 'attemptedTransition', null
       error: (jqXHR, textStatus, errorThrown) =>
         @get('controllers.commonLoginBox').set "loginErrorMsg", "Incorrect email/password"
 
