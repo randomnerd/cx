@@ -64,6 +64,7 @@ gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'slim'
 gem 'clockwork'
+gem 'daemons'
 
 # gem 'sshkit', github: 'leehambley/sshkit'
 gem 'capistrano'

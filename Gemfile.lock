@@ -83,6 +83,7 @@ GEM
     coffee-script-source (1.6.3)
     connection_pool (1.1.0)
     cookiejar (0.3.0)
+    daemons (1.1.9)
     dalli (2.6.4)
     devise (3.2.1)
       bcrypt-ruby (~> 3.0)
@@ -259,6 +260,7 @@ DEPENDENCIES
   capistrano-rails
   clockwork
   coffee-rails (~> 4.0.0)
+  daemons
   dalli
   devise
   devise-async
