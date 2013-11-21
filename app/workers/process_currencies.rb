@@ -1,7 +1,7 @@
 class ProcessCurrencies
-  @queue = :currencies
+  include Sidekiq::Worker
 
-  def self.perform
+  def perform
     return if Rails.cache.read :currencies_processing
     Rails.cache.write :currencies_processing, true
     Currency.all.each do |currency|
@@ -19,6 +19,8 @@ class ProcessCurrencies
           puts "[#{Time.now}] Processing #{currency.name}: host down"
         when Timeout::Error
           puts "[#{Time.now}] Processing #{currency.name}: failed to connect"
+        when Errno::EHOSTUNREACH
+          puts "[#{Time.now}] Processing #{currency.name}: host unreachable"
         else
           puts e.inspect
           puts e.backtrace
@@ -30,6 +32,5 @@ class ProcessCurrencies
     puts e.inspect
   ensure
     Rails.cache.write :currencies_processing, false
-    sleep 2 # allow pusher to finish sending notifications
   end
 end

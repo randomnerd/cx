@@ -7,7 +7,7 @@ module PusherSync
 
   def pusher_serialize
     o = Object.const_get("#{self.class.name}Serializer")
-    o.try(:new, self, root: false) || self
+    o.try(:new, self, root: false).to_json || self.to_json
   end
 
   def pusher_name
@@ -15,15 +15,15 @@ module PusherSync
   end
 
   def pusher_create
-    Pusher[pusher_channel].trigger_async("#{pusher_name}#new", pusher_serialize)
+    PusherMsg.perform_async(pusher_channel, "c", pusher_serialize)
   end
 
   def pusher_update
-    Pusher[pusher_channel].trigger_async("#{pusher_name}#update", pusher_serialize)
+    PusherMsg.perform_async(pusher_channel, "u", pusher_serialize)
   end
 
   def pusher_delete
-    Pusher[pusher_channel].trigger_async("#{pusher_name}#delete", pusher_serialize)
+    PusherMsg.perform_async(pusher_channel, "d", pusher_serialize)
   end
 
   def pusher_channel

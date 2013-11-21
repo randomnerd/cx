@@ -60,9 +60,10 @@ gem 'mysql'
 gem 'dalli'
 
 gem 'httparty'
-gem 'resque'
-gem 'resque-scheduler', :require => 'resque_scheduler'
-gem 'resque-pool'
+gem 'sidekiq'
+gem 'sinatra', require: false
+gem 'slim'
+gem 'clockwork'
 
 # gem 'sshkit', github: 'leehambley/sshkit'
 gem 'capistrano'

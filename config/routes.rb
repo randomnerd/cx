@@ -1,9 +1,6 @@
-Cx::Application.routes.draw do
-  require 'resque/server'
-  require 'resque_scheduler'
-  require 'resque_scheduler/server'
-  mount Resque::Server => "/hq/resque"
+require 'sidekiq/web'
 
+Cx::Application.routes.draw do
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
       resources :currencies, only: [:index, :show] do
@@ -37,6 +34,10 @@ Cx::Application.routes.draw do
     sessions: 'sessions',
     registrations: 'registrations'
   }
+
+  authenticate :user, -> u { u.admin? } do
+    mount Sidekiq::Web => '/hq/sidekiq'
+  end
   post '/pusher/auth', to: 'pusher#auth'
   root 'chat#index'
   get '*path', to: 'chat#index'

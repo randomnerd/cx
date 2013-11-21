@@ -16,6 +16,6 @@ class BalanceChange < ActiveRecord::Base
 
   def pusher_create
     return unless self.amount + self.held != 0
-    Pusher[pusher_channel].trigger_async("#{pusher_name}#new", pusher_serialize)
+    PusherMsg.perform_async(pusher_channel, "c", pusher_serialize)
   end
 end

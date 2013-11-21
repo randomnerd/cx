@@ -38,18 +38,18 @@
 @h.setupPusher = (store, model, key, ctrl) ->
   c = pusher.subscribe(key)
   c.callbacks._callbacks = {}
-  c.bind "#{model.toLowerCase()}#new", (o) ->
+  c.bind "c", (o) ->
     return if store.getById(model, o.id)
     store.pushPayload(model, h.manyHash(model, o))
     obj = store.getById(model, o.id)
     ctrl?.addObject(obj)
 
-  c.bind "#{model.toLowerCase()}#update", (o) ->
+  c.bind "u", (o) ->
     f = store.getById(model, o.id)
     return if +(new Date(f?.get('updated_at'))) > +(new Date(o.updated_at))
     store.pushPayload(model, h.manyHash(model, o))
 
-  c.bind "#{model.toLowerCase()}#delete", (o) ->
+  c.bind "d", (o) ->
     Ember.run.next ->
       obj = store.getById(model, o.id)
       return unless obj
