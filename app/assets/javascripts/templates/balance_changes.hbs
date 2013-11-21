@@ -45,6 +45,12 @@
           </td>
           <td class="text-right monospace">{{round item.t_total}} {{currency.name}}</td>
         </tr>
+        {{else}}
+          <tr>
+            <td colspan="4" class="text-muted text-center">
+              Nothing to show here yet...
+            </td>
+          </tr>
         {{/each}}
       </tbody>
     </table>

@@ -5,6 +5,7 @@ Cx.BalanceChangesRoute = Cx.AuthRoute.extend
       d.get('firstObject')
 
   setupController: (c, m) ->
+    c.set 'currency', m
+    c.set 'model', []
     @store.find('balanceChange', {currency_name: m.get('name')}).then (bc) =>
       c.set 'model', Em.ArrayProxy.create(bc)
-      c.set 'currency', m
