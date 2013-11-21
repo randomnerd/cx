@@ -1,20 +1,20 @@
 <div class="row">
-  <div class="col-lg-4">
+  <div class="col-sm-4">
     <div class="panel panel-default panel-big-heading text-center">
       <div class="panel-heading">Available</div>
-      <h2>{{round currency.balance.firstObject.amount}} {{currency.name}}</h2>
+      <h3 class='monospace'>{{round currency.balance.firstObject.amount}} {{currency.name}}</h3>
     </div>
   </div>
-  <div class="col-lg-4">
+  <div class="col-sm-4">
     <div class="panel panel-default panel-big-heading text-center">
       <div class="panel-heading">Held for orders</div>
-      <h2>{{round currency.balance.firstObject.held}} {{currency.name}}</h2>
+      <h3 class='monospace'>{{round currency.balance.firstObject.held}} {{currency.name}}</h3>
     </div>
   </div>
-  <div class="col-lg-4">
+  <div class="col-sm-4">
     <div class="panel panel-default panel-big-heading text-center">
       <div class="panel-heading">Total</div>
-      <h2>{{round currency.balance.firstObject.total}} {{currency.name}}</h2>
+      <h3 class='monospace'>{{round currency.balance.firstObject.total}} {{currency.name}}</h3>
     </div>
   </div>
 </div>

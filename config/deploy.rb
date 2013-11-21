@@ -14,6 +14,7 @@ set :unicorn_binary, "#{shared_path}/bin/unicorn"
 set :unicorn_config, "#{current_path}/config/unicorn.rb"
 set :unicorn_pid,    "#{shared_path}/tmp/pids/unicorn.pid"
 set :resque_pid,     "#{shared_path}/tmp/pids/resque.pid"
+set :clockwork_config, "#{current_path}/config/clockwork.rb"
 
 set :linked_files, %w{config/database.yml}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
@@ -24,6 +25,28 @@ set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public
 SSHKit.config.command_map[:rake]  = "bundle exec rake"
 SSHKit.config.command_map[:rails] = "bundle exec rails"
 
+namespace :clockwork do
+  desc "Start clockwork daemon"
+  task :start do
+    on roles(:app) do
+      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)} bundle exec clockworkd -c #{fetch(:clockwork_config)} --pid-dir tmp/pids -d #{current_path} --log start"
+    end
+  end
+
+  desc "Stop clockwork daemon"
+  task :stop do
+    on roles(:app) do
+      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)} bundle exec clockworkd -c #{fetch(:clockwork_config)} --pid-dir tmp/pids -d #{current_path} --log stop"
+    end
+  end
+
+  desc "Restart clockwork daemon"
+  task :restart do
+    on roles(:app) do
+      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)} bundle exec clockworkd -c #{fetch(:clockwork_config)} --pid-dir tmp/pids -d #{current_path} --log restart"
+    end
+  end
+end
 
 namespace :deploy do
   desc "Start application"
@@ -31,27 +54,6 @@ namespace :deploy do
     on roles(:app) do
       execute "cd #{current_path} && #{fetch(:unicorn_binary)} -c #{fetch(:unicorn_config)} -E #{fetch(:rails_env, "production")} -D"
     end
-  end
-
-  desc 'Stop resque pool'
-  task :stop_resque do
-    on roles(:resque) do
-      execute "kill `cat #{fetch(:resque_pid)}`"
-    end
-  end
-
-  desc 'Start resque pool'
-  task :start_resque do
-    on roles(:resque) do
-      execute "cd #{current_path} && bundle exec resque-pool -E #{fetch(:rails_env, "production")} -p #{fetch(:resque_pid)} -d"
-    end
-  end
-
-  desc 'Restart resque pool'
-  task :restart_resque do
-    invoke 'deploy:stop_resque'
-    sleep 3
-    invoke 'deploy:start_resque'
   end
 
   desc "Stop application"
@@ -77,11 +79,10 @@ namespace :deploy do
 
   desc 'Restart application'
   task :restart do
-    invoke 'deploy:stop'
-    sleep 10
-    invoke 'deploy:start'
+    invoke "deploy:reload"
   end
 
-  after :finishing, 'deploy:cleanup', 'bundle:install', 'deploy:restart_resque'
+  after :deploy, 'clockwork:restart', 'sidekiq:restart'
+  after :finishing, 'deploy:cleanup'
 
 end

@@ -46,7 +46,7 @@
 
   c.bind "u", (o) ->
     f = store.getById(model, o.id)
-    return if +(new Date(f?.get('updated_at'))) > +(new Date(o.updated_at))
+    return if f && +(new Date(f?.get('updated_at'))) > +(new Date(o.updated_at))
     store.pushPayload(model, h.manyHash(model, o))
 
   c.bind "d", (o) ->
