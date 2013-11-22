@@ -52,7 +52,7 @@ Ember.Handlebars.helper 'round', (amount) ->
 
 Ember.Handlebars.helper 'noExp', (amount) ->
   return 0 unless amount
-  amount.noExponents()
+  h.round(amount).noExponents()
 
 Ember.Handlebars.helper 'orZero', (v) ->
   if v then return v else return 0
