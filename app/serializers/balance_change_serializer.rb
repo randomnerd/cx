@@ -16,8 +16,7 @@ class BalanceChangeSerializer < ActiveModel::Serializer
     return nil unless object.subject
     c = object.subject.try(:trade_pair).try(:currency)
     m = object.subject.try(:trade_pair).try(:market)
-    c.try(:id) == object.balance.currency_id ? object.subject.try(:rate) : 1
-    object.subject.try(:rate)
+    c.try(:id) == object.balance.currency_id ? object.subject.try(:rate) : 1 * 10 ** 8
   end
 
   def txid
