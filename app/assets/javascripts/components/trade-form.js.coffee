@@ -13,6 +13,7 @@ Cx.TradeFormComponent = Ember.Component.extend
       t = h.f2n @get 'amount'
       b = @get('pair.currency.balance.firstObject.amount')
     return false unless t
+    return false if @get 'inProgress'
     b >= t && @get('total') > 0 && parseFloat(@get 'amount') >= 0.01
   ).property('total', 'amount', 'pair.currency.balance.firstObject.amount', 'pair.market.balance.firstObject.amount')
 
@@ -30,6 +31,7 @@ Cx.TradeFormComponent = Ember.Component.extend
     setTotal: (balance) ->
       @set 'amount', h.n2f(balance)
     submit: ->
+      @set 'inProgress', true
       store = @get('targetObject.store')
       order = store.createRecord 'order',
         user:      @get('user').get('content').get('content')
@@ -37,4 +39,4 @@ Cx.TradeFormComponent = Ember.Component.extend
         rate:      h.f2n(@get('rate'))
         amount:    h.f2n(@get('amount'))
         bid:       !!@get('buy')
-      order.save()
+      order.save().then => @set 'inProgress', false

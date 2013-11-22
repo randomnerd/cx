@@ -21,7 +21,8 @@
         <td>{{noExp marketAmount}}</td>
         <td class="actions">
           <span class="pull-right">
-            <button class="btn btn-danger btn-xs" {{action 'cancel' this}}>Cancel</button>
+            <button {{bind-attr class=":btn :btn-danger :btn-xs inProgress:disabled"}}
+              {{action 'cancel' this}}>Cancel</button>
           </span>
         </td>
       </tr>
