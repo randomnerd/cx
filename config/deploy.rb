@@ -6,6 +6,11 @@ set :repo_url, 'git@github.com:erundook/cx.git'
 set :deploy_to, '/var/www/cx'
 set :scm, :git
 
+set :local_repository, "file://."
+set :deploy_via, :copy
+set :copy_cache, true
+set :copy_via, :scp
+
 # set :format, :pretty
 # set :log_level, :debug
 set :pty, true
@@ -18,6 +23,7 @@ set :clockwork_config, "#{current_path}/config/clockwork.rb"
 
 set :linked_files, %w{config/database.yml}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :sidekiq_pid, "tmp/pids/sidekiq.pid"
 
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 # set :keep_releases, 5

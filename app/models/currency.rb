@@ -60,8 +60,6 @@ class Currency < ActiveRecord::Base
         raise 'unable to move funds' unless move
         txid    = self.rpc.sendfrom account, withdrawal.address, amount
         raise 'sendfrom failed' unless txid
-        unlock  = balance.unlock_funds(withdrawal.amount, withdrawal, false)
-        raise 'unlock failed' unless unlock
         withdrawal.processed = true
         withdrawal.txid = txid
         withdrawal.user.notifications.create(
@@ -69,7 +67,7 @@ class Currency < ActiveRecord::Base
           body: "#{n2f withdrawal.amount} #{self.name} sent to #{withdrawal.address}"
         )
       rescue => e
-        unlock  = balance.unlock_funds(withdrawal.amount, withdrawal)
+        balance.add_funds(withdrawal.amount, withdrawal)
         withdrawal.failed = true
         puts e.inspect
         puts e.backtrace
@@ -79,6 +77,7 @@ class Currency < ActiveRecord::Base
         )
       ensure
         withdrawal.save
+        withdrawal.balance_change.touch
         withdrawal.balance_change.pusher_update
       end
     end
@@ -91,7 +90,7 @@ class Currency < ActiveRecord::Base
   end
 
   def update_deposit_confirmations
-    deposits = deposits.unprocessed.where('confirmations < ?', self.tx_conf)
+    deposits = self.deposits.unprocessed.where('confirmations < ?', self.tx_conf)
     deposits.each do |deposit|
       begin
         update = self.rpc.gettransaction deposit.txid

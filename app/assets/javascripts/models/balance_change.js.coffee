@@ -12,6 +12,7 @@ Cx.BalanceChange = DS.Model.extend
   currency_id: DS.attr('number')
   vs_currency: DS.attr('string')
   vs_rate:     DS.attr('string')
+  address:     DS.attr('string')
   txid:        DS.attr('string')
   time: (-> @get('created_at')?.toISOString()).property('created_at')
   positive: (-> @get('amount') > 0).property('amount')

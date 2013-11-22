@@ -2,7 +2,6 @@ Cx.WithdrawalBoxComponent = Ember.Component.extend
   min_withdraw: 0.01
   actions:
     submit: ->
-      console.log @get('currency.name'), @get('amount'), @get('address')
       $.ajax
         url: "/api/v1/currencies/#{@get 'currency.id'}/withdraw"
         type: "POST"
@@ -10,9 +9,10 @@ Cx.WithdrawalBoxComponent = Ember.Component.extend
           amount: @get 'amount'
           address: @get 'address'
         success: (data) =>
-          console.log 'success'
-        error: (data) =>
-          console.log 'fail'
+          $('#withdrawal-box').modal('hide')
+          @set 'address', null
+          @set 'amount', null
+        error: (data) => console.log 'fail'
     setFullAmount: ->
       @set 'amount', h.n2f @get('currency.balance.firstObject.amount')
       $('#withdrawal-form #amount-input').focus()

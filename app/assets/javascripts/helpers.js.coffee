@@ -9,20 +9,6 @@
   Math.round(amount * Math.pow(10, precision)) / Math.pow(10, precision)
 
 @h.openLoginMenu = -> $('#login-menu-link').dropdown('toggle')
-@h.postInProgress ||= false
-@h.pushedModels ||= []
-@h.postDone = -> h.postInProgress = false
-@h.flushPushedModels = (store) ->
-  return unless h.pushedModels?.length
-  if h.postInProgress
-    setTimeout (-> h.flushPushedModels(store)), 50
-    return
-  Ember.run.schedule 'sync', ->
-    for d in h.pushedModels
-      [model, data] = d
-      continue if store.getById(model, data.id)
-      store.pushPayload(model, h.manyHash(model, data))
-    h.pushedModels = []
 
 @h.manyHash = (model, d) ->
   h = {}
@@ -40,6 +26,7 @@
   c.callbacks._callbacks = {}
   c.bind "c", (o) ->
     return if store.getById(model, o.id)
+    console.log 'new', model, o.id
     store.pushPayload(model, h.manyHash(model, o))
     obj = store.getById(model, o.id)
     ctrl?.addObject(obj)
@@ -47,6 +34,7 @@
   c.bind "u", (o) ->
     f = store.getById(model, o.id)
     return if f && +(new Date(f?.get('updated_at'))) > +(new Date(o.updated_at))
+    console.log 'upd', model, o.id
     store.pushPayload(model, h.manyHash(model, o))
 
   c.bind "d", (o) ->

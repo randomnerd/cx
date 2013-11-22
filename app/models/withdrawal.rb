@@ -25,6 +25,6 @@ class Withdrawal < ActiveRecord::Base
 
   def lock_funds
     balance = user.balance_for(self.currency_id)
-    balance.lock_funds(self.amount, self)
+    balance.add_funds(-self.amount, self)
   end
 end
