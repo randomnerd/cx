@@ -5,6 +5,7 @@ Cx.BalanceChangesRoute = Cx.AuthRoute.extend
       d.get('firstObject')
 
   setupController: (c, m) ->
+    c.set 'page', 1
     c.set 'currency', m
     c.set 'model', []
     @store.find('deposit', {currency_name: m.get('name')}).then (d) =>
