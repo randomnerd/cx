@@ -95,6 +95,13 @@
             </td>
           </tr>
         {{/each}}
+        {{#if loadingMore}}
+          <tr>
+            <td colspan="4" class="text-muted text-center">
+              Loading more...
+            </td>
+          </tr>
+        {{/if}}
       </tbody>
     </table>
   </div>

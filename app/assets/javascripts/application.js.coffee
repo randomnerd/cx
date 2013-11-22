@@ -3,6 +3,7 @@
 #= require handlebars
 #= require ember
 #= require ember-data
+#= require ember-infinite-scroll
 #= require_self
 #= require cx
 #= require_tree .

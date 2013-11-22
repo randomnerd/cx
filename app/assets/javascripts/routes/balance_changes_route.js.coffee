@@ -11,3 +11,16 @@ Cx.BalanceChangesRoute = Cx.AuthRoute.extend
       @controllerFor('deposits').set 'model', Em.ArrayProxy.create(d)
     @store.find('balanceChange', {currency_name: m.get('name')}).then (bc) =>
       c.set 'model', Em.ArrayProxy.create(bc)
+
+  actions:
+    getMore: ->
+      c = @get 'controller'
+      nextPage = c.get('page') + 1
+      @store.find('balanceChange',
+        currency_name: c.get('currency.name')
+        page: nextPage
+      ).then (d) ->
+        c.set('loadingMore', false)
+        return unless d.get('length')
+        c.addObjects(d)
+        c.set('page', nextPage)

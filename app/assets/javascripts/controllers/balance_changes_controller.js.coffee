@@ -1,4 +1,5 @@
-Cx.BalanceChangesController = Em.ArrayController.extend
+Cx.BalanceChangesController = Em.ArrayController.extend InfiniteScroll.ControllerMixin,
+  perPage: 10
   sortProperties: ['num_id']
   sortAscending: false
   needs: ['auth', 'deposits']
@@ -15,3 +16,7 @@ Cx.BalanceChangesController = Em.ArrayController.extend
   addObject: (o) ->
     return unless @filter(o)
     @_super(o)
+
+Cx.BalanceChangesView = Em.View.extend InfiniteScroll.ViewMixin,
+  didInsertElement: -> @setupInfiniteScrollListener()
+  willDestroyElement: -> @teardownInfiniteScrollListener()
