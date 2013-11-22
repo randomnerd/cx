@@ -11,4 +11,12 @@ class Api::V1::MessagesController < Api::V1::BaseController
   def permitted_params
     params.permit(message: [:body])
   end
+
+  def destroy
+    if current_user.try(:admin?)
+      super
+    else
+      head :unauthorized
+    end
+  end
 end

@@ -22,6 +22,11 @@ Cx.CommonChatController = Ember.ArrayController.extend
         @lock = el.scrollTop + $(el).height() * 1.1 < el.scrollHeight
   ).on('init')
 
+  mentioned: ((a,b,c) ->
+    console.log 'mentioned', this
+    !!a.match @get 'controllers.auth.nickname'
+  ).property('controllers.auth.nickname')
+
   actions:
     toggle: ->
       hide = !@get 'hide'
@@ -36,4 +41,8 @@ Cx.CommonChatController = Ember.ArrayController.extend
         created_at: new Date()
       message.save()
       @set 'msg', ''
+      Ember.run.next -> $('#chat input').focus()
+    addName: (item) ->
+      msg = @get 'msg'
+      @set 'msg', "#{msg}#{item.get('name')}, "
       Ember.run.next -> $('#chat input').focus()

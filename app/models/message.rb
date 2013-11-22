@@ -1,6 +1,7 @@
 class Message < ActiveRecord::Base
   validate :valid_msg
   belongs_to :user, touch: true
+  before_create :set_system
 
   include PusherSync
   def pusher_channel
@@ -16,6 +17,10 @@ class Message < ActiveRecord::Base
   def valid_msg
     return unless body.empty?
     errors.add(:body, 'empty')
+  end
+
+  def set_system
+    self.system = true if self.user.admin?
   end
 
 end

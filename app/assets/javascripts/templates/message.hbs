@@ -1,1 +1,14 @@
-<strong>{{name}}: {{body}}</strong>
+<div {{bind-attr class=":message :panel :panel-default :nopadding mention:highlight own:own content.system:system"}}>
+  <div class="text-muted pull-right">
+    {{view Cx.TimeagoView title=content.time}}
+  </div>
+  <div class="nickname">
+    <a {{action 'addName' this}}>{{content.name}}</a>
+  </div>
+  {{#if currentUser.admin}}
+    <a class="pull-right nodecor" {{action 'remove' this}}>
+      <i class="icon-trash"></i>
+    </a>
+  {{/if}}
+  {{content.body}}
+</div>

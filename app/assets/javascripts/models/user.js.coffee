@@ -1,4 +1,5 @@
 Cx.User = DS.Model.extend
+  admin:    DS.attr('boolean')
   email:    DS.attr('string')
   nickname: DS.attr('string')
   created_at: DS.attr('date')

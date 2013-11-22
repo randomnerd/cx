@@ -5,21 +5,8 @@
   <div class="content">
 
     <div class="messages" id="messageList">
-      {{#each controllers.messages}}
-      <div class="message panel panel-default nopadding {{msgClass}} {{#if picUrl}}withPic{{/if}}">
-        <div class="text-muted pull-right">
-          {{view Cx.TimeagoView title=time}}
-        </div>
-        <div class="nickname">
-          <a class="appendNickname">{{name}}</a>
-        </div>
-        {{#if moderator}}
-          <a class="deleteMessage pull-right">
-            <i class="icon-trash"></i>
-          </a>
-        {{/if}}
-        {{body}}
-      </div>
+      {{#each msg in controllers.messages}}
+      {{render message msg}}
       {{else}}
       <div class="text-muted">No messages yet</div>
       {{/each}}

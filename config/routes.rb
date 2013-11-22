@@ -40,5 +40,6 @@ Cx::Application.routes.draw do
     mount Sidekiq::Web => '/hq/sidekiq'
   end
   post '/pusher/auth', to: 'pusher#auth'
+  root to: 'home#index'
   get '*path', to: 'home#index'
 end

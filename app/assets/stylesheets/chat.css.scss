@@ -54,9 +54,10 @@
         text-decoration: none;
       }
 
-      &.system    { background-color: #fcf8e3; }
+      &.system    { background-color: #fcf8e3 !important; }
       &.own       { background-color: #dff0d8; }
       &.highlight { background-color: #d9edf7; }
+      &.highlight.system { background-color: #f2dede !important; }
     }
 
   }
