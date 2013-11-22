@@ -9,7 +9,9 @@ class Api::V1::NotificationsController < Api::V1::BaseController
   end
 
   def ack_all
-    end_of_association_chain.update_all ack: true, updated_at: Time.now
+    end_of_association_chain.unack.each do |n|
+      n.update_attribute :ack, true
+    end
     render json: nil
   end
 

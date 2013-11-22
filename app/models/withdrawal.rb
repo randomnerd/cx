@@ -1,6 +1,7 @@
 class Withdrawal < ActiveRecord::Base
   belongs_to :user
   belongs_to :currency
+  has_one :balance_change, as: :subject
 
   scope :unprocessed, -> { where(processed: false, failed: false) }
 

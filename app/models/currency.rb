@@ -2,6 +2,7 @@ class Currency < ActiveRecord::Base
   include ApplicationHelper
   has_many :incomes
   has_many :withdrawals
+  has_many :deposits
   scope :by_name, -> name { where(name: name) }
 
   def rpc
@@ -78,6 +79,7 @@ class Currency < ActiveRecord::Base
         )
       ensure
         withdrawal.save
+        withdrawal.balance_change.pusher_update
       end
     end
   end
@@ -89,11 +91,12 @@ class Currency < ActiveRecord::Base
   end
 
   def update_deposit_confirmations
-    deposits = Deposit.unprocessed.where('confirmations < ?', self.tx_conf)
+    deposits = deposits.unprocessed.where('confirmations < ?', self.tx_conf)
     deposits.each do |deposit|
       begin
         update = self.rpc.gettransaction deposit.txid
         next unless update
+        return if update['confirmations'] == deposit.confirmations
         deposit.update_attribute :confirmations, update['confirmations']
         self.add_deposit(deposit)
       rescue => e

@@ -18,6 +18,45 @@
     </div>
   </div>
 </div>
+
+{{#if deposits.length}}
+<div class="panel panel-default panel-big-heading">
+  <div class="panel-heading">Pending deposits</div>
+  <div class="content">
+    <div class="alert alert-info">
+      {{currency.name}} deposits are credited to the account balance after
+      <strong>{{currency.tx_conf}} confirmations</strong>.
+    </div>
+    <table class="table table-condensed table-striped nomargin">
+      <thead>
+        <th>ID</th>
+        <th>Time</th>
+        <th>Validity</th>
+        <th class="text-center">TXID</th>
+        <th class="text-right">Amount</th>
+      </thead>
+      <tbody>
+      {{#each deposit in deposits}}
+      <tr>
+        <td>{{deposit.id}}</td>
+        <td>{{view Cx.TimeagoView title=deposit.time}}</td>
+        <td class="text-center">
+          <span class="badge badge-warning">{{deposit.confirmations}}</span>
+        </td>
+        <td class="text-center">
+          <small class="monospace">{{deposit.txid}}</small>
+        </td>
+        <td class="text-right monospace">
+          {{round deposit.amount}} {{currency.name}}
+        </td>
+      </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
+{{/if}}
+
 <div class="panel panel-default panel-big-heading">
   <div class="panel-heading">{{currency.name}} balance history</div>
   <div class="content">
@@ -40,7 +79,11 @@
               @ {{round item.vs_rate}} {{item.vs_currency}} each
             {{else}}
               {{item.source}}: {{round item.abs_amount}} {{currency.name}}
-              {{#if item.txid}}({{item.txid}}){{/if}}
+              {{#if item.txid}}
+              <div class="monospace small text-muted ellipsis">
+                {{item.txid}}
+              </div>
+              {{/if}}
             {{/if}}
           </td>
           <td class="text-right monospace">{{round item.t_total}} {{currency.name}}</td>

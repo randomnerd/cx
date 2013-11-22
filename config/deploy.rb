@@ -73,7 +73,7 @@ namespace :deploy do
   desc "Reload the application"
   task :reload do
     on roles(:app) do
-      execute "OLDPID=`cat #{fetch(:unicorn_pid)}` kill -s USR2 $OLDPID; sleep 3; kill -s QUIT $OLDPID"
+      execute "OLDPID=`cat #{fetch(:unicorn_pid)}`; kill -s USR2 $OLDPID; sleep 3; kill -s QUIT $OLDPID"
     end
   end
 

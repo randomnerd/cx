@@ -9,6 +9,7 @@ Cx::Application.routes.draw do
           post :withdraw
         end
       end
+      resources :deposits, only: [:index]
       resources :balances, only: [:index]
       resources :balance_changes, only: [:index]
       resources :address_book_items, only: [:index, :create, :update, :destroy]
