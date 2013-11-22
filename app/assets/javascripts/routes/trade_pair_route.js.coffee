@@ -6,6 +6,9 @@ Cx.TradePairRoute = Ember.Route.extend
 
   setupController: (c, pair) ->
     c.set 'model', pair
+    @controllerFor('orders').set 'model', []
+    @controllerFor('trades').set 'model', []
+
     @store.find('order', {tradePair: pair.get('id')}).then (d) =>
       @controllerFor('orders').set 'model', @store.filter 'order', (o) ->
         o.get('trade_pair_id') == parseInt(pair.get 'id')
