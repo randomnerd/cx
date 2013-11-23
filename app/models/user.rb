@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  validates_presence_of :email
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -14,8 +15,13 @@ class User < ActiveRecord::Base
   has_many :notifications
   has_many :address_book_items
   has_many :balance_changes, through: :balances
-  after_commit :set_nickname, on: :create
-  after_commit :set_totp_key, on: :create
+  after_create :set_initial_values
+
+  def set_initial_values
+    self.skip_reconfirmation!
+    set_nickname
+    set_totp_key
+  end
 
   def set_nickname(name = nil)
     name ||= email.split('@').first

@@ -32,9 +32,9 @@ Cx.AuthController = Ember.ObjectController.extend
       url: '/users'
       type: "POST"
       data:
-        "user[email]": @get('controllers.commonLoginBox.email')
-        "user[password]": @get('controllers.commonLoginBox.password')
-        "user[password_confirmation]": @get('controllers.commonLoginBox.password')
+        "user[email]": $('#login-email').val()
+        "user[password]": $('#login-password').val()
+        "user[password_confirmation]": $('#login-password').val()
       success: (data) =>
         $('meta[name="csrf-token"]').attr('content', data.token)
         object = @store.push(Cx.User, data.user)
