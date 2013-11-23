@@ -8,7 +8,11 @@ class Api::V1::OrdersController < Api::V1::BaseController
 
   def create
     order = current_user.orders.create(permitted_params[:order])
-    render json: {orders: [OrderSerializer.new(order, root: false),]}
+    if order.persisted?
+      render json: {orders: [OrderSerializer.new(order, root: false)]}
+    else
+      render json: {errors: order.errors}, status: :unprocessable_entity
+    end
   end
 
   def cancel

@@ -23,8 +23,10 @@ Cx.Order = DS.Model.extend
       type: "POST"
       success: (data) =>
         @transitionTo('deleted.saved')
+        cb()
       error: (jqXHR, textStatus, errorThrown) ->
         console.log 'cancel failed'
+        cb()
 
 
 Cx.Order.FIXTURES = [

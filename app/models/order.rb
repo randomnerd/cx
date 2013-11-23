@@ -138,7 +138,8 @@ class Order < ActiveRecord::Base
   end
 
   def check_order_count
-    return if Order.active.bid(self.bid).count < 20
+    count = user.orders.active.bid(self.bid).tp(self.trade_pair_id).count
+    return if count < 20
     errors.add(:id, "too%20much%20open%20orders")
   end
 
