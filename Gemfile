@@ -74,6 +74,7 @@ gem 'capistrano-bundler'
 gem 'newrelic_rpm'
 
 gem 'rotp'
+gem 'font-awesome-sass'
 
 group :development do
   gem 'pry'

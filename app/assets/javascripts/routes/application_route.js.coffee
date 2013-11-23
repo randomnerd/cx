@@ -1,3 +1,4 @@
+Cx.LoadingRoute = Ember.Route.extend({})
 Cx.ApplicationRoute = Ember.Route.extend
   model: ->
     Ember.RSVP.hash(
