@@ -47,28 +47,30 @@
                 </td>
               </tr>
               {{/each}}
-              <tr>
-                <td><small>CoinEx donations</small></td>
-                <td>
-                  <small class="monospace">
-                    1EDf1HHaKfcfiVnWgbSRYQbaYqqDnt1JqY
-                  </small>
-                </td>
-                <td>
-                  <div class="pull-right btn-group">
-                    <button class="btn btn-primary btn-xs"
-                      {{action 'pickBookAddress' '1EDf1HHaKfcfiVnWgbSRYQbaYqqDnt1JqY'}}>
-                      Pick
-                    </button>
-                    <button class="btn btn-default btn-xs disabled">
-                      Edit
-                    </button>
-                    <button class="btn btn-danger btn-xs disabled">
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {{#if currency.donations}}
+                <tr>
+                  <td><small>CoinEx donations</small></td>
+                  <td>
+                    <small class="monospace">
+                      {{currency.donations}}
+                    </small>
+                  </td>
+                  <td>
+                    <div class="pull-right btn-group">
+                      <button class="btn btn-primary btn-xs"
+                        {{action 'pickBookAddress' currency.donations}}>
+                        Pick
+                      </button>
+                      <button class="btn btn-default btn-xs disabled">
+                        Edit
+                      </button>
+                      <button class="btn btn-danger btn-xs disabled">
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              {{/if}}
             </tbody>
           </table>
         </div>
