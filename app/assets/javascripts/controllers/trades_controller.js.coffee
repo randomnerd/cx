@@ -20,6 +20,6 @@ Cx.TradesController = Em.ArrayController.extend
       o.get('bid_user_id') == parseInt(@get 'controllers.auth.id')) &&
       o.get('trade_pair_id') == @get 'tradePairId'
     @ownProxy = h.sortedArray(trades, @sortProperties, @sortAscending)
-  ).property('controllers.auth.id', 'tradePairId', '@each')
+  ).property('controllers.auth.id', 'tradePairId')
 
 

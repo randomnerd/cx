@@ -1,4 +1,3 @@
-Cx.LoadingRoute = Ember.Route.extend({})
 Cx.ApplicationRoute = Ember.Route.extend
   model: ->
     Ember.RSVP.hash(
@@ -7,6 +6,7 @@ Cx.ApplicationRoute = Ember.Route.extend
       tradePairs: @store.findAll 'tradePair'
     ).then (m) -> m
   setupController: (c, m) ->
+    $('#initialSpinner').remove()
     @controllerFor('messages').set 'model', m.messages
     @controllerFor('tradePairs').set 'model', m.tradePairs
     @controllerFor('currencies').set 'model', m.currencies
