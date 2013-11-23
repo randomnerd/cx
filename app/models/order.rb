@@ -8,7 +8,7 @@ class Order < ActiveRecord::Base
   belongs_to :trade_pair
 
   before_save :set_fee
-  after_create :process
+  after_commit :process_async, on: :create
 
   scope :recent,   ->     { order('created_at desc').limit(50) }
   scope :active,   ->     { where(complete: false).where(cancelled: false) }
@@ -42,6 +42,10 @@ class Order < ActiveRecord::Base
       end
       fill_matches
     end
+  end
+
+  def process_async
+    ProcessOrders.perform_async(self.id)
   end
 
   def lock_funds
