@@ -183,6 +183,7 @@ GEM
       redis (~> 3.0.4)
     responders (1.0.0)
       railties (>= 3.2, < 5)
+    rotp (1.4.6)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -279,6 +280,7 @@ DEPENDENCIES
   pusher-async!
   quiet_assets
   rails (= 4.0.1)
+  rotp
   rspec
   sass-rails (~> 4.0.0)
   sdoc

@@ -73,6 +73,8 @@ gem 'capistrano-bundler'
 
 gem 'newrelic_rpm'
 
+gem 'rotp'
+
 group :development do
   gem 'pry'
 end
