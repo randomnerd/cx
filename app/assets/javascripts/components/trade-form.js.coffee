@@ -15,7 +15,9 @@ Cx.TradeFormComponent = Ember.Component.extend
     return false unless t
     return false if @get 'inProgress'
     b >= t && @get('total') > 0 && parseFloat(@get 'amount') >= 0.01
-  ).property('total', 'amount', 'pair.currency.balance.firstObject.amount', 'pair.market.balance.firstObject.amount')
+  ).property('total', 'amount', 'inProgress'
+             'pair.currency.balance.firstObject.amount',
+             'pair.market.balance.firstObject.amount')
 
   fee: (->
     if @get('buy')
