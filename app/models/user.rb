@@ -34,6 +34,7 @@ class User < ActiveRecord::Base
   end
 
   def totp_qrcode_url
+    return unless totp
     data = totp.provisioning_uri("CoinEx-#{self.email}")
     "https://chart.googleapis.​com/chart?chs=200x200&chld=M|0&cht=qr&chl=#{data}"
   end
