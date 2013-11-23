@@ -12,7 +12,12 @@ class Api::V1::CurrenciesController < Api::V1::BaseController
   end
 
   def withdraw
-    return unless current_user
+    head(:unauthorized) and return unless current_user
+    unless current_user.totp_active && current_user.totp_verify(params[:totp])
+      render json: {errors: {totp: 'Wrong TOTP'}}, status: 401
+      return
+    end
+
     current_user.withdrawals.create(
       currency_id: resource.id,
       amount:  params[:amount].to_f * 10 ** 8,

@@ -1,4 +1,5 @@
 Cx.WithdrawalBoxComponent = Ember.Component.extend
+  tfaCode: ''
   min_withdraw: 0.01
   actions:
     submit: ->
@@ -8,11 +9,17 @@ Cx.WithdrawalBoxComponent = Ember.Component.extend
         data:
           amount: @get 'amount'
           address: @get 'address'
+          totp: @get 'tfaCode'
         success: (data) =>
           $('#withdrawal-box').modal('hide')
           @set 'address', null
           @set 'amount', null
-        error: (data) => console.log 'fail'
+        error: (data) =>
+          errors = data.responseJSON?.errors
+          console.log errors
+          if errors.totp
+            $('#withdrawal-form #tfa-input').parent().addClass('has-error')
+            Ember.run.next -> $('#withdrawal-form #tfa-input').focus()
     setFullAmount: ->
       @set 'amount', h.n2f @get('currency.balance.firstObject.amount')
       $('#withdrawal-form #amount-input').focus()
@@ -67,8 +74,10 @@ Cx.WithdrawalBoxComponent = Ember.Component.extend
   allowWithdraw: (->
     a = parseFloat(@get('amount'))
     ba = h.n2f @get('currency.balance.firstObject.amount')
+    return unless @get('address')?.length > 30
+    return if @get('user.totp_active') && @get('tfaCode').length < 6
     a <= ba && a >= @get('min_withdraw')
-  ).property('amount', 'currency.balance.firstObject.amount')
+  ).property('amount', 'currency.balance.firstObject.amount', 'user.totp_active', 'tfaCode', 'address')
 
   allowSaveEntry: (->
     @get('bookAddress') && @get('bookName')
