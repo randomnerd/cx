@@ -12,14 +12,11 @@ Cx.TradesController = Em.ArrayController.extend
   own: (->
     return unless tpId = @get 'tradePairId'
     @ownProxy = undefined if @ownProxy
-    @store.find 'trade',
-      tradePair: tpId
-      user: @get 'controllers.auth.id'
     trades = @filter (o) =>
       (o.get('ask_user_id') == parseInt(@get 'controllers.auth.id') ||
       o.get('bid_user_id') == parseInt(@get 'controllers.auth.id')) &&
       o.get('trade_pair_id') == @get 'tradePairId'
     @ownProxy = h.sortedArray(trades, @sortProperties, @sortAscending)
-  ).property('controllers.auth.id', 'tradePairId')
+  ).property('controllers.auth.id', 'tradePairId', '@each')
 
 

@@ -19,6 +19,10 @@ Cx.TradePairRoute = Ember.Route.extend
         o.get('trade_pair_id') == parseInt(pair.get 'id')
       @controllerFor('trades').set 'tradePairId', parseInt(pair.get('id'))
 
+    @store.find 'trade',
+      tradePair: pair.get('id')
+      user: @get 'controllers.auth.id'
+
   deactivate: ->
     @ordersChannel?.unsubscribe()
     @ordersChannel = undefined
