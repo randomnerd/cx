@@ -1,7 +1,9 @@
 Cx.ChangePasswordRoute = Em.Route.extend
   beforeModel: (route) ->
-    if !@controllerFor('auth').get('isSignedIn') && !route.params.token
-      @transitionTo('tradeIndex')
+    if @controllerFor('auth').get('isSignedIn')
+      @transitionTo('tradeIndex') if route.params.token
+    else
+      @transitionTo('tradeIndex') unless route.params.token
 
 Cx.ChangePasswordTokenRoute = Em.Route.extend
   model: (params) -> params
