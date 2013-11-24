@@ -86,11 +86,11 @@ class Trade < ActiveRecord::Base
   end
 
   def bid_fee
-    (market_amount / 100 * (bid_order.fee || 0)).round
+    (amount / 100 * (bid_order.fee || 0)).round
   end
 
   def ask_fee
-    (amount / 100 * (ask_order.fee || 0)).round
+    (market_amount / 100 * (ask_order.fee || 0)).round
   end
 
   def update_chart_items

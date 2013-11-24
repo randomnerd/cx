@@ -33,7 +33,8 @@ Cx::Application.routes.draw do
 
   devise_for :users, controllers: {
     sessions: 'sessions',
-    registrations: 'registrations'
+    registrations: 'registrations',
+    passwords: 'passwords'
   }
 
   authenticate :user, -> u { u.admin? } do
@@ -42,4 +43,7 @@ Cx::Application.routes.draw do
   post '/pusher/auth', to: 'pusher#auth'
   root to: 'home#index'
   get '*path', to: 'home#index'
+
+  # fake routes for url helpers
+  get '/account/change_password/:token', to: 'home#index', as: :change_password
 end

@@ -27,6 +27,47 @@ Cx.AuthController = Ember.ObjectController.extend
       error: (jqXHR, textStatus, errorThrown) =>
         @get('controllers.commonLoginBox').set "loginErrorMsg", "Incorrect email/password"
 
+  forgotPassword: (email) ->
+    $.ajax
+      url: '/users/password'
+      type: "POST"
+      data:
+        "user[email]": $('#login-email').val()
+      success: (data) =>
+        @get('controllers.commonLoginBox').set "loginInfoMsg", "Recovery email sent"
+        console.log 'sent'
+
+  changePasswordWithToken: (c) ->
+    $.ajax
+      url: '/users/password'
+      type: "PUT"
+      data:
+        "user[password]": c.get('newPassword')
+        "user[password_confirmation]": c.get('newPassword')
+        "user[reset_password_token]": c.get('token')
+      success: (data) =>
+        $('meta[name="csrf-token"]').attr('content', data.token)
+        object = @store.push(Cx.User, data.user)
+        user = @store.find(Cx.User, object.id)
+        @set 'model', user
+        @target.transitionTo('tradeIndex')
+      error: (data) =>
+        console.log 'failed', data
+
+  changePassword: (c) ->
+    $.ajax
+      url: '/users'
+      type: "PUT"
+      data:
+        "user[password]": c.get('newPassword')
+        "user[password_confirmation]": c.get('newPassword')
+        "user[current_password]": c.get('oldPassword')
+      success: (data) =>
+        c.set 'oldPassword', ''
+        c.set 'newPassword', ''
+        c.set 'newPasswordConf', ''
+        @target.transitionTo('tradeIndex')
+
   register: (r) ->
     $.ajax
       url: '/users'

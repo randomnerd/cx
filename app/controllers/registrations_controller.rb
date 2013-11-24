@@ -1,4 +1,4 @@
-class RegistrationsController  < ApplicationController
+class RegistrationsController < Devise::RegistrationsController
   respond_to :json
 
   def create
@@ -20,4 +20,16 @@ class RegistrationsController  < ApplicationController
     params.require(:user).permit(:email, :password)
   end
 
+  def update
+    self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+    prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+
+    if update_resource(resource, account_update_params)
+      sign_in resource_name, resource, :bypass => true
+      render json: UserSerializer.new(resource)
+    else
+      clean_up_passwords resource
+      render json: {errors: resource.errors}, status: 422
+    end
+  end
 end

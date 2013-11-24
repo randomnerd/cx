@@ -3,23 +3,37 @@
   {{loginErrorMsg}}
 </div>
 {{/if}}
+{{#if loginInfoMsg}}
+<div class="alert alert-info">
+  {{loginInfoMsg}}
+</div>
+{{/if}}
 <form>
   {{input id="login-email" type="text" name="user[email]" placeholder="Email" class="form-control" value=email}}
-  {{input id="login-password" type="password" name="user[password]" placeholder="Password" class="form-control" value=password}}
-  {{#if regMode}}
-    <button class="btn btn-primary btn-block" {{action 'submitReg'}}>
-      Create account
+  {{#unless forgotMode}}
+    {{input id="login-password" type="password" name="user[password]" placeholder="Password" class="form-control" value=password}}
+    {{#if regMode}}
+      <button class="btn btn-primary btn-block" {{action 'submitReg'}}>
+        Create account
+      </button>
+      <button class="btn btn-default btn-block" {{action 'toggleRegMode' bubbles=false}}>
+        Cancel
+      </button>
+    {{else}}
+      <button class="btn btn-primary btn-block" {{action 'login'}}>
+        Sign in
+      </button>
+      <div id="login-other-options">
+        <a id="forgot-password-link" class="pull-left" {{action 'toggleForgotMode' bubbles=false}}>Forgot password?</a>
+        <a id="signup-link" class="pull-right" {{action 'toggleRegMode' bubbles=false}}>Create account</a>
+      </div>
+    {{/if}}
+  {{else}}
+    <button class="btn btn-primary btn-block" {{action 'forgotPassword'}}>
+      Send recovery email
     </button>
-    <button class="btn btn-default btn-block" {{action 'toggleRegMode' bubbles=false}}>
+    <button class="btn btn-default btn-block" {{action 'toggleForgotMode' bubbles=false}}>
       Cancel
     </button>
-  {{else}}
-    <button class="btn btn-primary btn-block" {{action 'login'}}>
-      Sign in
-    </button>
-    <div id="login-other-options">
-      <a id="forgot-password-link" class="pull-left">Forgot password?</a>
-      <a id="signup-link" class="pull-right" {{action 'toggleRegMode' bubbles=false}}>Create account</a>
-    </div>
-  {{/if}}
+  {{/unless}}
 </form>
