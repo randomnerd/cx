@@ -9,7 +9,8 @@ Cx.BalanceChangesController = Em.ArrayController.extend InfiniteScroll.Controlle
     @channel?.unsubscribe()
     @channel = h.setupPusher @store, 'balanceChange', "private-balanceChanges-#{uid}", @
   ).on('init').observes('controllers.auth.id')
-  filter: (o) -> o.get('currency_id') == parseInt(@get('currency.id'))
+  filter: (o) ->
+    o.get('currency.id') == @get('currency.id')
   setFilter: (->
     @set 'model', @store.filter 'balanceChange', (o) => @filter(o)
   ).on('init').observes('currency.id')

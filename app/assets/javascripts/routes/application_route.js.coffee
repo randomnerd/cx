@@ -27,11 +27,14 @@ Cx.ApplicationRoute = Ember.Route.extend
       balances:      @store.findAll 'balance'
       notifications: @store.findAll 'notification'
       addressBook:   @store.findAll 'addressBookItem'
+      workerStats:   @store.findAll 'workerStat'
     ).then (m) =>
       @controllerFor('balances').set 'model', m.balances
       @controllerFor('notifications').set 'model', m.notifications
       # @controllerFor('addressBookItems').set 'model', m.addressBook
-      addressBookChannel = h.setupPusher(@store, 'addressBookItem', "private-addressBook-#{user.get('id')}")
+      @addressBookChannel = h.setupPusher(@store, 'addressBookItem', "private-addressBook-#{user.get('id')}")
+      @statsChannel = h.setupPusher @store, 'workerStat', "private-worker-stats-#{user.get('id')}"
+
 
   actions:
     loadUserData: (user) -> @loadUserData(user)

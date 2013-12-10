@@ -1,0 +1,52 @@
+<div {{bind-attr class=":panel :panel-default :panel-big-heading :worker stats.length::nocontent"}}>
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-sm-5">
+        <div {{bind-attr class=":form-group :nomargin nameError:has-error"}}>
+          {{input type="text" value=name placeholder="Worker name here" class="form-control name-input"}}
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group nomargin pass-input">
+          <div class="input-group">
+            {{input type=pwFieldType value=pass placeholder="Worker password here" class="form-control"}}
+            <span class="input-group-btn">
+              <button {{bind-attr class=":btn :btn-default showingPassword:active"}} {{action 'toggleShowPass'}}>
+                <i class="fa fa-eye"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="btn-group">
+          <button {{bind-attr class=":btn :btn-primary allowSave::disabled"}}
+            {{action 'save' this}}>Save</button>
+          <button class="btn btn-danger" {{action 'remove' this}}>Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{#if stats.length}}
+    <div class="worker-stats">
+      {{#each stat in stats}}
+      <div class="panel panel-default">
+        <div class="panel-heading">{{stat.currency.desc}}</div>
+        <div class="row">
+          <div class="col-sm-4">
+            Accepted: <span class="pull-right badge badge-success">{{stat.accepted}}</span><br/>
+            Rejected: <span class="pull-right badge badge-danger">{{stat.rejected}}</span>
+          </div>
+          <div class="col-sm-4 text-center">
+            <span class="badge badge-info badge-xlarge">{{hrate stat.hashrate}}</span>
+          </div>
+          <div class="col-sm-4">
+            Blocks: <span class="pull-right badge badge-info">{{stat.blocks}}</span><br/>
+            Share diff: <span class="pull-right badge badge-info">{{stat.diff}}</span>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  {{/if}}
+</div>

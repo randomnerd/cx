@@ -7,9 +7,7 @@ class ProcessCurrencies
     Currency.all.each do |currency|
       begin
         puts "[#{Time.now}] Processing #{currency.name}"
-        currency.with_lock do
-          currency.process_transactions
-        end
+        currency.process_transactions
         puts "[#{Time.now}] Processing #{currency.name}: done"
       rescue => e
         case e

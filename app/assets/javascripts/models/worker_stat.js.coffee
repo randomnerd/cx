@@ -1,0 +1,11 @@
+Cx.WorkerStat = DS.Model.extend
+  worker_id:   DS.attr('number')
+  currency:    DS.belongsTo('currency')
+  # currency_id: DS.attr('number')
+  accepted:    DS.attr('number')
+  rejected:    DS.attr('number')
+  diff:        DS.attr('number')
+  blocks:      DS.attr('number')
+  hashrate:    DS.attr('number')
+  created_at:  DS.attr('date')
+  updated_at:  DS.attr('date')

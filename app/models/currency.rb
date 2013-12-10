@@ -3,7 +3,15 @@ class Currency < ActiveRecord::Base
   has_many :incomes
   has_many :withdrawals
   has_many :deposits
+  has_many :blocks
+  has_many :worker_stats
+  has_many :hashrates
   scope :by_name, -> name { where(name: name) }
+
+  include PusherSync
+  def pusher_channel
+    "currencies"
+  end
 
   def rpc
     @rpc ||= CryptoRPC.new(self)
@@ -28,23 +36,27 @@ class Currency < ActiveRecord::Base
     txs.reverse.each do |tx|
       next unless tx['category'] == 'receive'
       return if Deposit.find_by_txid(tx['txid'])
+      rtx = self.rpc.gettransaction([tx['txid']])
+      rtx['details'].each do |txin|
+        next unless txin['category'] == 'receive'
+        wallet = Wallet.find_by_address(txin['address'])
+        next unless wallet
 
-      wallet = Wallet.find_by_address(tx['address'])
-      next unless wallet
+        deposit = wallet.deposits.create({
+          user_id: wallet.user_id,
+          currency_id: wallet.currency_id,
+          amount: txin['amount'] * 10 ** 8,
+          txid: tx['txid'],
+          confirmations: tx['confirmations']
+        })
 
-      deposit = wallet.deposits.create({
-        user_id: wallet.user_id,
-        currency_id: wallet.currency_id,
-        amount: tx['amount'] * 10 ** 8,
-        txid: tx['txid'],
-        confirmations: tx['confirmations']
-      })
+        wallet.user.notifications.create({
+          title: "New #{self.name} deposit",
+          body: "Incoming transaction for #{txin['amount']} #{self.name}"
+        })
+        self.add_deposit(deposit)
 
-      wallet.user.notifications.create({
-        title: "New #{self.name} deposit",
-        body: "Incoming transaction for #{tx['amount']} #{self.name}"
-      })
-      self.add_deposit(deposit)
+      end
     end
 
     self.process_deposits(skip + batch, batch)
@@ -96,6 +108,7 @@ class Currency < ActiveRecord::Base
         update = self.rpc.gettransaction deposit.txid
         next unless update
         return if update['confirmations'] == deposit.confirmations
+
         deposit.update_attribute :confirmations, update['confirmations']
         self.add_deposit(deposit)
       rescue => e
@@ -103,6 +116,50 @@ class Currency < ActiveRecord::Base
         puts e.backtrace
         next
       end
+    end
+  end
+
+  def process_mining
+    update_diff_and_hashrate
+    update_user_hashrates
+    update_blocks
+    process_payouts
+  end
+
+  def update_diff_and_hashrate
+    hrate = self.rpc.getnetworkhashps
+    data = self.rpc.getdifficulty
+    diff = data.try(:[], 'proof-of-work')
+    diff ||= data
+    self.diff = diff if diff
+    self.net_hashrate = hrate if hrate
+    self.save
+  end
+
+  def update_user_hashrates
+    users = {}
+    self.worker_stats.active.each do |hr|
+      users[hr.worker.user_id] ||= 0
+      users[hr.worker.user_id]  += hr.hashrate
+    end
+    users.each do |user_id, rate|
+      Hashrate.set_rate(self.id, user_id, rate)
+    end
+  end
+
+  def update_blocks
+    self.blocks.immature.each do |block|
+      info = self.rpc.gettransaction(block.txid)
+      next unless info
+      block.category = info['details'][0]['category']
+      block.confirmations = info['confirmations']
+      block.save
+    end
+  end
+
+  def process_payouts
+    self.blocks.generate.unpaid.each do |block|
+      block.process_payouts
     end
   end
 end

@@ -1,33 +1,15 @@
 {{#if currentUser.isSignedIn}}
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" id="login-menu-link">
-      {{currentUser.email}}
+      {{currentUser.nickname}}
       <b class="caret"></b>
     </a>
     <ul class="dropdown-menu">
-      <li>
-        {{#link-to 'balances'}}Balances{{/link-to}}
-      </li>
-      <li class="">
-        <a href="/workers">
-          Workers
-        </a>
-      </li>
-      <li class="">
-        <a href="/account">Settings</a>
-      </li>
-        <li class="">
-          <a href="/admin">Admin</a>
-        </li>
-        <li class="">
-          <a href="/admin_audit">Site audit</a>
-        </li>
-        <li>
-          {{#link-to 'changePassword'}}Change password{{/link-to}}
-        </li>
-        <li>
-          <a {{action 'logout'}}>Log out</a>
-        </li>
+      <li>{{#link-to 'balances'}}Balances{{/link-to}}</li>
+      <li>{{#link-to 'workers'}}Workers{{/link-to}}</li>
+      <li><a href="/admin">Admin</a></li>
+      <li>{{#link-to 'changePassword'}}Change password{{/link-to}}</li>
+      <li><a {{action 'logout'}}>Log out</a></li>
     </ul>
   </li>
 {{else}}

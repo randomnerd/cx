@@ -316,3 +316,28 @@ body.modal-open {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.panel.worker {
+  .panel-heading {
+    padding: 4px;
+    .btn-group {
+      width: 100%;
+      .btn { height: 30px; width: 50%; }
+    }
+  }
+}
+
+.panel.nocontent {
+  padding-bottom: 0px;
+  .panel-heading { margin-bottom: 0px; }
+}
+
+.worker-stats {
+  .panel:last-of-type { margin-bottom: 0px; }
+}
+
+.badge.badge-xlarge {
+  margin-top: 5px;
+  font-size: 24px;
+  font-weight: normal;
+}

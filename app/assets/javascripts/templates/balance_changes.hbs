@@ -1,7 +1,4 @@
-<h1 style="margin-top: 0px;">
-{{currency.desc}} balance
-<small>Find your {{currency.name}} balance details here.</small>
-</h1>
+<h1 style="margin-top: 0px;">{{currency.desc}} balance</h1>
 
 <div class="row">
   <div class="col-sm-4">
@@ -73,37 +70,8 @@
         <th class="text-right">Total balance</th>
       </thead>
       <tbody>
-        {{#each item in controller}}
-        <tr {{bind-attr class="item.positive:success:danger"}}>
-          <td>{{item.id}}</td>
-          <td>{{view Cx.TimeagoView title=item.time}}</td>
-          <td>
-            {{#if item.trade}}
-              {{#if item.positive}}Bought{{else}}Sold{{/if}}
-              {{round item.abs_total}} {{currency.name}}
-              @ {{round item.vs_rate}} {{item.vs_currency}} each
-            {{else}}
-              {{item.source}}: {{round item.abs_amount}} {{currency.name}}
-              {{#if item.withdrawal}}
-                <div class="monospace small text-muted ellipsis">
-                  Destination: {{item.address}}
-                </div>
-              {{/if}}
-              {{#if item.txid}}
-              <div class="monospace small text-muted ellipsis">
-                TXID: {{item.txid}}
-              </div>
-              {{else}}
-                {{#if item.withdrawal}}
-                <div class="monospace small text-muted ellipsis">
-                  TXID: pending
-                </div>
-                {{/if}}
-              {{/if}}
-            {{/if}}
-          </td>
-          <td class="text-right monospace">{{round item.t_total}} {{currency.name}}</td>
-        </tr>
+        {{#each}}
+          {{render 'balanceChange' this}}
         {{else}}
           <tr>
             <td colspan="4" class="text-muted text-center">

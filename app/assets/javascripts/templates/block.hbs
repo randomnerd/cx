@@ -1,0 +1,32 @@
+<tr {{bind-attr class="validityClass"}}>
+  <td>
+  {{#if orphan}}
+    <span class="text-muted">N/A</span>
+  {{else}}
+    {{number}}
+  {{/if}}
+  </td>
+  <td>{{validityMessage}}</td>
+  <td>
+    {{finder}}
+  </td>
+  <td>
+    {{view Cx.TimeagoView title=time}}
+  </td>
+  <td>
+  {{#if orphan}}
+    <span class="text-muted">N/A</span>
+  {{else}}
+    {{round reward}}
+  {{/if}}
+  </td>
+  {{#if currentUser.isSignedIn}}
+    <td>
+    {{#if payout}}
+      {{round payout.reward_minus_fee}}
+    {{else}}
+      <span class="text-muted">N/A</span>
+    {{/if}}
+    </td>
+  {{/if}}
+</tr>

@@ -1,0 +1,34 @@
+<tr {{bind-attr class="positive:success:danger"}}>
+  <td>{{id}}</td>
+  <td>{{view Cx.TimeagoView title=time}}</td>
+  <td>
+    {{#if trade}}
+      {{#if positive}}Bought{{else}}Sold{{/if}}
+      {{round abs_total}} {{currency.name}}
+      @ {{round vs_rate}} {{vs_currency}} each
+    {{else}}
+      {{#if block_number}}
+        Mining reward for block #{{block_number}}: {{round abs_amount}} {{currency.name}}
+      {{else}}
+        {{source}}: {{round abs_amount}} {{currency.name}}
+        {{#if withdrawal}}
+          <div class="monospace small text-muted ellipsis">
+            Destination: {{address}}
+          </div>
+        {{/if}}
+        {{#if txid}}
+        <div class="monospace small text-muted ellipsis">
+          TXID: {{txid}}
+        </div>
+        {{else}}
+          {{#if withdrawal}}
+          <div class="monospace small text-muted ellipsis">
+            TXID: pending
+          </div>
+          {{/if}}
+        {{/if}}
+      {{/if}}
+    {{/if}}
+  </td>
+  <td class="text-right monospace">{{round t_total}} {{currency.name}}</td>
+</tr>

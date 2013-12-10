@@ -6,14 +6,18 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable, :confirmable,
          :lockable, :async
 
-  has_many :messages
+  has_many :blocks
   has_many :orders
   has_many :wallets
+  has_many :workers
   has_many :balances
   has_many :deposits
+  has_many :messages
   has_many :withdrawals
+  has_many :block_payouts
   has_many :notifications
   has_many :address_book_items
+  has_many :worker_stats, through: :workers
   has_many :balance_changes, through: :balances
   after_create :set_initial_values
 

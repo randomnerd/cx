@@ -9,6 +9,11 @@ Cx::Application.routes.draw do
           post :withdraw
         end
       end
+      resources :blocks, only: [:index, :show]
+      resources :block_payouts, only: [:index]
+      resources :hashrates, only: [:index]
+      resources :workers, only: [:index, :create, :update, :destroy]
+      resources :worker_stats, only: [:index]
       resources :deposits, only: [:index]
       resources :balances, only: [:index]
       resources :balance_changes, only: [:index]

@@ -24,12 +24,14 @@
         </li>
 
         <li class="">
-          <a href="/mining/pools">
+          {{#link-to 'miningIndex'}}
             Mining
             {{#if currentUser.isSignedIn}}
-              <span class="badge badge-info">100 Gh/s</span>
+              {{#if currentUser.hashrate}}
+                <span class="badge badge-info">{{hrate currentUser.hashrate}}</span>
+              {{/if}}
             {{/if}}
-          </a>
+          {{/link-to}}
         </li>
 
       </ul>

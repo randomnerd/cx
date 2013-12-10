@@ -1,0 +1,100 @@
+<div class="row">
+
+  <div class="col-sm-6">
+
+    <div class="panel panel-default panel-big-heading">
+      <div class="panel-heading">Top 15 hashrates</div>
+      <table class="table table-striped table-condensed">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Hashrate</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each hashrates}}
+            <tr class="success">
+              <td>{{name}}</td>
+              <td>{{hrate rate}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+
+  <div class="col-sm-6">
+    <div class="panel panel-default panel-big-heading">
+      <div class="panel-heading">Common stats</div>
+
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pool URL</strong></td>
+            <td>{{currency.mining_url}}</td>
+          </tr>
+          <tr>
+            <td><strong>Pool fee</strong></td>
+            <td>{{currency.mining_fee}} %</td>
+          </tr>
+          <tr>
+            <td><strong>Payout system</strong></td>
+            <td>PPLNS with {{currency.pplnsInterval}}min window</td>
+          </tr>
+          <tr>
+            <td><strong>Network hashrate</strong></td>
+            <td>{{hrate currency.net_hashrate}}</td>
+          </tr>
+          <tr>
+            <td><strong>Difficulty</strong></td>
+            <td>{{currency.diff}}</td>
+          </tr>
+          <tr>
+            <td><strong>Pool hashrate</strong></td>
+            <td>{{hrate currency.hashrate}}</td>
+          </tr>
+          {{#if currentUser.isSignedIn}}
+          <tr>
+            <td><strong>Your hashrate</strong></td>
+            <td>{{hrate currency.ownHashrate}}</td>
+          </tr>
+          {{/if}}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default panel-big-heading">
+  <div class="panel-heading">
+    Last found {{currency.name}} blocks
+  </div>
+
+  <table class="table nomargin">
+    <thead>
+      <tr>
+        <th>Number</th>
+        <th>Validity</th>
+        <th>Finder</th>
+        <th>Found</th>
+        <th>Reward</th>
+        {{#if currentUser.isSignedIn}}
+        <th>Your reward</th>
+        {{/if}}
+      </tr>
+    </thead>
+    <tbody>
+      {{#each block in blocks.limited}}{{render 'block' block}}{{/each}}
+    </tbody>
+  </table>
+
+</div>

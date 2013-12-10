@@ -1,6 +1,7 @@
 Cx.Currency = DS.Model.extend
   name:            DS.attr('string')
   desc:            DS.attr('string')
+  algo:            DS.attr('string')
   tx_fee:          DS.attr('number')
   tx_conf:         DS.attr('number')
   blk_conf:        DS.attr('number')
@@ -8,6 +9,7 @@ Cx.Currency = DS.Model.extend
   hashrate:        DS.attr('number')
   donations:       DS.attr('string')
   net_hashrate:    DS.attr('number')
+  diff:            DS.attr('number')
   last_block_at:   DS.attr('date')
   mining_enabled:  DS.attr('boolean')
   mining_url:      DS.attr('string')
@@ -16,6 +18,18 @@ Cx.Currency = DS.Model.extend
   balance: (->
     @store.filter 'balance', (b) => b.get('currency.id') == @get('id')
   ).property()
+  stats: (->
+    @store.filter 'workerStat', (o) =>
+      o.get('currency.id') == @get('id') &&
+      +new Date(o.get('updated_at')) > +new Date() - 2 * 60 * 1000
+  ).property()
+  ownHashrate: (->
+    hrate = 0
+    @get('stats').forEach (s) ->
+      hrate += s.get('hashrate') || 0
+    hrate
+  ).property('stats.@each.hashrate')
+
 
 Cx.Currency.FIXTURES = [
   {
