@@ -17,7 +17,8 @@
     <tr>
       <th>Trade pair</th>
       <th>Last price</th>
-      <th>24h volume</th>
+      <th class="text-right">24h volume</th>
+      <th class="text-right">24h market volume</th>
       <th>24h min price</th>
       <th>24h max price</th>
     </tr>
@@ -27,7 +28,8 @@
     <tr class="clickRow" {{action 'openPair' this}}>
       <td class="monospace">{{name}}</td>
       <td>{{round last_price}}</td>
-      <td>{{round currency_volume}} / {{round market_volume}}</td>
+      <td class="text-right">{{round currency_volume}}</td>
+      <td class="text-right">{{round market_volume}}</td>
       <td>{{round rate_min}}</td>
       <td>{{round rate_max}}</td>
     </tr>
