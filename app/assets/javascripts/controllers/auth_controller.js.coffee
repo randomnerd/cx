@@ -4,6 +4,15 @@
 Cx.AuthController = Ember.ObjectController.extend
   needs: ['commonLoginBox']
   isSignedIn: Em.computed.notEmpty("content.email")
+  workerStats: (->
+    @store.filter 'workerStat', -> true
+  ).property()
+  hashrate: (->
+    hrate = 0
+    @get('workerStats').forEach (s) ->
+      hrate += s.get('hashrate') || 0
+    hrate
+  ).property('workerStats.@each.hashrate')
   attemptedTransition: null
   login: (r) ->
     $.ajax

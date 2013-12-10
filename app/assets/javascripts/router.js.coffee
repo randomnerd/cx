@@ -6,6 +6,7 @@ Cx.Router.map () ->
     @route 'token', {path: '/:token'}
   @route 'tradePair', {path: '/trade/:url_slug'}
   @route 'balances', {path: '/account/balances'}
+  @route 'accountSettings', {path: '/account/settings'}
   @route 'balanceChanges', {path: '/account/balances/:name/details'}
   @route 'miningIndex', {path: '/mining/pools'}
   @route 'miningPool', {path: '/mining/pools/:name'}

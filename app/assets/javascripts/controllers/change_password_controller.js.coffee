@@ -7,9 +7,6 @@ Cx.ChangePasswordController = Em.Controller.extend
     return unless @get('newPassword') == @get('newPasswordConf')
     true
   ).property('oldPassword', 'newPassword', 'newPasswordConf')
-  focusFirstInput: (->
-    Ember.run.schedule 'afterRender', -> $('#change-password-form input')[0].focus()
-  ).on('init')
   actions:
     submit: ->
       if @get('token')
@@ -17,3 +14,7 @@ Cx.ChangePasswordController = Em.Controller.extend
       else
         @get("controllers.auth").changePassword(@)
 
+Cx.ChangePasswordView = Em.View.extend
+  didInsertElement: ->
+    Ember.run.schedule 'afterRender', ->
+      $('#change-password-form input')[0].focus()

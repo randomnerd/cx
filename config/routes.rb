@@ -9,6 +9,13 @@ Cx::Application.routes.draw do
           post :withdraw
         end
       end
+      resources :users, only: [:update] do
+        member do
+          post :verify_totp
+          get :tfa_key
+          post :set_nickname
+        end
+      end
       resources :blocks, only: [:index, :show]
       resources :block_payouts, only: [:index]
       resources :hashrates, only: [:index]

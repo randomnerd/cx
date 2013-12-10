@@ -1,0 +1,51 @@
+<div class="panel panel-default panel-big-heading" id="accountSettings">
+  <div class="panel-heading">Account settings</div>
+  <div class="content">
+
+    <form>
+
+      <div class="form-group {{chatNameInputClass}}">
+        <label class="control-label" for="chatName">
+          Chat name
+        </label>
+        <div class="input-group">
+          {{input type="text" id="name-input" value=nickname class="form-control"}}
+          <span class="input-group-btn">
+            <button {{bind-attr class=":btn :btn-primary nameChanged::disabled"}} {{action 'setNickname'}}>Save</button>
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="controls">
+          <label for="dontConfirmOrders" class="checkbox nomargin">
+            <input type="checkbox" id="dontConfirmOrders" checked disabled>
+            Don't ask for order confirmation
+          </label>
+        </div>
+      </div>
+
+      <div {{bind-attr class=":form-group wrongTOTP:has-error :nomargin :clearfix"}}>
+        <label class="control-label" for="totpResponse">
+          Two-factor authentication
+        </label>
+        <div class="controls">
+        {{#if user.totp_active}}
+          {{input type="text" id="totp-input" value=totp class="form-control" disabled=totpProcessing placeholder="Type your code to disable"}}
+          <span class="help-block" style="margin-bottom: 0px;">TFA is enabled on your account.</span>
+        {{else}}
+          <div class="QRtitle">
+            Scan this QR code with
+            <a href="https://support.google.com/accounts/answer/1066447" target="_blank">
+              Google Authenticator</a><br/>
+          </div>
+          <img {{bind-attr src=user.totp_qr}} class="pull-left googleQRcode">
+          {{input type="text" id="totp-input" value=totp class="form-control withQR has-error" disabled=totpProcessing placeholder="and type your code here"}}
+          <a id="resetTOTP">or generate a new key</a>
+        {{/if}}
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
