@@ -14,7 +14,7 @@ class CreateCurrencies < ActiveRecord::Migration
       t.string  :mining_url
       t.boolean :public
       t.float   :mining_fee
-      t.timestamp :last_block_at
+      t.datetime :last_block_at
       t.string  :user
       t.string  :pass
       t.string  :host

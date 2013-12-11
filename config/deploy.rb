@@ -88,7 +88,7 @@ namespace :deploy do
     invoke "deploy:reload"
   end
 
-  after :deploy, 'sidekiq:restart'
+  after :deploy, 'sidekiq:restart', 'clockwork:restart'
   after :finishing, 'deploy:cleanup'
 
 end

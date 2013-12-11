@@ -12,11 +12,8 @@
           </tr>
         </thead>
         <tbody>
-          {{#each hashrates.limited}}
-            <tr {{bind-attr class="own:success"}}>
-              <td>{{name}}</td>
-              <td>{{hrate rate}}</td>
-            </tr>
+          {{#each rate in hashrates.limited}}
+            {{render 'hashrate' rate}}
           {{/each}}
         </tbody>
       </table>
