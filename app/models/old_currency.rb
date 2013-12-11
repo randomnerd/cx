@@ -30,6 +30,7 @@ class OldCurrency
         mining_enabled: curr.miningEnabled,
         mining_public: curr.miningPublic,
         mining_fee: curr.miningFee,
+        mining_url: curr.miningUrl,
         public: curr.public,
         user: curr.user,
         pass: curr.pass,
