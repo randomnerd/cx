@@ -36,7 +36,7 @@ class Currency < ActiveRecord::Base
     txs.reverse.each do |tx|
       next unless tx['category'] == 'receive'
       return if Deposit.find_by_txid(tx['txid'])
-      rtx = self.rpc.gettransaction([tx['txid']])
+      rtx = self.rpc.gettransaction(tx['txid'])
       rtx['details'].each do |txin|
         next unless txin['category'] == 'receive'
         wallet = Wallet.find_by_address(txin['address'])
@@ -76,7 +76,7 @@ class Currency < ActiveRecord::Base
         withdrawal.txid = txid
         withdrawal.user.notifications.create(
           title: "#{self.name} withdrawal processed",
-          body: "#{amount} #{self.name} sent to #{withdrawal.address}"
+          body: "#{n2f withdrawal.amount} #{self.name} sent to #{withdrawal.address}"
         )
       rescue => e
         balance.add_funds(withdrawal.amount, withdrawal)
