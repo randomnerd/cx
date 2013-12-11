@@ -2,8 +2,10 @@
   <div class="panel-heading">
     SHA256 mining pools
     <span class="pull-right">
-      <span class="badge badge-info">100</span>
-      <span class="badge badge-success">{{hrate controllers.currencies.scryptHashrate}}</span>
+<!--       <span class="badge badge-info">100</span> -->
+      {{#if controllers.currencies.sha256Hashrate}}
+      <span class="badge badge-success">{{hrate controllers.currencies.sha256Hashrate}}</span>
+      {{/if}}
     </span>
   </div>
   <table class="table nomargin">
@@ -42,8 +44,10 @@
   <div class="panel-heading">
     Scrypt mining pools
     <span class="pull-right">
-      <span class="badge badge-info">100</span>
+<!--       <span class="badge badge-info">100</span> -->
+      {{#if controllers.currencies.scryptHashrate}}
       <span class="badge badge-success">{{hrate controllers.currencies.scryptHashrate}}</span>
+      {{/if}}
     </span>
   </div>
   <table class="table nomargin">
