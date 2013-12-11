@@ -35,6 +35,7 @@ class Currency < ActiveRecord::Base
 
     txs.reverse.each do |tx|
       next unless tx['category'] == 'receive'
+      return if tx['category'] == 'move' && tx['account'] == 'stop_processing_here'
       return if Deposit.find_by_txid(tx['txid'])
       rtx = self.rpc.gettransaction(tx['txid'])
       rtx['details'].each do |txin|
