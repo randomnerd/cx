@@ -1,7 +1,7 @@
 class ChartItemSerializer < ActiveModel::Serializer
   # cached
   # delegate :cache_key, to: :object
-  attributes :id, :o, :h, :l, :c, :v, :trade_pair_id
+  attributes :id, :o, :h, :l, :c, :v
 
   def id
     object.time.to_i * 1000
