@@ -14,7 +14,9 @@ class OldCurrency
   field :miningFee, type: Float
   field :miningUrl, type: String
   field :txConfirms, type: Integer
-  field :txFee, type: Integer
+  field :blockConfirms, type: Integer
+  field :txFee, type: Float
+  field :algo, type: String
 
   def self.migrate
     OldCurrency.all.each do |curr|
@@ -23,6 +25,8 @@ class OldCurrency
         desc: curr.desc,
         tx_conf: curr.txConfirms,
         tx_fee: curr.txFee,
+        blk_conf: curr.blockConfirms,
+        algo: curr.algo,
         mining_enabled: curr.miningEnabled,
         mining_public: curr.miningPublic,
         mining_fee: curr.miningFee,

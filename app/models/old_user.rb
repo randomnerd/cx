@@ -7,7 +7,7 @@ class OldUser
   field :createdAt, type: Integer
 
   def self.migrate
-    OldUser.all.each do |user|
+    OldUser.all.no_timeout.each do |user|
       new_user = User.create({
         email: user.emails.first['address'],
         nickname: user.profile.try(:[], 'nickname'),
