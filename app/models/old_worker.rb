@@ -1,4 +1,4 @@
-class OldCurrency
+class OldWorker
   include Mongoid::Document
 
   field :name, type: String
