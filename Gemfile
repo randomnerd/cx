@@ -78,6 +78,8 @@ gem 'font-awesome-sass'
 
 gem 'mongoid', git: 'https://github.com/mongoid/mongoid.git'
 gem 'bson_ext'
+gem 'oj'
+gem 'multi_json'
 
 group :development do
   gem 'pry'
