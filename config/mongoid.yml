@@ -1,0 +1,17 @@
+development:
+  sessions:
+    default:
+      database: exchange
+      hosts:
+        - localhost:27017
+      options:
+  options:
+
+production:
+  sessions:
+    default:
+      database: exchange
+      hosts:
+        - 10.0.1.10:27017
+      options:
+  options:

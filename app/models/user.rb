@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   end
 
   def set_nickname(name = nil)
+    return if self.nickname && !self.nickname.try(:empty?)
     name ||= email.split('@').first
     return if name == nickname
     name += rand(10).to_s while !!User.find_by_nickname(name)
@@ -36,6 +37,7 @@ class User < ActiveRecord::Base
   end
 
   def set_totp_key
+    return if self.totp_key && !self.totp_key.try(:empty?)
     update_attribute :totp_key, ROTP::Base32.random_base32
   end
 

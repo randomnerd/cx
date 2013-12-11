@@ -3,7 +3,7 @@
     SHA256 mining pools
     <span class="pull-right">
       <span class="badge badge-info">100</span>
-      <span class="badge badge-success">100</span>
+      <span class="badge badge-success">{{hrate controllers.currencies.scryptHashrate}}</span>
     </span>
   </div>
   <table class="table nomargin">
@@ -21,15 +21,15 @@
     </thead>
     <tbody>
       {{#each curr in sha256Currencies}}
-      <tr class="clickRow">
+      <tr class="clickRow" {{action 'openStats' curr}}>
         <td class="monospace">{{curr.name}}</td>
         {{#if currentUser.isSignedIn}}
         <td>
-          <span class="text-muted">N/A</span>
+          {{hrate curr.ownHashrate}}
         </td>
         {{/if}}
-        <td>{{curr.hashrate}}</td>
-        <td>{{curr.net_hashrate}}</td>
+        <td>{{hrate curr.hashrate}}</td>
+        <td>{{hrate curr.net_hashrate}}</td>
         <td>{{curr.diff}}</td>
         <td>{{view Cx.TimeagoView title=curr.last_block_time}}</td>
       </tr>

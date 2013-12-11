@@ -1,5 +1,5 @@
-// Fetched from: http://builds.emberjs.com/canary/ember-data.js
-// Fetched on: 2013-11-13T11:57:53Z
+// Fetched from channel: canary, with url http://builds.emberjs.com/canary/ember-data.js
+// Fetched on: 2013-11-19T21:43:38Z
 // ==========================================================================
 // Project:   Ember Data
 // Copyright: Copyright 2011-2013 Tilde Inc. and contributors.
@@ -362,7 +362,7 @@ DS.DebugAdapter = Ember.DataAdapter.extend({
 DS.Transform = Ember.Object.extend({
 
   serialize: Ember.required(),
-
+  
   deserialize: Ember.required()
 
 });
@@ -442,7 +442,7 @@ DS.DateTransform = DS.Transform.extend({
     } else {
       return null;
     }
-  }
+  } 
 
 });
 
@@ -1900,7 +1900,7 @@ DS.Store = Ember.Object.extend(DS._Mappable, {
     If any of a record's properties change, or if it changes state, the
     filter function will be invoked again to determine whether it should
     still be in the array.
-
+    
     Optionally you can pass a query which will be triggered at first. The
     results returned by the server could then appear in the filter if they
     match the filter function.
@@ -2117,12 +2117,7 @@ DS.Store = Ember.Object.extend(DS._Mappable, {
         id = coerceId(data.id);
 
     Ember.assert("An adapter cannot assign a new id to a record that already has an id. " + record + " had id: " + oldId + " and you tried to update it with " + id + ". This likely happened because your server returned data in response to a find or update that had a different id than the one you sent.", oldId === null || id === oldId);
-    existingRecord = this.typeMapFor(record.constructor).idToRecord[id];
 
-    if (existingRecord) {
-      record.transitionTo('deleted.saved');
-      return;
-    }
     this.typeMapFor(record.constructor).idToRecord[id] = record;
 
     set(record, 'id', id);
@@ -4993,7 +4988,7 @@ DS.Model.reopenClass({
     var options = this.metaForProperty(name).options;
 
     if (options.inverse === null) { return null; }
-
+    
     var inverseName, inverseKind;
 
     if (options.inverse) {
@@ -5135,7 +5130,7 @@ DS.Model.reopenClass({
         App.Blog = DS.Model.extend({
           users: DS.hasMany('user'),
           owner: DS.belongsTo('user'),
-
+  
           posts: DS.hasMany('post')
         });
 
@@ -6927,7 +6922,7 @@ DS.RESTAdapter = DS.Adapter.extend({
     The `find` method makes an Ajax request to a URL computed by `buildURL`, and returns a
     promise for the resulting payload.
 
-    This method performs an HTTP `GET` request with the id provided as part of the querystring.
+    This method performs an HTTP `GET` request with the id provided as part of the querystring. 
 
     @method find
     @see RESTAdapter/buildURL
@@ -7111,7 +7106,7 @@ DS.RESTAdapter = DS.Adapter.extend({
     Called by the store when a newly created record is
     saved via the `save` method on a model record instance.
 
-    The `createRecord` method serializes the record and makes an Ajax (HTTP POST) request
+    The `createRecord` method serializes the record and makes an Ajax (HTTP POST) request 
     to a URL computed by `buildURL`.
 
     See `serialize` for information on how to customize the serialized form
@@ -7136,10 +7131,10 @@ DS.RESTAdapter = DS.Adapter.extend({
   },
 
   /**
-    Called by the store when an existing record is saved
+    Called by the store when an existing record is saved 
     via the `save` method on a model record instance.
-
-    The `updateRecord` method serializes the record and makes an Ajax (HTTP PUT) request
+    
+    The `updateRecord` method serializes the record and makes an Ajax (HTTP PUT) request 
     to a URL computed by `buildURL`.
 
     See `serialize` for information on how to customize the serialized form
@@ -8043,9 +8038,9 @@ var forEach = Ember.EnumerableUtils.forEach;
   [active_model_serializers](http://github.com/rails-api/active_model_serializers)
   Ruby gem.
 
-  This adapter extends the DS.RESTAdapter by making consistent use of the camelization,
-  decamelization and pluralization methods to normalize the serialized JSON into a
-  format that is compatible with a conventional Rails backend and Ember Data.
+  This adapter extends the DS.RESTAdapter by making consistent use of the camelization, 
+  decamelization and pluralization methods to normalize the serialized JSON into a 
+  format that is compatible with a conventional Rails backend and Ember Data. 
 
   ## JSON Structure
 
@@ -8088,7 +8083,7 @@ var forEach = Ember.EnumerableUtils.forEach;
 DS.ActiveModelAdapter = DS.RESTAdapter.extend({
   defaultSerializer: '_ams',
   /**
-    The ActiveModelAdapter overrides the `pathForType` method to build
+    The ActiveModelAdapter overrides the `pathForType` method to build 
     underscored URLs by decamelizing and pluralizing the object type name.
 
     ```js
@@ -8109,13 +8104,13 @@ DS.ActiveModelAdapter = DS.RESTAdapter.extend({
     The ActiveModelAdapter overrides the `ajaxError` method
     to return a DS.InvalidError for all 422 Unprocessable Entity
     responses.
-
+    
     A 422 HTTP response from the server generally implies that the request
-    was well formed but the API was unable to process it because the
+    was well formed but the API was unable to process it because the 
     content was not semantically correct or meaningful per the API.
-
+    
     For more information on 422 HTTP Error code see 11.2 WebDAV RFC 4918
-    https://tools.ietf.org/html/rfc4918#section-11.2
+    https://tools.ietf.org/html/rfc4918#section-11.2 
 
     @method ajaxError
     @param jqXHR

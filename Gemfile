@@ -76,6 +76,9 @@ gem 'newrelic_rpm'
 gem 'rotp'
 gem 'font-awesome-sass'
 
+gem 'mongoid', git: 'https://github.com/mongoid/mongoid.git'
+gem 'bson_ext'
+
 group :development do
   gem 'pry'
 end
