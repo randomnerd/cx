@@ -67,7 +67,7 @@ class Currency < ActiveRecord::Base
       begin
         balance = withdrawal.balance
         account = balance.rpc_account
-        amount  = withdrawal.amount / 10 ** 8
+        amount  = (withdrawal.amount / 10 ** 8) - self.tx_fee
         move    = self.rpc.move '', account, amount
         raise 'unable to move funds' unless move
         txid    = self.rpc.sendfrom account, withdrawal.address, amount
@@ -76,7 +76,7 @@ class Currency < ActiveRecord::Base
         withdrawal.txid = txid
         withdrawal.user.notifications.create(
           title: "#{self.name} withdrawal processed",
-          body: "#{n2f withdrawal.amount} #{self.name} sent to #{withdrawal.address}"
+          body: "#{amount} #{self.name} sent to #{withdrawal.address}"
         )
       rescue => e
         balance.add_funds(withdrawal.amount, withdrawal)
