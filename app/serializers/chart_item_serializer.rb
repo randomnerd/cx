@@ -1,6 +1,6 @@
 class ChartItemSerializer < ActiveModel::Serializer
   # cached
-  delegate :cache_key, to: :object
+  # delegate :cache_key, to: :object
   attributes :id, :o, :h, :l, :c, :v, :trade_pair_id
 
   def id
