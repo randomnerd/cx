@@ -103,5 +103,5 @@ Cx.ChartBoxComponent = Ember.Component.extend
       if p = _.find(@vseries.points, (d) -> d.category == item.id)
         p.update(vpoint, false, false, false)
       else
-        @vseries.addPoint(point, false, false, false)
+        @vseries.addPoint(vpoint, false, false, false)
       @chart.redraw()
