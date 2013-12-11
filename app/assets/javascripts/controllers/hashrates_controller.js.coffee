@@ -15,11 +15,11 @@ Cx.HashratesController = Em.ArrayController.extend
     rates = @get('arrangedContent').toArray().splice(0,15)
     unless _.find(rates, (d) => d.get('name') == @get('user.nickname'))
       return unless rate = @get('currency.ownHashrate')
-      rates.push @store.createRecord('hashrate', {
+      rates.push
         name: @get('user.nickname')
         rate: rate
         currency: @get('currency')
         user_id: parseInt(@get('user.id'))
-      })
+
     rates
   ).property('@each')

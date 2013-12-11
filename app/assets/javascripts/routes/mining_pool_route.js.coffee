@@ -7,9 +7,11 @@ Cx.MiningPoolRoute = Em.Route.extend
       @controllerFor('blocks').set 'model', @store.filter 'block', (o) =>
         o.get('currency.id') == m.get('id')
 
-    @store.find('blockPayout', {currency_name: m.get('name')}).then (d) =>
-      @controllerFor('blockPayouts').set 'model', @store.filter 'blockPayout', (o) =>
-        o.get('currency.id') == m.get('id')
+    if @controllerFor('auth').get('isSignedIn')
+      @store.find('blockPayout', {currency_name: m.get('name')}).then (d) =>
+        @controllerFor('blockPayouts').set 'model', @store.filter 'blockPayout', (o) =>
+          o.get('currency.id') == m.get('id')
+      @controllerFor('blockPayouts').set('currency', m)
 
     @store.find('hashrate', {currency_name: m.get('name')}).then (d) =>
       @controllerFor('hashrates').set 'model', @store.filter 'hashrate', (o) =>
@@ -17,7 +19,6 @@ Cx.MiningPoolRoute = Em.Route.extend
 
     @controllerFor('blocks').set('currency', m)
     @controllerFor('hashrates').set('currency', m)
-    @controllerFor('blockPayouts').set('currency', m)
     c.set 'currency', m
 
   activate: ->
