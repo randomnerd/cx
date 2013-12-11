@@ -60,6 +60,7 @@ Cx.AuthController = Ember.ObjectController.extend
         user = @store.find(Cx.User, object.id)
         @set 'model', user
         @target.transitionTo('tradeIndex')
+
       error: (data) =>
         console.log 'failed', data
 
@@ -76,6 +77,7 @@ Cx.AuthController = Ember.ObjectController.extend
         c.set 'newPassword', ''
         c.set 'newPasswordConf', ''
         @target.transitionTo('tradeIndex')
+        location.reload()
 
   register: (r) ->
     $.ajax
