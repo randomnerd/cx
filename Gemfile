@@ -78,7 +78,9 @@ gem 'font-awesome-sass'
 
 gem 'mongoid', git: 'https://github.com/mongoid/mongoid.git'
 gem 'bson_ext'
+gem 'rails-patch-json-encode'
 gem 'oj'
+gem 'oj_mimic_json'
 gem 'multi_json'
 
 group :development do
