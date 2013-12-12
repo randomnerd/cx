@@ -66,18 +66,16 @@ class Order < ActiveRecord::Base
       # use min rate for bid, and max rate for ask
       t_rate = bid ? [rate, o.rate].min : [rate, o.rate].max
 
-      o.with_lock do
-        Trade.create(
-          bid:            bid,
-          rate:           t_rate,
-          amount:         amt,
-          ask_id:         bid ? o.id : id,
-          bid_id:         bid ? id : o.id,
-          ask_user_id:    bid ? o.user_id : user_id,
-          bid_user_id:    bid ? user_id : o.user_id,
-          trade_pair_id:  trade_pair_id
-        )
-      end
+      Trade.create(
+        bid:            bid,
+        rate:           t_rate,
+        amount:         amt,
+        ask_id:         bid ? o.id : id,
+        bid_id:         bid ? id : o.id,
+        ask_user_id:    bid ? o.user_id : user_id,
+        bid_user_id:    bid ? user_id : o.user_id,
+        trade_pair_id:  trade_pair_id
+      )
     end
   end
 
@@ -112,10 +110,12 @@ class Order < ActiveRecord::Base
   end
 
   def update_status(update_amount)
-    self.filled += update_amount
-    self.complete = complete?
-    save
-    cancel(true) if !complete? && unmatched_market_amount <= 0
+    self.with_lock do
+      self.filled += update_amount
+      self.complete = complete?
+      save
+      cancel(true) if !complete? && unmatched_market_amount <= 0
+    end
   end
 
   def complete?
@@ -127,7 +127,7 @@ class Order < ActiveRecord::Base
       return false if self.complete? && !force
       cid = bid ? trade_pair.market_id : trade_pair.currency_id
       amt = bid ? unmatched_market_amount : unmatched_amount
-      return false unless user.balance_for(cid).unlock_funds(amt, self)
+      return false unless user.balance_for(cid).unlock_funds(amt, self) || force
       update_attribute :cancelled, true
     end
   end
