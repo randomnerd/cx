@@ -35,14 +35,15 @@ class Order < ActiveRecord::Base
 
   def process
     return if complete? or cancelled
-    unless lock_funds
-      self.cancel(true)
-      return false
-    end
     fill_matches
   end
 
   def process_async
+    return if complete? or cancelled
+    unless lock_funds
+      self.cancel(true)
+      return false
+    end
     ProcessOrders.perform_async(self.id)
   end
 
