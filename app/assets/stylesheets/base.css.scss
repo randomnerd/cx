@@ -219,8 +219,11 @@ body.modal-open {
 
 #support {
   position: fixed;
-  bottom: 0;
-  right: 20px;
+  bottom: -2px;
+  height: 30px;
+  width: 150px;
+  text-align: center;
+  right: -2px;
   overflow: hidden;
   -webkit-box-shadow: 0 6px 6px rgba(0,0,0,.175);
   -moz-box-shadow: 0 6px 6px rgba(0,0,0,.175);
@@ -229,11 +232,6 @@ body.modal-open {
   .panel {
     margin: 0;
     margin-bottom: -4px;
-    .panel-body { padding: 0px 6px; }
-    a {
-      font-weight: bold;
-      &:hover { text-decoration: none; }
-    }
   }
 }
 

@@ -20,13 +20,8 @@
         </tr>
       </thead>
       <tbody>
-        {{#each trades}}
-        <tr {{bind-attr class="bid:success:danger"}}>
-          <td>{{view Cx.TimeagoView title=time}}</td>
-          <td>{{round rate}}</td>
-          <td>{{round amount}}</td>
-          <td>{{round marketAmount}}</td>
-        </tr>
+        {{#each trade in trades}}
+          {{render 'trade' trade}}
         {{/each}}
       </tbody>
     </table>
