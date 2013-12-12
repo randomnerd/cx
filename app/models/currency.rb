@@ -68,7 +68,7 @@ class Currency < ActiveRecord::Base
       begin
         balance = withdrawal.balance
         account = balance.rpc_account
-        amount  = (withdrawal.amount / 10 ** 8) - self.tx_fee
+        amount  = (withdrawal.amount.to_f / 10 ** 8) - (self.tx_fee || 0).to_f
         move    = self.rpc.move '', account, amount
         raise 'unable to move funds' unless move
         txid    = self.rpc.sendfrom account, withdrawal.address, amount
@@ -108,7 +108,7 @@ class Currency < ActiveRecord::Base
       begin
         update = self.rpc.gettransaction deposit.txid
         next unless update
-        return if update['confirmations'] == deposit.confirmations
+        next if update['confirmations'] == deposit.confirmations
 
         deposit.update_attribute :confirmations, update['confirmations']
         self.add_deposit(deposit)
