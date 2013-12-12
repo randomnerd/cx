@@ -34,14 +34,12 @@ class Order < ActiveRecord::Base
   end
 
   def process
-    self.with_lock do
-      return if complete? or cancelled
-      unless lock_funds
-        self.cancel(true)
-        return false
-      end
-      fill_matches
+    return if complete? or cancelled
+    unless lock_funds
+      self.cancel(true)
+      return false
     end
+    fill_matches
   end
 
   def process_async
