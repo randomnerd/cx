@@ -14,13 +14,13 @@ class Withdrawal < ActiveRecord::Base
 
   def check_amounts
     return if self.amount.to_f / 10 ** 8 >= 0.01
-    errors.add(:amount, "too%20low")
+    errors.add(:amount, "Minimum withdrawal is 0.01")
   end
 
   def check_balance
     balance = user.balance_for(self.currency_id)
     return if balance.amount >= self.amount
-    errors.add(:amount, "greater%20than%20balance")
+    errors.add(:amount, "Balance is too low")
   end
 
   def lock_funds
