@@ -52,6 +52,7 @@ class Currency < ActiveRecord::Base
           txid: tx['txid'],
           confirmations: tx['confirmations']
         })
+        next unless deposit.persisted?
 
         wallet.user.notifications.create({
           title: "New #{self.name} deposit",
