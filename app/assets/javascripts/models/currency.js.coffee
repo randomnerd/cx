@@ -28,7 +28,7 @@ Cx.Currency = DS.Model.extend
     @get('stats').forEach (s) ->
       hrate += s.get('hashrate') || 0
     hrate
-  ).property('stats.@each.hashrate')
+  ).property('stats.@each')
 
 
 Cx.Currency.FIXTURES = [
