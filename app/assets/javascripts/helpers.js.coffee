@@ -64,7 +64,7 @@
     else return ''
   if hashrate > 1000000
     h.round(hashrate / 1000000, 2) + " Th/s"
-  if hashrate > 1000
+  else if hashrate > 1000
     h.round(hashrate / 1000, 2) + " Gh/s"
   else if hashrate < 1
     h.round(hashrate * 1000, 2) + " Kh/s"
