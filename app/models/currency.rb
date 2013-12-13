@@ -8,6 +8,7 @@ class Currency < ActiveRecord::Base
   has_many :worker_stats
   has_many :hashrates
   has_many :balances
+  scope :with_mining, -> { where(mining_enabled: true) }
   scope :by_name, -> name { where(name: name) }
 
   include PusherSync

@@ -8,5 +8,4 @@ module Clockwork
   end
 
   every(60.seconds, 'ProcessCurrencies')
-  every(60.seconds, 'ProcessPools')
 end
