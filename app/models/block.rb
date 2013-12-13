@@ -30,6 +30,7 @@ class Block < ActiveRecord::Base
     self.block_payouts.unpaid.each do |payout|
       balance = payout.user.balance_for(self.currency_id)
       fees   += payout.fee
+      next unless payout.reward_minus_fee > 0
       next unless balance.add_funds(payout.reward_minus_fee, payout)
       payout.user.notifications.create({
         title: 'Mining reward',
