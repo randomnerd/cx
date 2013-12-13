@@ -7,7 +7,7 @@ class CryptoRPC
 
   def construct_rpc(method, args)
     {
-      timeout: 5,
+      timeout: 500,
       port: @currency.port,
       basic_auth: @auth,
       body: {
@@ -21,8 +21,8 @@ class CryptoRPC
 
   def api_call(method, args = [])
     r = HTTParty.post(@url, construct_rpc(method, args))
-    throw r.parsed_response['error'] if r.parsed_response['error']
-    r.parsed_response['result']
+    throw r.parsed_response['error'] if r.parsed_response.try(:[], 'error')
+    r.parsed_response.try(:[], 'result')
   end
 
   def method_missing(method, *args)
