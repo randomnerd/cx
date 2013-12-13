@@ -21,7 +21,7 @@
   </div>
 </div>
 
-{{#if deposits.length}}
+{{#if filteredDeposits.length}}
 <div class="panel panel-default panel-big-heading">
   <div class="panel-heading">Pending deposits</div>
   <div class="content">
@@ -38,7 +38,7 @@
         <th class="text-right">Amount</th>
       </thead>
       <tbody>
-      {{#each deposit in deposits}}
+      {{#each deposit in filteredDeposits}}
       <tr>
         <td>{{deposit.id}}</td>
         <td>{{view Cx.TimeagoView title=deposit.time}}</td>

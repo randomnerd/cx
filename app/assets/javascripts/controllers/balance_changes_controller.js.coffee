@@ -4,6 +4,9 @@ Cx.BalanceChangesController = Em.ArrayController.extend InfiniteScroll.Controlle
   sortAscending: false
   needs: ['auth', 'deposits']
   deposits: Em.computed.alias('controllers.deposits.unprocessed')
+  filteredDeposits: (->
+    @get('deposits').filter (o) => @filter(o)
+  ).property('deposits.@each')
   setupPusher: (->
     return unless uid = @get 'controllers.auth.id'
     @channel?.unsubscribe()
