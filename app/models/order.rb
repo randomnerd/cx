@@ -102,8 +102,9 @@ class Order < ActiveRecord::Base
     cid = bid ? trade_pair.market_id : trade_pair.currency_id
     amt = bid ? market_amount : amount
     balance = user.balances.find_by_currency_id(cid)
+    balance.verify!
     if balance.amount < amt
-      errors.add(:amount, "insufficient%20funds,%20amount(#{amt})%20balance(#{balance.amount})")
+      errors.add(:amount, "insufficient funds, amount(#{amt}) balance(#{balance.amount})")
     end
   end
 
@@ -132,17 +133,17 @@ class Order < ActiveRecord::Base
 
   def filled_in_bound
     return unless filled > amount
-    errors.add(:filled, "cant%20fill%20more%20than%20amount")
+    errors.add(:filled, "cant fill% more than amount")
   end
 
   def check_order_count
     count = user.orders.active.bid(self.bid).tp(self.trade_pair_id).count
     return if count < 20
-    errors.add(:id, "too%20much%20open%20orders")
+    errors.add(:id, "too much open orders")
   end
 
   def check_amounts
     return if amount.to_f / 10 ** 8 >= 0.01 && market_amount > 0
-    errors.add(:amount, "too%20low")
+    errors.add(:amount, "too low")
   end
 end

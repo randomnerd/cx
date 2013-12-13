@@ -70,6 +70,7 @@ class Currency < ActiveRecord::Base
   def process_withdrawals
     withdrawals.unprocessed.each do |withdrawal|
       begin
+        next unless withdrawal.valid?
         balance = withdrawal.balance
         account = balance.rpc_account
         amount  = (withdrawal.amount.to_f / 10 ** 8) - (self.tx_fee || 0).to_f

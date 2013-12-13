@@ -19,6 +19,7 @@ class Withdrawal < ActiveRecord::Base
 
   def check_balance
     balance = user.balance_for(self.currency_id)
+    balance.verify!
     return if balance.amount >= self.amount
     errors.add(:amount, "Balance is too low")
   end
