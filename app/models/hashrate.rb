@@ -15,7 +15,7 @@ class Hashrate < ActiveRecord::Base
   end
 
   def pusher_update
-    return unless self.class.active.include? self
+    return unless currency.hashrates.active.include?(self)
     PusherMsg.perform_async(pusher_channel, "u", pusher_serialize)
   end
 
