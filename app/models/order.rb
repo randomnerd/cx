@@ -34,6 +34,7 @@ class Order < ActiveRecord::Base
   end
 
   def process
+    return unless self.valid?
     return if complete? or cancelled
     fill_matches
   end

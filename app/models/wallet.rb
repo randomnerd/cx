@@ -6,8 +6,7 @@ class Wallet < ActiveRecord::Base
   has_many :deposits
   has_many :withdrawals
 
-  before_create :generate_address
-  after_create :set_balance_address
+  after_commit :set_balance_address, on: :create
 
   def generate_address
     self.address ||= currency.rpc.getnewaddress "user-#{self.user_id}"

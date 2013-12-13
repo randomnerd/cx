@@ -5,8 +5,9 @@ class Withdrawal < ActiveRecord::Base
 
   scope :unprocessed, -> { where(processed: false, failed: false) }
 
-  before_create :check_amounts, :check_balance
-  after_create :lock_funds
+  validate :check_amounts
+  validate :check_balance
+  after_commit :lock_funds, on: :create
 
   def balance
     self.user.balance_for(self.currency_id)
