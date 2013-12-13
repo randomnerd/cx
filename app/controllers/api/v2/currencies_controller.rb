@@ -13,9 +13,11 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
 
   def withdraw
     head(:unauthorized) and return unless current_user
-    unless current_user.totp_active && current_user.totp_verify(params[:totp])
-      render json: {errors: {totp: 'Wrong TOTP'}}, status: 401
-      return
+    if current_user.totp_active
+      unless current_user.totp_verify(params[:totp])
+        render json: {errors: {totp: 'Wrong TOTP'}}, status: 401
+        return
+      end
     end
 
     current_user.withdrawals.create(
