@@ -13,7 +13,9 @@
         </thead>
         <tbody>
           {{#each rate in hashrates.limited}}
+            {{#if rate.rate}}
             {{render 'hashrate' rate}}
+            {{/if}}
           {{/each}}
         </tbody>
       </table>
