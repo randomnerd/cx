@@ -128,7 +128,10 @@ class Currency < ActiveRecord::Base
   end
 
   def update_diff_and_hashrate
-    hrate = self.rpc.getnetworkhashps
+    begin
+      hrate = self.rpc.getnetworkhashps
+    rescue => e
+    end
     data = self.rpc.getdifficulty
     diff = data.try(:[], 'proof-of-work')
     diff ||= data
