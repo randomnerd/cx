@@ -1,4 +1,5 @@
 class Currency < ActiveRecord::Base
+  valitade :check_duplicates, on: :create
   include ApplicationHelper
   has_many :incomes
   has_many :withdrawals
@@ -6,6 +7,7 @@ class Currency < ActiveRecord::Base
   has_many :blocks
   has_many :worker_stats
   has_many :hashrates
+  has_many :balances
   scope :by_name, -> name { where(name: name) }
 
   include PusherSync
@@ -165,5 +167,10 @@ class Currency < ActiveRecord::Base
     self.blocks.generate.unpaid.each do |block|
       block.process_payouts
     end
+  end
+
+  def check_duplicates
+    return unless user.deposits.find_by_txid(self.txid)
+    errors.add(:txid, 'Duplicate deposit!')
   end
 end
