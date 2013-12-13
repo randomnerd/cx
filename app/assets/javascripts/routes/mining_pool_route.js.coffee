@@ -24,9 +24,7 @@ Cx.MiningPoolRoute = Em.Route.extend
   activate: ->
     @controllerFor('blocks').setupPusher()
     @controllerFor('hashrates').setupPusher()
-    @controllerFor('blockPayouts').setupPusher()
 
   deactivate: ->
     @controllerFor('blocks').get('channel').unsubscribe()
     @controllerFor('hashrates').get('channel').unsubscribe()
-    @controllerFor('blockPayouts').get('channel').unsubscribe()
