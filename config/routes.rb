@@ -2,7 +2,7 @@ require 'sidekiq/web'
 
 Cx::Application.routes.draw do
   namespace :api, defaults: { format: 'json' } do
-    namespace :v1 do
+    namespace :v2 do
       resources :currencies, only: [:index, :show] do
         member do
           post :generate_address

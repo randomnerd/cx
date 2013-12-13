@@ -4,7 +4,7 @@ Cx.WithdrawalBoxComponent = Ember.Component.extend
   actions:
     submit: ->
       $.ajax
-        url: "/api/v1/currencies/#{@get 'currency.id'}/withdraw"
+        url: "/api/v2/currencies/#{@get 'currency.id'}/withdraw"
         type: "POST"
         data:
           amount: @get 'amount'

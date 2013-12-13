@@ -1,4 +1,4 @@
-class Api::V1::BlockPayoutsController < Api::V1::BaseController
+class Api::V2::BlockPayoutsController < Api::V2::BaseController
   before_filter :authenticate_user!, only: [:index]
   has_scope :by_currency_name, as: :currency_name
 

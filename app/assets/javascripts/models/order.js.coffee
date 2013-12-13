@@ -19,7 +19,7 @@ Cx.Order = DS.Model.extend
 
   cancel: (cb) ->
     $.ajax
-      url: "/api/v1/orders/#{@get 'id'}/cancel"
+      url: "/api/v2/orders/#{@get 'id'}/cancel"
       type: "POST"
       success: (data) =>
         @transitionTo('deleted.saved')

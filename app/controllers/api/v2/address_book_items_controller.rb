@@ -1,4 +1,4 @@
-class Api::V1::AddressBookItemsController < Api::V1::BaseController
+class Api::V2::AddressBookItemsController < Api::V2::BaseController
   def create
     item = current_user.address_book_items.create(permitted_params[:address_book_item])
     render json: {

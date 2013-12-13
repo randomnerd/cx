@@ -1,4 +1,4 @@
-class Api::V1::MessagesController < Api::V1::BaseController
+class Api::V2::MessagesController < Api::V2::BaseController
   def index
     respond_with Message.recent
   end

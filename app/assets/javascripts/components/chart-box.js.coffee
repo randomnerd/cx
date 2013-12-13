@@ -71,7 +71,7 @@ Cx.ChartBoxComponent = Ember.Component.extend
     @vseries.setData([], false)
     @watchForUpdates(@get 'pair.id')
     $.ajax
-      url: "/api/v1/trade_pairs/#{@get 'pair.id'}/chart_items"
+      url: "/api/v2/trade_pairs/#{@get 'pair.id'}/chart_items"
       type: 'GET'
       success: (data) =>
         for item in data.chart_items

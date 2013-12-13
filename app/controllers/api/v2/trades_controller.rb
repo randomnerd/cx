@@ -1,4 +1,4 @@
-class Api::V1::TradesController < Api::V1::BaseController
+class Api::V2::TradesController < Api::V2::BaseController
   belongs_to :trade_pair, param: :tradePair
   has_scope :user
 

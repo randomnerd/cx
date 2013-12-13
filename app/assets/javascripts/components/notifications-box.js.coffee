@@ -6,7 +6,7 @@ Cx.NotificationsBoxComponent = Ember.Component.extend
   actions:
     ackAll: ->
       $.ajax
-        url: "/api/v1/notifications/ack_all"
+        url: "/api/v2/notifications/ack_all"
         type: "POST"
         success: (data) =>
           @get('items.unAck').forEach =>
@@ -15,7 +15,7 @@ Cx.NotificationsBoxComponent = Ember.Component.extend
 
     removeAll: ->
       $.ajax
-        url: "/api/v1/notifications/del_all"
+        url: "/api/v2/notifications/del_all"
         type: "POST"
         success: (data) =>
           @get('items').forEach =>

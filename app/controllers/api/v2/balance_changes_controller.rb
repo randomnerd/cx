@@ -1,4 +1,4 @@
-class Api::V1::BalanceChangesController < Api::V1::BaseController
+class Api::V2::BalanceChangesController < Api::V2::BaseController
   before_filter :authenticate_user!
   has_scope :by_currency_name, as: :currency_name
 

@@ -1,4 +1,4 @@
-class Api::V1::BalancesController < Api::V1::BaseController
+class Api::V2::BalancesController < Api::V2::BaseController
   before_filter :authenticate_user!, only: [:index]
   has_scope :currency
 

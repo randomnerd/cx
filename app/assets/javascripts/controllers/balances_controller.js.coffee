@@ -12,7 +12,7 @@ Cx.BalancesController = Ember.ArrayController.extend
     newAddress: (currency) ->
       currency.set 'generating', true
       $.ajax
-        url: "/api/v1/currencies/#{currency.get('id')}/generate_address"
+        url: "/api/v2/currencies/#{currency.get('id')}/generate_address"
         type: "POST"
         success: (data) =>
           currency.set 'generating', false

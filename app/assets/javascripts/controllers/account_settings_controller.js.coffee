@@ -13,7 +13,7 @@ Cx.AccountSettingsController = Em.Controller.extend
     totp = @get('totp')
     return unless totp.length == 6
 
-    xhr = $.post "/api/v1/users/#{@get 'user.id'}/verify_totp", { totp: totp }
+    xhr = $.post "/api/v2/users/#{@get 'user.id'}/verify_totp", { totp: totp }
     @set 'totpProcessing', true
     xhr.done (data) =>
       @set 'totp', ''
@@ -30,5 +30,5 @@ Cx.AccountSettingsController = Em.Controller.extend
 
   actions:
     setNickname: ->
-      xhr = $.post "/api/v1/users/#{@get 'user.id'}/set_nickname", { name: @get('nickname') }
+      xhr = $.post "/api/v2/users/#{@get 'user.id'}/set_nickname", { name: @get('nickname') }
       xhr.done (data) => @set 'user.nickname', data.user.nickname

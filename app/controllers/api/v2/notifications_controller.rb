@@ -1,4 +1,4 @@
-class Api::V1::NotificationsController < Api::V1::BaseController
+class Api::V2::NotificationsController < Api::V2::BaseController
   has_scope :user
   def index
     respond_with end_of_association_chain.recent

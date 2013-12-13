@@ -1,4 +1,4 @@
-class Api::V1::HashratesController < Api::V1::BaseController
+class Api::V2::HashratesController < Api::V2::BaseController
   has_scope :currency_name
 
   def index

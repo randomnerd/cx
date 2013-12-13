@@ -1,4 +1,4 @@
-class Api::V1::CurrenciesController < Api::V1::BaseController
+class Api::V2::CurrenciesController < Api::V2::BaseController
   has_scope :by_name, as: :name
   def generate_address
     return unless current_user

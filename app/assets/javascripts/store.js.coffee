@@ -2,4 +2,4 @@
 
 Cx.ApplicationSerializer = DS.ActiveModelSerializer
 Cx.ApplicationAdapter = DS.ActiveModelAdapter.reopen
-  namespace: 'api/v1'
+  namespace: 'api/v2'
