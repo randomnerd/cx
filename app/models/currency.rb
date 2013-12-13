@@ -136,7 +136,7 @@ class Currency < ActiveRecord::Base
     diff = data.try(:[], 'proof-of-work')
     diff ||= data
     self.diff = diff if diff
-    self.net_hashrate = hrate if hrate
+    self.net_hashrate = hrate / 1000 if hrate
     self.save
   end
 

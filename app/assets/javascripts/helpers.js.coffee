@@ -62,6 +62,8 @@
     if na
       return new Handlebars.SafeString('<span class="text-muted">N/A</span>')
     else return ''
+  if hashrate > 1000000
+    h.round(hashrate / 1000000, 2) + " Th/s"
   if hashrate > 1000
     h.round(hashrate / 1000, 2) + " Gh/s"
   else if hashrate < 1
