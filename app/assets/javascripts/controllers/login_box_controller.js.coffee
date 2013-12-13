@@ -6,7 +6,6 @@ Cx.CommonLoginBoxController = Ember.Controller.extend
       @set "loginInfoMsg", null
       @set 'forgotMode', !@get('forgotMode')
     submitReg: ->
-      console.log @get('email'), @get('password')
       @get("controllers.auth").register(@)
     forgotPassword: ->
       @get("controllers.auth").forgotPassword(@get('email'))

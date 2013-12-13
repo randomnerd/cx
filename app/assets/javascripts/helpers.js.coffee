@@ -26,7 +26,6 @@
   c.callbacks._callbacks = {}
   c.bind "c", (o) ->
     return if store.getById(model, o.id)
-    console.log 'new', model, o.id
     store.pushPayload(model, h.manyHash(model, o))
     obj = store.getById(model, o.id)
     ctrl?.addObject(obj)
@@ -35,14 +34,12 @@
     f = store.getById(model, o.id)
     return if f && +(new Date(f?.get('updated_at'))) > +(new Date(o.updated_at))
     return if !f && !updPush
-    console.log 'upd', model, o.id
     store.pushPayload(model, h.manyHash(model, o))
 
   c.bind "uu", (o) ->
     f = store.getById(model, o.id)
     return unless f
     for key, value of o.fields
-      console.log key, value
       if key == 'created_at' || key == 'updated_at' || key == 'last_block_at'
         f.set key, new Date(value)
       else

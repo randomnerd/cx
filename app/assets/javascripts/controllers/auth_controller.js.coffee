@@ -30,7 +30,6 @@ Cx.AuthController = Ember.ObjectController.extend
         @get('controllers.commonLoginBox').set "loginErrorMsg", null
         @target.send('loadUserData', user)
         if attemptedTrans = @get 'attemptedTransition'
-          console.log attemptedTrans
           attemptedTrans.retry()
           @set 'attemptedTransition', null
       error: (jqXHR, textStatus, errorThrown) =>
@@ -44,7 +43,6 @@ Cx.AuthController = Ember.ObjectController.extend
         "user[email]": $('#login-email').val()
       success: (data) =>
         @get('controllers.commonLoginBox').set "loginInfoMsg", "Recovery email sent"
-        console.log 'sent'
 
   changePasswordWithToken: (c) ->
     $.ajax

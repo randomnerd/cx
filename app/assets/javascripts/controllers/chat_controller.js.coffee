@@ -23,7 +23,6 @@ Cx.CommonChatController = Ember.ArrayController.extend
   ).on('init')
 
   mentioned: ((a,b,c) ->
-    console.log 'mentioned', this
     !!a.match @get 'controllers.auth.nickname'
   ).property('controllers.auth.nickname')
 
