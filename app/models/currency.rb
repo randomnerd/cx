@@ -1,5 +1,5 @@
 class Currency < ActiveRecord::Base
-  valitade :check_duplicates, on: :create
+  validate :check_duplicates, on: :create
   include ApplicationHelper
   has_many :incomes
   has_many :withdrawals
