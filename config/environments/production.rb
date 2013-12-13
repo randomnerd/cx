@@ -87,5 +87,5 @@ Cx::Application.configure do
      :password             => '5l-bcjpa-hl1',
      :authentication       => :plain,
      :enable_starttls_auto => true  }
-  config.action_mailer.default_url_options = { :host => 'dev1.coinex.pw' }
+  config.action_mailer.default_url_options = { :host => 'coinex.pw' }
 end
