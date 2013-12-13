@@ -21,6 +21,8 @@ class ProcessCurrencies
           puts "[#{Time.now}] Processing #{currency.name}: failed to connect"
         when Errno::EHOSTUNREACH
           puts "[#{Time.now}] Processing #{currency.name}: host unreachable"
+        when Errno::EPIPE
+          puts "[#{Time.now}] Processing #{currency.name}: broken pipe"
         else
           puts e.inspect
           puts e.backtrace
