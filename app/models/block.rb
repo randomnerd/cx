@@ -11,6 +11,7 @@ class Block < ActiveRecord::Base
   }
   scope :recent, -> { limit(20).order('created_at desc') }
 
+  include ApplicationHelper
   include PusherSync
   def pusher_channel
     "blocks-#{self.currency_id}"
@@ -30,6 +31,10 @@ class Block < ActiveRecord::Base
       balance = payout.user.balance_for(self.currency_id)
       fees   += payout.fee
       next unless balance.add_funds(payout.reward_minus_fee, payout)
+      payout.user.notifications.create({
+        title: 'Mining reward',
+        body: "#{n2f payout.reward_minus_fee} #{currency.name} added to your balance"
+      })
       payout.update_attribute :paid, true
     end
 
