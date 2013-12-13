@@ -14,7 +14,7 @@ Cx.HashratesController = Em.ArrayController.extend
   limited: (->
     rates = @get('arrangedContent').toArray().splice(0,15)
     unless _.find(rates, (d) => d.get('name') == @get('user.nickname'))
-      return unless rate = @get('currency.ownHashrate')
+      return rates unless rate = @get('currency.ownHashrate')
       rates.push
         name: @get('user.nickname')
         rate: rate
