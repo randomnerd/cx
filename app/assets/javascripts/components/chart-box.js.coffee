@@ -47,14 +47,12 @@ Cx.ChartBoxComponent = Ember.Component.extend
           opposite: true
       }],
       series: [{
-        animation: false,
         type: 'candlestick'
         name: 'Exchange rate'
         data: [[0,0,0,0,0]]
         dataGrouping: { units: groupingUnits }
         zIndex: 2
       }, {
-        animation: false,
         name  : 'Volume',
         type  : 'column',
         marker: { enabled: false },
@@ -97,11 +95,9 @@ Cx.ChartBoxComponent = Ember.Component.extend
       point = [ item.id, item.o, item.h, item.l, item.c ]
       vpoint = [ item.id, item.v ]
       if p = _.find(@series.points, (d) -> d.category == item.id)
-        p.update(point, false, false, false)
-      else
-        @series.addPoint(point, false, false, false)
+        p.remove()
+      @series.addPoint(point, false)
       if p = _.find(@vseries.points, (d) -> d.category == item.id)
-        p.update(vpoint, false, false, false)
-      else
-        @vseries.addPoint(vpoint, false, false, false)
+        p.remove()
+      @vseries.addPoint(vpoint, false)
       @chart.redraw()
