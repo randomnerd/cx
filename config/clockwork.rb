@@ -7,5 +7,5 @@ module Clockwork
     job.constantize.perform_async
   end
 
-  every(120.seconds, 'ProcessCurrencies')
+  every(4.minutes, 'ProcessCurrencies')
 end
