@@ -1,5 +1,6 @@
 class ProcessCurrencies
   include Sidekiq::Worker
+  sidekiq_options queue: :currencies, retry: false
 
   def perform
     Currency.all.each do |currency|

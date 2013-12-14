@@ -1,5 +1,6 @@
 class ProcessPool
   include Sidekiq::Worker
+  sidekiq_options queue: :pools, retry: false
 
   def perform(cid)
     cache_key = "pool_#{cid}_processing"

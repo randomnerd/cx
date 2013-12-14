@@ -1,5 +1,6 @@
 class ProcessCurrency
   include Sidekiq::Worker
+  sidekiq_options queue: :currencies, retry: false
 
   def perform(cid)
     cache_key = "currency_#{cid}_processing"

@@ -1,2 +1,8 @@
 ---
-:concurrency: 200
+:concurrency: 100
+:queues:
+  - [mailer, 3]
+  - [currencies, 5]
+  - [pools, 5]
+  - [pusher, 8]
+  - [orders, 10]

@@ -260,5 +260,5 @@ end
 Devise::Async.setup do |config|
   config.enabled = Rails.env.production?
   config.backend = :sidekiq
-  config.queue   = :default
+  config.queue   = :mailer
 end
