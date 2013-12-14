@@ -85,14 +85,14 @@ class Currency < ActiveRecord::Base
           body: "#{n2f withdrawal.amount} #{self.name} sent to #{withdrawal.address}"
         )
       rescue => e
-        balance.add_funds(withdrawal.amount, withdrawal)
+        # balance.add_funds(withdrawal.amount, withdrawal)
         withdrawal.failed = true
         puts e.inspect
         puts e.backtrace
-        withdrawal.user.notifications.create(
-          title: "#{self.name} withdrawal failed",
-          body: "#{n2f withdrawal.amount} #{self.name} were credited back to your account"
-        )
+        # withdrawal.user.notifications.create(
+        #   title: "#{self.name} withdrawal failed",
+        #   body: "#{n2f withdrawal.amount} #{self.name} were credited back to your account"
+        # )
       ensure
         withdrawal.save
         withdrawal.balance_change.touch
