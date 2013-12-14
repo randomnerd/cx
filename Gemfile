@@ -82,6 +82,7 @@ gem 'rails-patch-json-encode'
 gem 'oj'
 gem 'oj_mimic_json'
 gem 'multi_json'
+gem 'unicorn-worker-killer'
 
 gem 'rails-mailgun', git: "git://github.com/code-mancers/rails-mailgun.git"
 
