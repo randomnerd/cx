@@ -60,7 +60,7 @@ gem 'mysql'
 gem 'dalli'
 
 gem 'httparty'
-gem 'sidekiq'
+gem 'sidekiq', github: 'mperham/sidekiq'
 gem 'sinatra', require: false
 gem 'slim'
 gem 'clockwork'
