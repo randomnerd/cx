@@ -79,13 +79,19 @@ Cx::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   # FIXME: insecure
-  config.action_mailer.smtp_settings = {
-     :address              => "smtp.mailgun.org",
-     :port                 => 587,
-     :domain               => 'coinex.pw',
-     :user_name            => 'postmaster@coinex.pw',
-     :password             => '5l-bcjpa-hl1',
-     :authentication       => :plain,
-     :enable_starttls_auto => true  }
+  config.action_mailer.delivery_method  = :mailgun
+  config.action_mailer.mailgun_settings = {
+    api_host: "coinex.pw",
+    api_key:  "key-3y6mllsejkbxklxgwvha1g0l6frjpyi2"
+  }
+
+  # config.action_mailer.smtp_settings = {
+  #    :address              => "smtp.mailgun.org",
+  #    :port                 => 587,
+  #    :domain               => 'coinex.pw',
+  #    :user_name            => 'postmaster@coinex.pw',
+  #    :password             => '5l-bcjpa-hl1',
+  #    :authentication       => :plain
+  # }
   config.action_mailer.default_url_options = { :host => 'coinex.pw' }
 end

@@ -83,6 +83,8 @@ gem 'oj'
 gem 'oj_mimic_json'
 gem 'multi_json'
 
+gem 'rails-mailgun', git: "git://github.com/code-mancers/rails-mailgun.git"
+
 group :development do
   gem 'pry'
 end
