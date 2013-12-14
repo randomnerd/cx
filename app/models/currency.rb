@@ -95,8 +95,10 @@ class Currency < ActiveRecord::Base
         # )
       ensure
         withdrawal.save
-        withdrawal.balance_change.touch
-        withdrawal.balance_change.pusher_update
+        if withdrawal.balance_change
+          withdrawal.balance_change.touch
+          withdrawal.balance_change.pusher_update
+        end
       end
     end
   end
