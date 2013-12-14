@@ -1,5 +1,5 @@
 # config/unicorn.rb
-worker_processes Integer(ENV["WEB_CONCURRENCY"] || 12)
+worker_processes Integer(ENV["WEB_CONCURRENCY"] || 6)
 timeout 15
 preload_app true
 pid 'tmp/pids/unicorn.pid'
