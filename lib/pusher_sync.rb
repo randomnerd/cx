@@ -1,8 +1,8 @@
 module PusherSync
    def self.included(base)
-    # base.after_create  :pusher_create
-    # base.after_update  :pusher_update
-    # base.after_destroy :pusher_delete
+    base.after_create  :pusher_create
+    base.after_update  :pusher_update
+    base.after_destroy :pusher_delete
   end
 
   def pusher_serialize
