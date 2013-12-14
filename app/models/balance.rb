@@ -15,7 +15,7 @@ class Balance < ActiveRecord::Base
   scope :currency, -> id { where(currency_id: id) }
 
   def add_funds(amount, subject, comment = nil)
-    # self.with_lock do
+    self.with_lock do
       increment :amount, amount
       balance_changes.create(
         subject:  subject,
@@ -24,11 +24,11 @@ class Balance < ActiveRecord::Base
         t_amount: self.amount,
         t_held:   self.held
       ) if save
-    # end
+    end
   end
 
   def lock_funds(lock_amount, subject)
-    # self.with_lock do
+    self.with_lock do
       return false if self.amount < lock_amount
       decrement :amount,  lock_amount
       increment :held,    lock_amount
@@ -40,11 +40,11 @@ class Balance < ActiveRecord::Base
         t_amount: self.amount,
         t_held:   self.held
       ) if save
-    # end
+    end
   end
 
   def unlock_funds(unlock_amount, subject, move = true)
-    # self.with_lock do
+    self.with_lock do
       return false if self.held < unlock_amount
       increment :amount,  unlock_amount if move
       decrement :held,    unlock_amount
@@ -56,7 +56,7 @@ class Balance < ActiveRecord::Base
         t_amount: self.amount,
         t_held:   self.held
       ) if save
-    # end
+    end
   end
 
   def verify(detailed = false)
