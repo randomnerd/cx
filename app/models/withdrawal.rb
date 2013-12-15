@@ -37,10 +37,10 @@ class Withdrawal < ActiveRecord::Base
         b = balance.balance_changes.where('id != ?', self.balance_change.id).sum(:amount)
         raise 'balance is too low' if b < self.amount
         account = balance.rpc_account
-        amount  = (self.amount.to_f / 10 ** 8) - (self.tx_fee || 0).to_f
-        move    = self.rpc.move '', account, amount
+        amount  = (self.amount.to_f / 10 ** 8) - (currency.tx_fee || 0).to_f
+        move    = currency.rpc.move '', account, amount
         raise 'unable to move funds' unless move
-        txid    = self.rpc.sendfrom account, self.address, amount
+        txid    = currency.rpc.sendfrom account, self.address, amount
         raise 'sendfrom failed' unless txid
         self.processed = true
         self.txid = txid
