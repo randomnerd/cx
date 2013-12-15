@@ -1,4 +1,5 @@
 class Withdrawal < ActiveRecord::Base
+  include ApplicationHelper
   belongs_to :user
   belongs_to :currency
   has_one :balance_change, as: :subject
@@ -26,7 +27,7 @@ class Withdrawal < ActiveRecord::Base
 
   def process_async
     return if self.processed or self.failed
-    ProcessWithdrawals.perform(self.id)
+    ProcessWithdrawals.perform_async(self.id)
   end
 
   def process
