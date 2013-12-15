@@ -16,7 +16,7 @@ class Message < ActiveRecord::Base
   end
 
   def account_old_enough
-    return if user.created_at > 3.days_ago
+    return if user.created_at < 3.days.ago
     errors.add(:user_id, 'account is not old enough')
   end
 
