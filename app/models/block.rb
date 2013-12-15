@@ -23,11 +23,12 @@ class Block < ActiveRecord::Base
   end
 
   def process_payouts
-    return unless self.category == 'generate'
-    return if self.paid
-
-    fees = 0
     self.with_lock do
+      self.reload
+      return unless self.category == 'generate'
+      return if self.paid
+
+      fees = 0
       self.block_payouts.unpaid.each do |payout|
         balance = payout.user.balance_for(self.currency_id)
         fees   += payout.fee
