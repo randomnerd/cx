@@ -25,6 +25,8 @@ set :linked_files, %w{config/database.yml}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 set :sidekiq_pid, "tmp/pids/sidekiq.pid"
 
+set :sidekiq_processes, 4
+
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 # set :keep_releases, 5
 

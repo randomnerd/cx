@@ -27,20 +27,22 @@ class Block < ActiveRecord::Base
     return if self.paid
 
     fees = 0
-    self.block_payouts.unpaid.each do |payout|
-      balance = payout.user.balance_for(self.currency_id)
-      fees   += payout.fee
-      next unless payout.reward_minus_fee > 0
-      next unless balance.add_funds(payout.reward_minus_fee, payout)
-      payout.user.notifications.create({
-        title: 'Mining reward',
-        body: "#{n2f payout.reward_minus_fee} #{currency.name} added to your balance"
-      })
-      payout.update_attribute :paid, true
-    end
+    self.with_lock do
+      self.block_payouts.unpaid.each do |payout|
+        balance = payout.user.balance_for(self.currency_id)
+        fees   += payout.fee
+        next unless payout.reward_minus_fee > 0
+        next unless balance.add_funds(payout.reward_minus_fee, payout)
+        payout.user.notifications.create({
+          title: 'Mining reward',
+          body: "#{n2f payout.reward_minus_fee} #{currency.name} added to your balance"
+        })
+        payout.update_attribute :paid, true
+      end
 
-    self.currency.incomes.create(amount: fees, subject: self) if fees > 0
-    unpaid = self.block_payouts.unpaid.count
-    self.update_attribute(:paid, true) if unpaid == 0
+      self.currency.incomes.create(amount: fees, subject: self) if fees > 0
+      unpaid = self.block_payouts.unpaid.count
+      self.update_attribute(:paid, true) if unpaid == 0
+    end
   end
 end
