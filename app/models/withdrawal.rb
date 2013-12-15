@@ -59,7 +59,7 @@ class Withdrawal < ActiveRecord::Base
         #   body: "#{n2f self.amount} #{self.name} were credited back to your account"
         # )
       ensure
-        self.save
+        self.save(validate: false)
         return unless self.balance_change
         self.balance_change.touch
         self.balance_change.pusher_update
