@@ -2,7 +2,7 @@ Cx.Deposit = DS.Model.extend
   amount: DS.attr('number')
   created_at: DS.attr('date')
   updated_at: DS.attr('date')
-  currency_id: DS.attr('number')
+  currency: DS.belongsTo('currency')
   confirmations: DS.attr('number')
   processed: DS.attr('boolean')
   txid: DS.attr('string')
