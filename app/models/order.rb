@@ -34,9 +34,11 @@ class Order < ActiveRecord::Base
   end
 
   def process
-    return unless self.valid?
-    return if complete? or cancelled
-    fill_matches
+    self.with_lock do
+      return unless self.valid?
+      return if complete? or cancelled
+      fill_matches
+    end
   end
 
   def process_async
@@ -59,23 +61,25 @@ class Order < ActiveRecord::Base
     Order.matches_for(self).each do |o|
       self.reload
       break if complete?
-      o_amt  = unmatched_amount
-      t_amt  = o.unmatched_amount
-      # use their amount if it is less than ours
-      amt    = o_amt > t_amt ? t_amt : o_amt
-      # use min rate for bid, and max rate for ask
-      t_rate = bid ? [rate, o.rate].min : [rate, o.rate].max
+      o.with_lock do
+        o_amt  = unmatched_amount
+        t_amt  = o.unmatched_amount
+        # use their amount if it is less than ours
+        amt    = o_amt > t_amt ? t_amt : o_amt
+        # use min rate for bid, and max rate for ask
+        t_rate = bid ? [rate, o.rate].min : [rate, o.rate].max
 
-      Trade.create(
-        bid:            bid,
-        rate:           t_rate,
-        amount:         amt,
-        ask_id:         bid ? o.id : id,
-        bid_id:         bid ? id : o.id,
-        ask_user_id:    bid ? o.user_id : user_id,
-        bid_user_id:    bid ? user_id : o.user_id,
-        trade_pair_id:  trade_pair_id
-      )
+        Trade.create(
+          bid:            bid,
+          rate:           t_rate,
+          amount:         amt,
+          ask_id:         bid ? o.id : id,
+          bid_id:         bid ? id : o.id,
+          ask_user_id:    bid ? o.user_id : user_id,
+          bid_user_id:    bid ? user_id : o.user_id,
+          trade_pair_id:  trade_pair_id
+        )
+      end
     end
   end
 
