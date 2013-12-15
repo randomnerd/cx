@@ -9,7 +9,7 @@ class Trade < ActiveRecord::Base
   delegate :currency, to: :trade_pair
   delegate :market,   to: :trade_pair
 
-  after_commit :process, on: :create
+  after_create :process
 
   include PusherSync
   def pusher_channel
