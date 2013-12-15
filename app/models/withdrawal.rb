@@ -7,7 +7,7 @@ class Withdrawal < ActiveRecord::Base
 
   validate :check_amounts
   validate :check_balance
-  after_commit :lock_funds, on: :create
+  after_commit :process_async, on: :create
 
   def balance
     self.user.balance_for(self.currency_id)
@@ -19,23 +19,23 @@ class Withdrawal < ActiveRecord::Base
   end
 
   def check_balance
-    balance = user.balance_for(self.currency_id)
     balance.verify!
     return if balance.amount >= self.amount
     errors.add(:amount, "Balance is too low")
   end
 
-  def lock_funds
-    balance = user.balance_for(self.currency_id)
-    balance.add_funds(-self.amount, self)
+  def process_async
+    return if self.processed or self.failed
+    ProcessWithdrawals.perform(self.id)
   end
 
   def process
     self.with_lock do
+      self.reload
+      return if self.processed or self.failed
+      return unless self.valid?
       begin
-        balance = self.balance
-        b = balance.balance_changes.where('id != ?', self.balance_change.id).sum(:amount)
-        raise 'balance is too low' if b < self.amount
+        raise 'failed to take funds' unless balance.take_funds(self.amount, self)
         account = balance.rpc_account
         amount  = (self.amount.to_f / 10 ** 8) - (currency.tx_fee || 0).to_f
         move    = currency.rpc.move '', account, amount

@@ -27,6 +27,21 @@ class Balance < ActiveRecord::Base
     end
   end
 
+  def take_funds(amount, subject, comment = nil)
+    self.with_lock do
+      return false if self.amount < amount
+      decrement :amount, amount
+      balance_changes.create(
+        subject:  subject,
+        comment:  comment || "take_funds",
+        amount:   -amount,
+        t_amount: self.amount,
+        t_held:   self.held
+      ) if save
+    end
+  end
+
+
   def lock_funds(lock_amount, subject)
     self.with_lock do
       return false if self.amount < lock_amount

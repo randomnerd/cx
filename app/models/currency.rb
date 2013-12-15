@@ -67,13 +67,8 @@ class Currency < ActiveRecord::Base
     self.process_deposits(skip + batch, batch)
   end
 
-  def process_withdrawals
-    withdrawals.unprocessed.each &:process
-  end
-
   def process_transactions
     update_deposit_confirmations
-    process_withdrawals
     process_deposits
   end
 
