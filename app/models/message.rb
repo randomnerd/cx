@@ -1,5 +1,6 @@
 class Message < ActiveRecord::Base
   validate :valid_msg
+  validate :account_old_enough
   belongs_to :user, touch: true
   before_create :set_system
 
@@ -11,7 +12,12 @@ class Message < ActiveRecord::Base
   scope :recent, -> { includes(:user).order('created_at desc').limit(50) }
 
   def name
-    user.nickname
+    user.try(:nickname)
+  end
+
+  def account_old_enough
+    return if user.created_at > 3.days_ago
+    errors.add(:user_id, 'account is not old enough')
   end
 
   def valid_msg

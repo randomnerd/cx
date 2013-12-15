@@ -14,12 +14,12 @@ Cx.ApplicationRoute = Ember.Route.extend
     @loadUserData(@controllerFor('auth').get('content'))
 
     @presenceChannel = pusher.subscribe("presence-users")
-    @presenceChannel.bind 'pusher:member_added', (data) =>
-      user = data.info
-      user.id = data.id
-      @store.pushPayload 'user', users: [user]
-    @presenceChannel.bind 'pusher:member_removed', (data) =>
-      @store.getById('user', data.id)?.deleteRecord()
+    # @presenceChannel.bind 'pusher:member_added', (data) =>
+    #   user = data.info
+    #   user.id = data.id
+    #   @store.pushPayload 'user', users: [user]
+    # @presenceChannel.bind 'pusher:member_removed', (data) =>
+    #   @store.getById('user', data.id)?.deleteRecord()
 
   loadUserData: (user) ->
     return unless user

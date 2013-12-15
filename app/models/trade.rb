@@ -10,7 +10,6 @@ class Trade < ActiveRecord::Base
   delegate :market,   to: :trade_pair
 
   after_commit :process, on: :create
-  after_commit :update_chart_items, on: :create
 
   include PusherSync
   def pusher_channel
@@ -32,15 +31,16 @@ class Trade < ActiveRecord::Base
   end
 
   def process
-    self.destroy and return false if bid_order.complete? || ask_order.complete?
-    self.destroy and return false if bid_order.cancelled || ask_order.cancelled
-    self.destroy and return false unless amount > 0
-    self.destroy and return false unless market_amount > 0
-    self.destroy and return false unless bid_market_amount > 0
+    self.delete and return false if bid_order.complete? || ask_order.complete?
+    self.delete and return false if bid_order.cancelled || ask_order.cancelled
+    self.delete and return false unless amount > 0
+    self.delete and return false unless market_amount > 0
+    self.delete and return false unless bid_market_amount > 0
     process_funds
     update_orders
     update_stats
     notify_users
+    update_chart_items
   end
 
   def process_funds
