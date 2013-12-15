@@ -45,8 +45,8 @@ class Withdrawal < ActiveRecord::Base
         self.processed = true
         self.txid = txid
         self.user.notifications.create(
-          title: "#{self.name} withdrawal processed",
-          body: "#{n2f self.amount} #{self.name} sent to #{self.address}"
+          title: "#{currency.name} withdrawal processed",
+          body: "#{n2f self.amount} #{currency.name} sent to #{self.address}"
         )
       rescue => e
         # balance.add_funds(self.amount, self)
