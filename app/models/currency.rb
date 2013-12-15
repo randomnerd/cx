@@ -68,39 +68,7 @@ class Currency < ActiveRecord::Base
   end
 
   def process_withdrawals
-    withdrawals.unprocessed.each do |withdrawal|
-      begin
-        next unless withdrawal.valid?
-        balance = withdrawal.balance
-        account = balance.rpc_account
-        amount  = (withdrawal.amount.to_f / 10 ** 8) - (self.tx_fee || 0).to_f
-        move    = self.rpc.move '', account, amount
-        raise 'unable to move funds' unless move
-        txid    = self.rpc.sendfrom account, withdrawal.address, amount
-        raise 'sendfrom failed' unless txid
-        withdrawal.processed = true
-        withdrawal.txid = txid
-        withdrawal.user.notifications.create(
-          title: "#{self.name} withdrawal processed",
-          body: "#{n2f withdrawal.amount} #{self.name} sent to #{withdrawal.address}"
-        )
-      rescue => e
-        # balance.add_funds(withdrawal.amount, withdrawal)
-        withdrawal.failed = true
-        puts e.inspect
-        puts e.backtrace
-        # withdrawal.user.notifications.create(
-        #   title: "#{self.name} withdrawal failed",
-        #   body: "#{n2f withdrawal.amount} #{self.name} were credited back to your account"
-        # )
-      ensure
-        withdrawal.save
-        if withdrawal.balance_change
-          withdrawal.balance_change.touch
-          withdrawal.balance_change.pusher_update
-        end
-      end
-    end
+    withdrawals.unprocessed.each &:process
   end
 
   def process_transactions
