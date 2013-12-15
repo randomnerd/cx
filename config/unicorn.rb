@@ -3,6 +3,8 @@ worker_processes Integer(ENV["WEB_CONCURRENCY"] || 12)
 timeout 15
 preload_app true
 pid 'tmp/pids/unicorn.pid'
+stderr_path "log/unicorn.stderr.log"
+stdout_path "log/unicorn.stdout.log"
 
 GC.respond_to?(:copy_on_write_friendly=) and
  GC.copy_on_write_friendly = true
