@@ -10,6 +10,16 @@ class Trade < ActiveRecord::Base
   delegate :market,   to: :trade_pair
 
   after_create :process
+  validate :orders_are_not_filled
+
+  def orders_are_not_filled
+    ask_ok = ask_order.trades.sum(:amount) < ask_order.amount
+    bid_ok = ask_order.trades.sum(:amount) < ask_order.amount
+    ask_amount_ok = self.amount <= ask_order.unmatched_amount
+    bid_amount_ok = self.amount <= bid_order.unmatched_amount
+    return if ask_ok && bid_ok && ask_amount_ok && bid_amount_ok
+    errors.add(:amount, 'orders are already filled')
+  end
 
   include PusherSync
   def pusher_channel

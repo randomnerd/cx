@@ -59,9 +59,11 @@ class Order < ActiveRecord::Base
 
   def fill_matches
     Order.matches_for(self).each do |o|
-      self.reload
-      break if complete?
       o.with_lock do
+        self.reload
+        o.reload
+        break if complete? || self.cancelled
+        next if o.complete || o.cancelled
         o_amt  = unmatched_amount
         t_amt  = o.unmatched_amount
         # use their amount if it is less than ours

@@ -15,7 +15,7 @@ Cx.OrdersController = Em.ArrayController.extend
       o.get('cancelled') == false &&
       o.get('complete') == false
       ret
-  ).property('controllers.auth.id', 'tradePairId', '@each')
+  ).property('controllers.auth.id', 'tradePairId', '@each.complete', '@each.cancelled')
 
   ask: (->
     return unless @get 'tradePairId'
@@ -24,7 +24,7 @@ Cx.OrdersController = Em.ArrayController.extend
       o.get('cancelled') == false &&
       o.get('complete') == false &&
       o.get('bid') == false
-  ).property('tradePairId', '@each')
+  ).property('tradePairId', '@each.complete', '@each.cancelled')
 
   bid: (->
     return unless @get 'tradePairId'
@@ -33,4 +33,4 @@ Cx.OrdersController = Em.ArrayController.extend
       o.get('cancelled') == false &&
       o.get('complete') == false &&
       o.get('bid') == true
-  ).property('tradePairId', '@each')
+  ).property('tradePairId', '@each.complete', '@each.cancelled')
