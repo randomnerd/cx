@@ -6,8 +6,8 @@ class Withdrawal < ActiveRecord::Base
 
   scope :unprocessed, -> { where(processed: false, failed: false) }
 
-  validate :check_amounts
-  validate :check_balance
+  validate :check_amounts, on: :create
+  validate :check_balance, on: :create
   after_commit :process_async, on: :create
 
   def balance

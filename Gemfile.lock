@@ -21,14 +21,6 @@ GIT
       railties (>= 3.1)
 
 GIT
-  remote: git://github.com/jdudek/pusher-async.git
-  revision: d9730dbb3eef67a10483094afda720b1179d2944
-  specs:
-    pusher-async (0.0.1)
-      em-http-request (~> 1.0.0)
-      pusher (~> 0.11.3)
-
-GIT
   remote: git://github.com/mperham/sidekiq.git
   revision: e711e68636694e0a07e53b8aebfb11da718f1865
   specs:
@@ -116,6 +108,7 @@ GEM
     cookiejar (0.3.0)
     daemons (1.1.9)
     dalli (2.6.4)
+    database_cleaner (1.2.0)
     devise (3.2.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -142,8 +135,14 @@ GEM
     execjs (2.0.2)
     factory_girl (4.3.0)
       activesupport (>= 3.0.0)
+    factory_girl_rails (4.3.0)
+      factory_girl (~> 4.3.0)
+      railties (>= 3.0.0)
     font-awesome-sass (4.0.2)
       sass-rails (>= 3.1.1)
+    fork (1.0.0)
+    fork_break (0.1.1)
+      fork
     handlebars-source (1.1.2)
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
@@ -229,14 +228,17 @@ GEM
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rotp (1.5.0)
-    rspec (2.14.1)
-      rspec-core (~> 2.14.0)
-      rspec-expectations (~> 2.14.0)
-      rspec-mocks (~> 2.14.0)
     rspec-core (2.14.7)
     rspec-expectations (2.14.4)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.4)
+    rspec-rails (2.14.0)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      railties (>= 3.0)
+      rspec-core (~> 2.14.0)
+      rspec-expectations (~> 2.14.0)
+      rspec-mocks (~> 2.14.0)
     sass (3.2.12)
     sass-rails (4.0.1)
       railties (>= 4.0.0, < 5.0)
@@ -245,6 +247,8 @@ GEM
     sdoc (0.3.20)
       json (>= 1.1.3)
       rdoc (~> 3.10)
+    shoulda-matchers (2.4.0)
+      activesupport (>= 3.0.0)
     signature (0.1.7)
     sinatra (1.4.4)
       rack (~> 1.4)
@@ -304,12 +308,14 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   daemons
   dalli
+  database_cleaner
   devise
   devise-async
   em-http-request
   ember-rails!
-  factory_girl
+  factory_girl_rails (~> 4.0)
   font-awesome-sass
+  fork_break
   has_scope
   httparty
   inherited_resources (~> 1.4.1)
@@ -323,15 +329,15 @@ DEPENDENCIES
   oj_mimic_json
   pry
   pusher
-  pusher-async!
   quiet_assets
   rails (= 4.0.2)
   rails-mailgun!
   rails-patch-json-encode
   rotp
-  rspec
+  rspec-rails
   sass-rails (~> 4.0.0)
   sdoc
+  shoulda-matchers
   sidekiq!
   sinatra
   slim

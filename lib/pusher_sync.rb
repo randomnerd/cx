@@ -1,5 +1,6 @@
 module PusherSync
-   def self.included(base)
+  def self.included(base)
+    return if Rails.env.test?
     base.after_create  :pusher_create
     base.after_update  :pusher_update
     base.after_destroy :pusher_delete

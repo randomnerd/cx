@@ -45,13 +45,9 @@ gem 'devise'
 gem 'devise-async'
 gem 'cancan'
 gem 'pusher'
-gem 'pusher-async', github: "jdudek/pusher-async"
 gem 'em-http-request'
 gem "ember-rails", github: "emberjs/ember-rails"
 gem 'quiet_assets'
-
-gem 'rspec'
-gem 'factory_girl'
 
 gem 'inherited_resources', '~> 1.4.1'
 gem 'has_scope'
@@ -86,6 +82,11 @@ gem 'unicorn-worker-killer'
 
 gem 'rails-mailgun', git: "git://github.com/code-mancers/rails-mailgun.git"
 
-group :development do
+group :development, :test do
   gem 'pry'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers'
+  gem 'fork_break'
+  gem 'factory_girl_rails', "~> 4.0"
+  gem 'database_cleaner'
 end

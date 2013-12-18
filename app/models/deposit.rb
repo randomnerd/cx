@@ -9,6 +9,13 @@ class Deposit < ActiveRecord::Base
     joins(:currency).where(currencies: {name: name})
   }
 
+  validate :check_duplicates, on: :create
+
+  def check_duplicates
+    return unless user.deposits.find_by_txid(self.txid)
+    errors.add(:txid, 'Duplicate deposit!')
+  end
+
   include PusherSync
   def pusher_channel
     "private-deposits-#{self.user_id}"

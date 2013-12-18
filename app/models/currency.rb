@@ -1,5 +1,4 @@
 class Currency < ActiveRecord::Base
-  validate :check_duplicates, on: :create
   include ApplicationHelper
   has_many :incomes
   has_many :withdrawals
@@ -14,6 +13,32 @@ class Currency < ActiveRecord::Base
   include PusherSync
   def pusher_channel
     "currencies"
+  end
+
+  def balance_diff
+    actual = self.balances.sum('amount+held').to_f/10**8
+    real   = self.rpc.getbalance.to_f
+    case self.name
+    when 'WDC' then real += 40000
+    when 'BTC' then real += 180
+    when 'LTC' then real += 1500
+    end
+    real - actual
+  rescue => e
+    nil
+  end
+
+  def balance_diff_neg
+    actual  = self.balances.where('amount > 0').sum('amount+held').to_f/10**8
+    real    = self.rpc.getbalance.to_f
+    case self.name
+    when 'WDC' then real += 40000
+    when 'BTC' then real += 180
+    when 'LTC' then real += 1500
+    end
+    real - actual
+  rescue => e
+    nil
   end
 
   def rpc
@@ -135,10 +160,5 @@ class Currency < ActiveRecord::Base
     self.blocks.generate.unpaid.each do |block|
       block.process_payouts
     end
-  end
-
-  def check_duplicates
-    return unless user.deposits.find_by_txid(self.txid)
-    errors.add(:txid, 'Duplicate deposit!')
   end
 end
