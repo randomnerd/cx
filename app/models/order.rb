@@ -40,12 +40,12 @@ class Order < ActiveRecord::Base
   end
 
   def process_async
-    return if complete? or cancelled or Rails.env.test?
+    return if complete? or cancelled
     unless lock_funds
       self.cancel(true)
       return false
     end
-    ProcessOrders.perform_async(self.id)
+    ProcessOrders.perform_async(self.id) unless Rails.env.test?
   end
 
   def lock_funds

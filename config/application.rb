@@ -27,6 +27,10 @@ module Cx
       Pusher.app_id = '30750'
       Pusher.key = '339899db7460f58950bd'
       Pusher.secret = 'd453d87791622c357d96'
+    elsif Rails.env.staging?
+      Pusher.app_id = '62188'
+      Pusher.key = 'e024a679b66f37d3ed8e'
+      Pusher.secret = '7b16b8061cb2e9b7f9ef'
     else
       Pusher.app_id = '59520'
       Pusher.key = 'f432464ea002212eaf37'

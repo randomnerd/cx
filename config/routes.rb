@@ -43,6 +43,7 @@ Cx::Application.routes.draw do
     end
   end
 
+
   devise_for :users, controllers: {
     sessions: 'sessions',
     registrations: 'registrations',
@@ -50,6 +51,9 @@ Cx::Application.routes.draw do
   }
 
   authenticate :user, -> u { u.admin? } do
+    namespace :hq do
+      root to: 'home#index'
+    end
     mount Sidekiq::Web => '/hq/sidekiq'
   end
   post '/pusher/auth', to: 'pusher#auth'

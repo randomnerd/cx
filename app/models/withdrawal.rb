@@ -14,6 +14,28 @@ class Withdrawal < ActiveRecord::Base
     self.user.balance_for(self.currency_id)
   end
 
+  def verify(skip = 0, batch = 50)
+    return if self.created_at > 10.minutes.ago
+    acc = "user-#{self.user_id}"
+    amt = (self.amount.to_f / 10 ** 8) - (self.currency.tx_fee || 0).to_f
+    txs = self.currency.listtransactions(acc, batch, skip)
+    txs.reverse.each do |tx|
+      next if Withdrawal.find_by_txid(tx['txid'])
+      next unless tx['amount'] == amt
+      self.failed = false
+      self.processed = true
+      self.txid = tx['txid']
+      self.save(validate: false)
+      return true
+    end
+    if txs.count < 50
+      self.balance.add_funds(self.amount, self)
+      return false
+    else
+      self.verify(skip+batch, batch)
+    end
+  end
+
   def check_amounts
     return if self.amount.to_f / 10 ** 8 >= 0.01
     errors.add(:amount, "Minimum withdrawal is 0.01")

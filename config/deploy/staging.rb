@@ -1,14 +1,21 @@
 set :stage, :staging
-set :rails_env, 'development'
+set :rails_env, 'staging'
+
+set :bundle_gemfile, -> { release_path.join('Gemfile') }
+set :bundle_dir, -> { shared_path.join('bundle') }
+set :bundle_flags, '--deployment --quiet'
+set :bundle_without, %w{development test}.join(' ')
+set :bundle_binstubs, -> { shared_path.join('bin') }
+set :bundle_roles, :all
 
 # Simple Role Syntax
 # ==================
 # Supports bulk-adding hosts to roles, the primary
 # server in each group is considered to be the first
 # unless any hosts have the primary property set.
-role :app, %w{cx.internal}
-#role :web, %w{lb.internal}
-#role :db,  %w{db.internal}
+role :app, %w{cx-staging.internal}
+role :web, %w{cx-staging.internal}
+role :db, %w{cx-staging.internal}
 
 # Extended Server Syntax
 # ======================
@@ -16,8 +23,7 @@ role :app, %w{cx.internal}
 # definition into the server list. The second argument
 # something that quacks like a hash can be used to set
 # extended properties on the server.
-#server '10.0.1.30', user: 'deploy', roles: %w{app}
-#server '10.0.1.11', user: 'deploy', roles: %w{db}
+# server 'example.com', user: 'deploy', roles: %w{web app}, my_property: :my_value
 
 # you can set custom ssh options
 # it's possible to pass any option but you need to keep in mind that net/ssh understand limited list of options
@@ -41,4 +47,4 @@ role :app, %w{cx.internal}
 #   }
 # setting per server overrides global ssh_options
 
-# fetch(:default_env).merge!(rails_env: :staging)
+fetch(:default_env).merge!(rails_env: :staging)
