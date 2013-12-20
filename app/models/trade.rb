@@ -4,7 +4,7 @@ class Trade < ActiveRecord::Base
   belongs_to :ask_user, class_name: 'User', foreign_key: 'ask_user_id'
   belongs_to :bid_user, class_name: 'User', foreign_key: 'bid_user_id'
   belongs_to :trade_pair
-  belongs_to :balance_change, as: :subject
+  has_many :balance_changes, as: :subject
   delegate :currency_id, to: :trade_pair
   delegate :market_id,   to: :trade_pair
   delegate :currency, to: :trade_pair
