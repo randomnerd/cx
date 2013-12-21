@@ -122,7 +122,7 @@ class Trade < ActiveRecord::Base
     rec.save
 
     return if Rails.env.test?
-    Pusher["chartItems-#{self.trade_pair_id}"].trigger_async('chartItem#update',
+    Pusher["chartItems-#{self.trade_pair_id}"].trigger('chartItem#update',
       ChartItemSerializer.new(rec, root: false))
   end
 end
