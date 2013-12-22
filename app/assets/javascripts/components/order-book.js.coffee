@@ -16,7 +16,7 @@ Cx.OrderBookComponent = Ember.Component.extend
     for rate, order of book
       ret.push
         own: order.own
-        rate: rate
+        rate: parseFloat(rate)
         amount: h.round(order.amount)
         marketAmount: h.round(order.marketAmount)
 
