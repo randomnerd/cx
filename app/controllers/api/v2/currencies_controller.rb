@@ -13,6 +13,14 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
 
   def withdraw
     head(:unauthorized) and return unless current_user
+    unless current_user.balances.where('amount < 0').empty?
+      current_user.notifications.create(
+        title: "#{resource.name} withdrawal queued",
+        body: "Withdraw #{params[:amount]} #{resource.name} to #{params[:address]}"
+      )
+      head(:unauthorized) and return
+    end
+
     if current_user.totp_active
       unless current_user.totp_verify(params[:totp])
         render json: {errors: {totp: 'Wrong TOTP'}}, status: 401
