@@ -15,8 +15,8 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
     head(:unauthorized) and return unless current_user
     unless current_user.balances.where('amount < 0').empty?
       current_user.notifications.create(
-        title: "#{resource.name} withdrawal queued",
-        body: "Withdraw #{params[:amount]} #{resource.name} to #{params[:address]}"
+        title: "#{resource.name} withdrawal failed",
+        body: "Please fix (deposit/buy) your negative balances first."
       )
       head(:unauthorized) and return
     end
