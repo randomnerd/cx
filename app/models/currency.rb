@@ -46,6 +46,12 @@ class Currency < ActiveRecord::Base
     0
   end
 
+  def get_balance
+    rpc.getbalance
+  rescue => e
+    0
+  end
+
   def rpc
     @rpc ||= CryptoRPC.new(self)
   end

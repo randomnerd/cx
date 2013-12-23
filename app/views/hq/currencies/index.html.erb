@@ -14,6 +14,7 @@
         <th>port</th>
         <th>tx fee</th>
         <th>tx conf</th>
+        <th class="text-right">wallet balance</th>
         <th class="text-right">balance diff</th>
         <th class="text-right">balances sum</th>
         <th class="text-right">neg balances sum</th>
@@ -29,6 +30,7 @@
           <td><%= curr.port %></td>
           <td><%= curr.tx_fee %></td>
           <td><%= curr.tx_conf %></td>
+          <td class="text-right monospace"><%= curr.get_balance %> <%= curr.name %></td>
           <td class="text-right monospace"><%= curr.balance_diff_neg %> <%= curr.name %></td>
           <td class="text-right monospace">
             <%= n2f curr.balances.sum('amount+held') %> <%= curr.name %>
