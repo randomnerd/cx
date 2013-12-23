@@ -9,6 +9,11 @@ class Withdrawal < ActiveRecord::Base
   validate :check_amounts, on: :create
   validate :check_balance, on: :create
   after_commit :process_async, on: :create
+  validate :production?
+
+  def production
+    errors.add(:id, 'Not in production environment') unless Rails.env.production?
+  end
 
   def balance
     self.user.balance_for(self.currency_id)
