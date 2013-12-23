@@ -72,6 +72,7 @@ Cx::Application.routes.draw do
         get :ban
         get :unban
         get :masq, to: 'masquerades#create'
+        get :resend_confirmation
       end
       collection { get :unmasq, to: 'masquerades#destroy' }
     end

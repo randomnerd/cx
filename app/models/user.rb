@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   end
 
   def set_nickname(name = nil)
-    return if self.nickname && !self.nickname.try(:empty?)
+    return if !name && self.nickname && !self.nickname.try(:empty?)
     name ||= email.split('@').first
     return if name == nickname
     name += rand(10).to_s while !!User.find_by_nickname(name)

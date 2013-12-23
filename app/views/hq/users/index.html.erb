@@ -53,6 +53,9 @@
               <% else -%>
                 <%= link_to 'Ban', ban_hq_user_path(user), confirm: 'Sure?', class: 'btn btn-default btn-xs' %>
               <% end -%>
+              <% unless user.confirmed_at.present? -%>
+                <%= link_to 'Resend confirm email', resend_confirmation_hq_user_path(user), confirm: 'Sure?', class: 'btn btn-default btn-xs' %>
+              <% end -%>
               <a href="#" class="btn btn-default btn-xs">Audit</a>
             </span>
 
