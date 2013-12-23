@@ -53,7 +53,6 @@ gem 'inherited_resources', '~> 1.4.1'
 gem 'has_scope'
 
 gem 'pg'
-gem 'mysql2'
 gem 'dalli'
 
 gem 'httparty'
