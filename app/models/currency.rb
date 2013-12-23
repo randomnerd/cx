@@ -34,7 +34,8 @@ class Currency < ActiveRecord::Base
   end
 
   def balance_diff_neg
-    actual  = self.balances.where('amount > 0').sum('amount+held').to_f/10**8
+    actual  = self.balances.where('amount >= 0').sum('amount+held').to_f/10**8
+    actual += self.balances.where('amount < 0').sum('held').to_f/10**8
     real    = self.rpc.getbalance.to_f
     case self.name
     when 'WDC' then real += 40000

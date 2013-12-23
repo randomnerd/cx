@@ -23,7 +23,7 @@
     </thead>
     <tbody>
       <% @currencies.each do |curr| -%>
-      <% cache(curr) do -%>
+      <% cache(curr, expires: 10.minutes) do -%>
         <tr class="<% unless curr.public %>text-muted<% end %>">
           <td><%= curr.id %></td>
           <td class="monospace"><%= curr.name %></td>
