@@ -70,7 +70,12 @@ class Balance < ActiveRecord::Base
 
   def unlock_funds(unlock_amount, subject, move = true)
     self.with_lock do
-      return false if self.held < unlock_amount
+      if self.held < unlock_amount
+        return false if move
+        negative = self.held - unlock_amount
+        self.add_funds(negative, subject, 'unlock_funds_negative')
+        increment :held, negative.abs
+      end
       increment :amount,  unlock_amount if move
       decrement :held,    unlock_amount
       balance_changes.create(
