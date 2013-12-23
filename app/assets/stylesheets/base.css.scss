@@ -79,7 +79,7 @@ a { cursor: pointer; }
 
 td.actions { text-align: right; }
 .btn { line-height: 1; }
-.btn.btn-xs { line-height: 1.5; }
+.btn.btn-xs, .btn.btn-sm { line-height: 1.5; }
 
 table .txid { text-align: center; }
 .monospace {

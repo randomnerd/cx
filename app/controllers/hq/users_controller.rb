@@ -1,4 +1,5 @@
 class Hq::UsersController < Hq::BaseController
+  has_scope :filter_query
   def index
     @users = collection
   end

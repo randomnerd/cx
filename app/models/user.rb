@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
   has_many :balance_changes, through: :balances
   after_create :set_initial_values
 
+  scope :filter_query, -> q { where('id = ? or nickname like ? or email like ?', q.to_i, "%#{q}%", "%#{q}%") }
+
   def set_initial_values
     self.skip_reconfirmation!
     set_nickname

@@ -1,5 +1,21 @@
-<div class="panel panel-default panel-big-heading">
-  <div class="panel-heading">Users</div>
+<div class="panel panel-default panel-big-heading" id="users">
+  <div class="panel-heading">
+    Users
+    <div class="pull-right" style="width: 300px;">
+      <form class="form-inline" role="form">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" name="filter_query" class="form-control input-sm" value="<%= params[:filter_query]%>" placeholder="Filter users...">
+            <span class="input-group-btn">
+              <button class="btn btn-primary btn-sm">Filter</button>
+              <%= link_to 'Reset', hq_users_path, class: 'btn btn-default btn-sm' %>
+            </span>
+            <!-- <button class="btn btn-default">Reset</button> -->
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <table class="table table-condensed table-striped">
     <thead>
