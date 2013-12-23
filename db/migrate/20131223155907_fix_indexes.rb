@@ -58,8 +58,5 @@ class FixIndexes < ActiveRecord::Migration
     add_index :worker_stats, :worker_id
     add_index :worker_stats, :currency_id
     add_index :worker_stats, :updated_at
-    remove_index "workers", ["name", "pass"]
-    add_index :workers, :name
-    add_index :workers, :pass
   end
 end
