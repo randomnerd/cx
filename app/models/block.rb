@@ -5,6 +5,7 @@ class Block < ActiveRecord::Base
 
   scope :immature, -> { where(category: 'immature') }
   scope :generate, -> { where(category: 'generate') }
+  scope :orphan,   -> { where(category: 'orphan') }
   scope :unpaid,   -> { where(paid: false) }
   scope :by_currency_name, -> name {
     joins(:currency).where(currencies: {name: name})

@@ -108,14 +108,16 @@ class Balance < ActiveRecord::Base
   end
 
   def verify_each!
-    held   = 0
-    amount = 0
-    self.balance_changes.order(:created_at).find_each do |bc|
-      held   += bc.held
-      amount += bc.amount
-      bc.update_attributes t_amount: amount, t_held: held
+    self.with_lock do
+      held   = 0
+      amount = 0
+      self.balance_changes.order(:created_at).find_each do |bc|
+        held   += bc.held
+        amount += bc.amount
+        bc.update_attributes t_amount: amount, t_held: held
+      end
+      self.update_attributes amount: amount, held: held
     end
-    self.update_attributes amount: amount, held: held
   end
 
   def verify!

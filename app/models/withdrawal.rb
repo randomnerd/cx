@@ -19,25 +19,43 @@ class Withdrawal < ActiveRecord::Base
     self.user.balance_for(self.currency_id)
   end
 
+  def balance_changes
+    BalanceChange.where(subject: self)
+  end
+
   def verify(skip = 0, batch = 50)
-    return if self.created_at > 10.minutes.ago
-    acc = "user-#{self.user_id}"
-    amt = (self.amount.to_f / 10 ** 8) - (self.currency.tx_fee || 0).to_f
-    txs = self.currency.listtransactions(acc, batch, skip)
-    txs.reverse.each do |tx|
-      next if Withdrawal.find_by_txid(tx['txid'])
-      next unless tx['amount'] == amt
-      self.failed = false
-      self.processed = true
-      self.txid = tx['txid']
-      self.save(validate: false)
-      return true
-    end
-    if txs.count < 50
-      self.balance.add_funds(self.amount, self)
-      return false
-    else
-      self.verify(skip+batch, batch)
+    self.with_lock do
+      return if self.created_at > 10.minutes.ago
+      return true if self.txid
+      acc = "user-#{self.user_id}"
+      amt = (self.amount.to_f / 10 ** 8) - (self.currency.tx_fee || 0).to_f
+      begin
+        txs = self.currency.rpc.listtransactions(acc, batch, skip)
+      rescue => e
+        next
+      end
+      puts self.inspect
+      next unless txs
+      txs.select {|tx| tx['category'] == 'send'}.reverse.each do |tx|
+        next if Withdrawal.find_by_txid(tx['txid'])
+        puts "#{tx['amount'].abs} | #{amt}"
+        next unless tx['amount'].abs == amt
+        self.failed = false
+        self.processed = true
+        self.txid = tx['txid']
+        puts "txid=#{self.txid}"
+        self.save(validate: false)
+        return true
+      end
+      if txs.count < 50
+        puts "invalid, destroy"
+        self.balance_changes.each &:destroy
+        self.destroy
+        self.balance.verify_each!
+        return false
+      else
+        self.verify(skip+batch, batch)
+      end
     end
   end
 

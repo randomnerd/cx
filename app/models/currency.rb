@@ -181,6 +181,9 @@ class Currency < ActiveRecord::Base
       block.confirmations = info['confirmations']
       block.save
     end
+    self.blocks.orphan.each do |block|
+      block.block_payouts.delete_all
+    end
   end
 
   def process_payouts

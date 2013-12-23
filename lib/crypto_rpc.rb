@@ -7,7 +7,7 @@ class CryptoRPC
 
   def construct_rpc(method, args)
     {
-      timeout: 5,
+      timeout: 30,
       port: @currency.port,
       basic_auth: @auth,
       body: {
