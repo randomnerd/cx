@@ -2,6 +2,7 @@ Cx.CommonChatController = Ember.ArrayController.extend
   lock: false
   msg: ''
   needs: ['auth', 'messages']
+  user: Em.computed.alias('controllers.auth')
 
   scroller: (->
     c = $('#chat .messages')
@@ -35,10 +36,11 @@ Cx.CommonChatController = Ember.ArrayController.extend
       return unless @get('allowSend')
       @lock = false
       message = @store.createRecord 'message',
-        name: @get('controllers.auth.nickname')
+        name: @get('user.nickname')
         body: @get('msg')
         created_at: new Date()
-      onSucc = -> true
+      onSucc = ->
+        h.ga_track('Chat', 'message', "#{@get('user.nickname')} (#{@get('user.email')}): #{@get('msg')}")
       onFail = (data) =>
         errors = []
         for key, value of data.errors

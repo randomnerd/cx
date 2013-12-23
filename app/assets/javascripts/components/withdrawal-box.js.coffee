@@ -14,6 +14,7 @@ Cx.WithdrawalBoxComponent = Ember.Component.extend
           $('#withdrawal-box').modal('hide')
           @set 'address', null
           @set 'amount', null
+          h.ga_track('Withdrawal', @get('currency.name'), "#{@get('user.email')}: #{@get 'amount'} to #{@get 'address'} #{'using totp' if @get('tfaCode')}")
         error: (data) =>
           errors = data.responseJSON?.errors
           console.log errors

@@ -1,6 +1,7 @@
 Cx.BalancesController = Ember.ArrayController.extend
   tradePairId: null
   needs: ['auth', 'currencies']
+  user: Em.computed.alias('controllers.auth')
   setupPusher: (->
     return unless uid = @get 'controllers.auth.id'
     @channel?.unsubscribe()
@@ -16,6 +17,7 @@ Cx.BalancesController = Ember.ArrayController.extend
         type: "POST"
         success: (data) =>
           currency.set 'generating', false
+          h.ga_track('New wallet', @get('currency.name'), @get('user.email'))
         error: (data) =>
           currency.set 'generating', false
 

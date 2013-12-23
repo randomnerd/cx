@@ -31,4 +31,6 @@ Cx.AccountSettingsController = Em.Controller.extend
   actions:
     setNickname: ->
       xhr = $.post "/api/v2/users/#{@get 'user.id'}/set_nickname", { name: @get('nickname') }
-      xhr.done (data) => @set 'user.nickname', data.user.nickname
+      xhr.done (data) =>
+        h.ga_track('Chat', 'changeName', "#{@get('user.nickname')} (#{@get('user.email')}): #{data.user.nickname}")
+        @set 'user.nickname', data.user.nickname

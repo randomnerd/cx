@@ -18,3 +18,11 @@ Cx.CatchAllRoute = Em.Route.extend
 
 Cx.Router.reopen
   location: 'history'
+  didTransition: (infos) ->
+    @_super(infos);
+    return unless window.ga
+    Em.run.next ->
+      _gaq('send', 'pageview', {
+         'page': window.location.hash,
+         'title': window.location.hash
+      });

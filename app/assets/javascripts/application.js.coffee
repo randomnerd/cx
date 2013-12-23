@@ -4,6 +4,7 @@
 #= require ember
 #= require ember-data
 #= require ember-infinite-scroll
+#= require google_analytics
 #= require_self
 #= require cx
 #= require_tree .

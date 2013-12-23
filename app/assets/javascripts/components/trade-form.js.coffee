@@ -33,7 +33,6 @@ Cx.TradeFormComponent = Ember.Component.extend
     setTotal: (balance) ->
       @set 'amount', h.n2f(balance)
     submit: ->
-      @set 'inProgress', true
       store = @get('targetObject.store')
       order = store.createRecord 'order',
         user:      @get('user').get('content').get('content')
@@ -42,6 +41,7 @@ Cx.TradeFormComponent = Ember.Component.extend
         amount:    h.f2n(@get('amount'))
         bid:       !!@get('buy')
       order.save().then(
-        (=> @set 'inProgress', false)
+        type = if @get('buy') then 'buy' else 'sell'
+        (=> h.ga_track('Order', @get('pair.url_slug'), "#{@get('user.email')}: new #{type}, #{@get('amount')} @ #{@get('rate')}"))
         (=> @set 'inProgress', false)
       )
