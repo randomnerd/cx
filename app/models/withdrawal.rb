@@ -11,7 +11,7 @@ class Withdrawal < ActiveRecord::Base
   after_commit :process_async, on: :create
   validate :production?
 
-  def production
+  def production?
     errors.add(:id, 'Not in production environment') unless Rails.env.production?
   end
 
