@@ -33,10 +33,10 @@
           <td class="text-right monospace"><%= curr.get_balance %> <%= curr.name %></td>
           <td class="text-right monospace"><%= curr.balance_diff_neg %> <%= curr.name %></td>
           <td class="text-right monospace">
-            <%= n2f curr.balances.sum('amount+held') %> <%= curr.name %>
+            <%= curr.balance_sum %> <%= curr.name %>
           </td>
           <td class="text-right monospace">
-            <%= n2f curr.balances.where('amount < 0').sum('amount+held') %> <%= curr.name %>
+            <%= curr.balance_sum_neg %> <%= curr.name %>
           </td>
           <td class="text-right">
             <span class="btn-group">

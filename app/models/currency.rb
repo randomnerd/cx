@@ -33,16 +33,23 @@ class Currency < ActiveRecord::Base
     nil
   end
 
-  def balance_diff_neg
+  def balance_sum
     actual  = self.balances.where('amount >= 0').sum('amount+held').to_f/10**8
     actual += self.balances.where('amount < 0').sum('held').to_f/10**8
+  end
+
+  def balance_sum_neg
+    self.balances.where('amount < 0').sum('amount')
+  end
+
+  def balance_diff_neg
     real    = self.rpc.getbalance.to_f
     case self.name
     when 'WDC' then real += 40000
     when 'BTC' then real += 180
     when 'LTC' then real += 1500
     end
-    real - actual
+    real - balance_sum
   rescue => e
     0
   end
