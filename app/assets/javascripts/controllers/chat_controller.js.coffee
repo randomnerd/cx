@@ -39,7 +39,7 @@ Cx.CommonChatController = Ember.ArrayController.extend
         name: @get('user.nickname')
         body: @get('msg')
         created_at: new Date()
-      onSucc = ->
+      onSucc = =>
         h.ga_track('Chat', 'message', "#{@get('user.nickname')} (#{@get('user.email')}): #{@get('msg')}")
       onFail = (data) =>
         errors = []
