@@ -11,13 +11,13 @@
       <tr>
         <th>#</th>
         <th>name</th>
-        <th>port</th>
         <th>tx fee</th>
         <th>tx conf</th>
         <th class="text-right">wallet balance</th>
         <th class="text-right">balance diff</th>
         <th class="text-right">balances sum</th>
         <th class="text-right">neg balances sum</th>
+        <th>version</th>
         <th></th>
       </tr>
     </thead>
@@ -27,7 +27,6 @@
         <tr class="<% unless curr.public %>text-muted<% end %>">
           <td><%= curr.id %></td>
           <td class="monospace"><%= curr.name %></td>
-          <td><%= curr.port %></td>
           <td><%= curr.tx_fee %></td>
           <td><%= curr.tx_conf %></td>
           <td class="text-right monospace"><%= curr.get_balance %> <%= curr.name %></td>
@@ -38,6 +37,7 @@
           <td class="text-right monospace">
             <%= curr.balance_sum_neg %> <%= curr.name %>
           </td>
+          <td><%= curr.client_version %></td>
           <td class="text-right">
             <span class="btn-group">
               <%= link_to 'Edit', edit_hq_currency_path(curr), class: 'btn btn-xs btn-default' %>

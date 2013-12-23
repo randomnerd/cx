@@ -39,6 +39,12 @@ class Currency < ActiveRecord::Base
     actual.round(8)
   end
 
+  def client_version
+    self.rpc.getinfo.try(:[], 'version')
+  rescue => e
+    'n/a'
+  end
+
   def balance_sum_neg
     self.balances.where('amount < 0').sum('amount').to_f/10**8
   end
