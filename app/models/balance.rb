@@ -14,6 +14,14 @@ class Balance < ActiveRecord::Base
 
   scope :currency, -> id { where(currency_id: id) }
 
+  def deposits
+    user.deposits.where(currency_id: self.currency_id)
+  end
+
+  def withdrawals
+    user.withdrawals.where(currency_id: self.currency_id)
+  end
+
   def add_funds(amount, subject, comment = nil)
     self.with_lock do
       increment :amount, amount
