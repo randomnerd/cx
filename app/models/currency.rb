@@ -36,6 +36,7 @@ class Currency < ActiveRecord::Base
   def balance_sum
     actual  = self.balances.where('amount >= 0').sum('amount+held').to_f/10**8
     actual += self.balances.where('amount < 0').sum('held').to_f/10**8
+    actual.round(8)
   end
 
   def balance_sum_neg
