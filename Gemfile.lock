@@ -162,7 +162,6 @@ GEM
     minitest (4.7.5)
     multi_json (1.8.2)
     multi_xml (0.5.5)
-    mysql2 (0.3.14)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
@@ -311,7 +310,6 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   multi_json
-  mysql2
   newrelic_rpm
   oj
   oj_mimic_json
