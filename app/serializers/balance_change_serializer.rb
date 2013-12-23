@@ -37,4 +37,8 @@ class BalanceChangeSerializer < ActiveModel::Serializer
   def currency_id
     object.balance.currency_id
   end
+
+  def created_at
+    object.try(:subject).try(:created_at) || object.try(:created_at)
+  end
 end
