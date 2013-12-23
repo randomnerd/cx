@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131213134051) do
+ActiveRecord::Schema.define(version: 20131223034506) do
 
   create_table "address_book_items", force: true do |t|
     t.string   "name"
@@ -201,17 +201,17 @@ ActiveRecord::Schema.define(version: 20131213134051) do
   add_index "orders", ["user_id", "trade_pair_id", "rate", "complete", "cancelled", "bid"], name: "orders_index", using: :btree
 
   create_table "trade_pairs", force: true do |t|
-    t.float    "buy_fee",                   default: 0.0
-    t.float    "sell_fee",                  default: 0.0
+    t.float    "buy_fee"
+    t.float    "sell_fee"
     t.integer  "last_price",      limit: 8
     t.integer  "market_id"
     t.integer  "currency_id"
-    t.boolean  "public",                    default: false
+    t.boolean  "public"
     t.string   "url_slug"
-    t.integer  "currency_volume", limit: 8, default: 0
-    t.integer  "market_volume",   limit: 8, default: 0
-    t.integer  "rate_min",        limit: 8, default: 0
-    t.integer  "rate_max",        limit: 8, default: 0
+    t.integer  "currency_volume", limit: 8
+    t.integer  "market_volume",   limit: 8
+    t.integer  "rate_min",        limit: 8
+    t.integer  "rate_max",        limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "old_id"
@@ -239,7 +239,7 @@ ActiveRecord::Schema.define(version: 20131213134051) do
   add_index "trades", ["ask_user_id"], name: "index_trades_on_ask_user_id", using: :btree
   add_index "trades", ["bid_id"], name: "index_trades_on_bid_id", using: :btree
   add_index "trades", ["bid_user_id"], name: "index_trades_on_bid_user_id", using: :btree
-  add_index "trades", ["trade_pair_id", "created_at"], name: "index_trades_on_trade_pair_id_and_created_at", using: :btree
+  add_index "trades", ["trade_pair_id"], name: "index_trades_on_trade_pair_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",    null: false
@@ -264,8 +264,10 @@ ActiveRecord::Schema.define(version: 20131213134051) do
     t.string   "totp_key"
     t.boolean  "totp_active",            default: false
     t.boolean  "confirm_orders",         default: true
+    t.datetime "banned_until"
   end
 
+  add_index "users", ["banned_until"], name: "index_users_on_banned_until", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["nickname"], name: "index_users_on_nickname", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree

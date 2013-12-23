@@ -1,0 +1,50 @@
+<div class="panel panel-default panel-big-heading">
+  <div class="panel-heading">Users</div>
+
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>email</th>
+        <th>nickname</th>
+        <th>chat ban</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| -%>
+        <tr>
+          <td><%= user.id %></td>
+          <td><%= user.email %></td>
+          <td><%= user.nickname %></td>
+          <td>
+            <% if user.banned? -%>
+              <span class="label label-danger">
+                Expires in <%= time_ago_in_words(user.banned_until) %>
+              </span>
+            <% else -%>
+              <span class="label label-success">Not banned</span>
+            <% end -%>
+          </td>
+          <td class="text-right">
+            <span class="btn-group">
+              <% unless current_user == user -%>
+                <%= link_to 'Sign in', masq_hq_user_path(user), class: 'btn btn-default btn-xs' %>
+              <% end -%>
+              <% if user.banned? -%>
+                <%= link_to 'Unban', unban_hq_user_path(user), class: 'btn btn-default btn-xs' %>
+              <% else -%>
+                <%= link_to 'Ban', ban_hq_user_path(user), class: 'btn btn-default btn-xs' %>
+              <% end -%>
+              <a href="#" class="btn btn-default btn-xs">Audit</a>
+            </span>
+
+          </td>
+        </tr>
+      <% end -%>
+    </tbody>
+  </table>
+
+</div>
+
+<div class="text-center"><%= will_paginate @users, renderer: BootstrapPagination::Rails %></div>

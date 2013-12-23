@@ -1,4 +1,4 @@
-<div {{bind-attr class=":message :panel :panel-default :nopadding mention:highlight own:own content.system:system"}}>
+<div {{bind-attr class=":message :panel :panel-default :nopadding mention:highlight own:own content.system:system content.failed:failed"}}>
   <div class="text-muted pull-right">
     {{view Cx.TimeagoView title=content.time}}
   </div>
@@ -10,5 +10,14 @@
       <i class="fa fa-trash-o"></i>
     </a>
   {{/if}}
-  {{content.body}}
+  {{#if content.errors}}
+    Errors:
+    <ul>
+    {{#each err in content.errors}}
+      <li>{{err}}</li>
+    {{/each}}
+    </ul>
+  {{else}}
+    {{content.body}}
+  {{/if}}
 </div>

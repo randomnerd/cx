@@ -63,4 +63,9 @@ class User < ActiveRecord::Base
   def admin?
     email == 'erundook@gmail.com' || email == 'captain@captainfuture-productions.com'
   end
+
+  def banned?
+    return false unless banned_until.present?
+    banned_until > Time.now.utc
+  end
 end

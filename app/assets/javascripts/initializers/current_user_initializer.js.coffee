@@ -5,7 +5,9 @@ Ember.Application.initializer
     store = container.lookup('store:main')
     attributes = $('meta[name="current-user"]').attr('content')
     if attributes
-      object = store.push(Cx.User, JSON.parse(attributes))
+      data = JSON.parse(attributes)
+      data.masq = $('meta[name="masquerade"]').attr('content')
+      object = store.push(Cx.User, data)
       user = store.find(Cx.User, object.id)
 
     container.lookup('controller:auth').set('model', user)

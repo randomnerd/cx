@@ -6,6 +6,7 @@ class Api::V2::BaseController < InheritedResources::Base
   def create
     @resource = build_resource
     @resource.user = current_user
+    binding.pry
     create!
   end
 end

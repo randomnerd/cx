@@ -5,7 +5,11 @@ class Api::V2::MessagesController < Api::V2::BaseController
 
   def create
     msg = current_user.messages.create(permitted_params[:message])
-    render json: {messages: [MessageSerializer.new(msg, root: false)]}
+    if msg.valid?
+      render json: {messages: [MessageSerializer.new(msg, root: false)]}
+    else
+      render json: {errors: msg.errors}, status: :unprocessable_entity
+    end
   end
 
   def permitted_params

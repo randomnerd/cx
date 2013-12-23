@@ -50,12 +50,21 @@ Cx::Application.routes.draw do
     passwords: 'passwords'
   }
 
-  authenticate :user, -> u { u.admin? } do
-    namespace :hq do
-      root to: 'home#index'
+  namespace :hq do
+    authenticate :user, -> u { u.admin? } do
+      mount Sidekiq::Web => '/sidekiq'
     end
-    mount Sidekiq::Web => '/hq/sidekiq'
+    root to: 'users#index'
+    resources :users do
+      member do
+        get :ban
+        get :unban
+        get :masq, to: 'masquerades#create'
+      end
+      collection { get :masq_back, to: 'masquerades#destroy' }
+    end
   end
+
   post '/pusher/auth', to: 'pusher#auth'
   root to: 'home#index'
   get '*path', to: 'home#index'

@@ -9,10 +9,17 @@
       <li>{{#link-to 'workers'}}Workers{{/link-to}}</li>
       <li>{{#link-to 'accountSettings'}}Settings{{/link-to}}</li>
       {{#if currentUser.admin}}
-        <li><a href="/admin">Admin</a></li>
+        <li><a href="/hq">Admin</a></li>
       {{/if}}
       <li>{{#link-to 'changePassword'}}Change password{{/link-to}}</li>
       <li><a {{action 'logout'}}>Log out</a></li>
+      {{#if currentUser.masq}}
+        <li>
+          <a {{bind-attr href=currentUser.masq}}>
+            <strong>Back to admin</strong>
+          </a>
+        </li>
+      {{/if}}
     </ul>
   </li>
 {{else}}

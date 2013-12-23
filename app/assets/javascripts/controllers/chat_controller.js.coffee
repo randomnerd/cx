@@ -38,7 +38,16 @@ Cx.CommonChatController = Ember.ArrayController.extend
         name: @get('controllers.auth.nickname')
         body: @get('msg')
         created_at: new Date()
-      message.save()
+      onSucc = -> true
+      onFail = (data) =>
+        errors = []
+        for key, value of data.errors
+          errors.push msg for msg in value
+        message.set('name', 'Message not sent')
+        message.set('errors', errors)
+        message.set('failed', true)
+
+      message.save().then(onSucc, onFail)
       @set 'msg', ''
       Ember.run.next -> $('#chat input').focus()
     addName: (item) ->

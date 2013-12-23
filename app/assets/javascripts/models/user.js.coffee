@@ -1,4 +1,5 @@
 Cx.User = DS.Model.extend
+  masq:     DS.attr('string')
   admin:    DS.attr('boolean')
   email:    DS.attr('string')
   totp_qr:  DS.attr('string')

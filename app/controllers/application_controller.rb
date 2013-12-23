@@ -14,4 +14,8 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:name, :email, :password, :password_confirmation)}
   end
 
+  def masquerading?
+    session[:admin_id].present?
+  end
+  helper_method :masquerading?
 end
