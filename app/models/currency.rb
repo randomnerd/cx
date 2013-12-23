@@ -43,13 +43,14 @@ class Currency < ActiveRecord::Base
   end
 
   def balance_diff_neg
-    real    = self.rpc.getbalance.to_f
+    real     = self.rpc.getbalance.to_f
+    deposits = self.deposits.unprocessed.sum(:amount).to_f/10**8
     case self.name
     when 'WDC' then real += 40000
     when 'BTC' then real += 180
     when 'LTC' then real += 1500
     end
-    real - balance_sum
+    real - deposits - balance_sum
   rescue => e
     0
   end
