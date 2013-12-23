@@ -4,15 +4,19 @@ Cx.CurrenciesController = Em.ArrayController.extend
     h.setupPusher @store, 'currency', 'currencies'
   ).on('init')
 
+  public: (->
+    @filter (o) -> o.get('public')
+  ).property('@each', '@each.public')
+
   scrypt: (->
-    a = @store.filter 'currency', (o) -> o.get('algo') == 'scrypt'
+    a = @get('public').filter (o) -> o.get('algo') == 'scrypt'
     h.sortedArray(a, ['name'], true)
-  ).property()
+  ).property('public')
 
   sha256: (->
-    a = @store.filter 'currency', (o) -> o.get('algo') == 'sha256'
+    a = @get('public').filter (o) -> o.get('algo') == 'sha256'
     h.sortedArray(a, ['name'], true)
-  ).property()
+  ).property('public')
 
   scryptHashrate: (->
     hrate = 0
