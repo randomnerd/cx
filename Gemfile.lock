@@ -170,6 +170,7 @@ GEM
     oj (2.5.1)
     oj_mimic_json (1.0.0)
     orm_adapter (0.5.0)
+    pg (0.17.1)
     polyglot (0.3.3)
     pry (0.9.12.4)
       coderay (~> 1.0)
@@ -314,6 +315,7 @@ DEPENDENCIES
   newrelic_rpm
   oj
   oj_mimic_json
+  pg
   pry
   pusher
   quiet_assets
