@@ -43,7 +43,7 @@ class Currency < ActiveRecord::Base
     end
     real - actual
   rescue => e
-    nil
+    0
   end
 
   def rpc

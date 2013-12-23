@@ -1,4 +1,4 @@
-<div class="panel panel-default panel-big-heading" id="users">
+<div class="panel panel-default panel-big-heading" id="trade_pairs">
   <div class="panel-heading">
     Currencies
     <div class="pull-right">
@@ -32,7 +32,7 @@
           </td>
           <td class="text-right">
             <span class="btn-group">
-              <%= link_to 'Edit', edit_hq_trade_pair_path(tp), confirm: 'Sure?', class: 'btn btn-xs btn-default' %>
+              <%= link_to 'Edit', edit_hq_trade_pair_path(tp), class: 'btn btn-xs btn-default' %>
               <% if tp.public -%>
                 <%= link_to 'Disable', disable_hq_trade_pair_path(tp), confirm: 'Sure?', class: 'btn btn-xs btn-danger' %>
               <% else -%>
