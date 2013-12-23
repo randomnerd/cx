@@ -29,6 +29,10 @@ class Order < ActiveRecord::Base
     "orders-#{self.trade_pair_id}"
   end
 
+  def balance_changes
+    BalanceChange.where(subject: self)
+  end
+
   def set_fee
     self.fee = bid ? trade_pair.buy_fee : trade_pair.sell_fee
   end

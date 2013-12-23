@@ -77,7 +77,8 @@ class Trade < ActiveRecord::Base
     s = s.select('sum(amount) as currency_volume')
     s = s.select('sum(amount*rate)/POW(10,8) as market_volume')
     s = s.select('min(rate) as rate_min')
-    s = s.select('max(rate) as rate_max').first
+    s = s.select('trade_pair_id')
+    s = s.select('max(rate) as rate_max').group(:trade_pair_id).order(:trade_pair_id).first
     tp.update_attributes(
       rate_max:        s.rate_max,
       rate_min:        s.rate_min,

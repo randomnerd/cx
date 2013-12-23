@@ -33,7 +33,7 @@ describe Order do
     ask.reload
     ask.trades.count.should be(1)
     ask.complete.should be_true
-    ask.trades.sum(:amount).should be(ask.amount)
+    ask.trades.sum(:amount).to_i.should be(ask.amount.to_i)
     @user2.orders.active.count.should be(3)
 
     # user1 sold 10 currency at 0.1, should have 40 currency and 1 market and 0 held
@@ -94,7 +94,7 @@ describe Order do
 
     ask.reload
     ask.trades.count.should be(1)
-    ask.trades.sum(:amount).should be(ask.amount)
+    ask.trades.sum(:amount).to_i.should be(ask.amount.to_i)
     ask.complete.should be_true
     @user2.orders.active.count.should be(2)
 

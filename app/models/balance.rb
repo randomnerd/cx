@@ -90,7 +90,7 @@ class Balance < ActiveRecord::Base
   end
 
   def verify(detailed = false)
-    v = balance_changes.select('sum(amount) as amount, sum(held) as held').first
+    v = balance_changes.select('sum(amount) as amount, sum(held) as held').group(:balance_id).order(:balance_id).first
     v.held ||= 0
     v.amount ||= 0
     result = v.amount == self.amount && v.held == self.held
