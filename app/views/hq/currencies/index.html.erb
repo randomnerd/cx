@@ -29,15 +29,11 @@
           <td class="monospace"><%= curr.name %></td>
           <td><%= curr.tx_fee %></td>
           <td><%= curr.tx_conf %></td>
-          <td class="text-right monospace"><%= curr.get_balance %> <%= curr.name %></td>
-          <td class="text-right monospace"><%= curr.balance_diff_neg %> <%= curr.name %></td>
-          <td class="text-right monospace">
-            <%= curr.balance_sum %> <%= curr.name %>
-          </td>
-          <td class="text-right monospace">
-            <%= curr.balance_sum_neg %> <%= curr.name %>
-          </td>
-          <td><%= curr.client_version %></td>
+          <td class="text-right monospace"><small><%= curr.get_balance %></small></td>
+          <td class="text-right monospace"><small><%= curr.balance_diff_neg %></small></td>
+          <td class="text-right monospace"><small><%= curr.balance_sum %></small></td>
+          <td class="text-right monospace"><small><%= curr.balance_sum_neg %></small></td>
+          <td><small><%= curr.client_version %></small></td>
           <td class="text-right">
             <span class="btn-group">
               <%= link_to 'Edit', edit_hq_currency_path(curr), class: 'btn btn-xs btn-default' %>
