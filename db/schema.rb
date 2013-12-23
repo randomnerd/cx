@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131223034506) do
+ActiveRecord::Schema.define(version: 20131223155907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,7 +25,8 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.datetime "updated_at"
   end
 
-  add_index "address_book_items", ["user_id", "currency_id"], name: "index_address_book_items_on_user_id_and_currency_id", using: :btree
+  add_index "address_book_items", ["currency_id"], name: "index_address_book_items_on_currency_id", using: :btree
+  add_index "address_book_items", ["user_id"], name: "index_address_book_items_on_user_id", using: :btree
 
   create_table "balance_changes", force: true do |t|
     t.integer  "amount",       limit: 8, default: 0
@@ -41,7 +42,8 @@ ActiveRecord::Schema.define(version: 20131223034506) do
   end
 
   add_index "balance_changes", ["balance_id"], name: "index_balance_changes_on_balance_id", using: :btree
-  add_index "balance_changes", ["subject_id", "subject_type"], name: "index_balance_changes_on_subject_id_and_subject_type", using: :btree
+  add_index "balance_changes", ["subject_id"], name: "index_balance_changes_on_subject_id", using: :btree
+  add_index "balance_changes", ["subject_type"], name: "index_balance_changes_on_subject_type", using: :btree
 
   create_table "balances", force: true do |t|
     t.integer  "currency_id"
@@ -54,8 +56,9 @@ ActiveRecord::Schema.define(version: 20131223034506) do
   end
 
   add_index "balances", ["amount"], name: "index_balances_on_amount", using: :btree
+  add_index "balances", ["currency_id"], name: "index_balances_on_currency_id", using: :btree
   add_index "balances", ["deposit_address"], name: "index_balances_on_deposit_address", using: :btree
-  add_index "balances", ["user_id", "currency_id"], name: "index_balances_on_user_id_and_currency_id", using: :btree
+  add_index "balances", ["user_id"], name: "index_balances_on_user_id", using: :btree
 
   create_table "block_payouts", force: true do |t|
     t.integer  "block_id",                   null: false
@@ -66,7 +69,8 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.datetime "updated_at"
   end
 
-  add_index "block_payouts", ["block_id", "user_id"], name: "index_block_payouts_on_block_id_and_user_id", using: :btree
+  add_index "block_payouts", ["block_id"], name: "index_block_payouts_on_block_id", using: :btree
+  add_index "block_payouts", ["user_id"], name: "index_block_payouts_on_user_id", using: :btree
 
   create_table "blocks", force: true do |t|
     t.integer  "currency_id",                             null: false
@@ -84,9 +88,11 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.integer  "time_spent"
   end
 
-  add_index "blocks", ["currency_id", "paid", "category"], name: "index_blocks_on_currency_id_and_paid_and_category", using: :btree
+  add_index "blocks", ["category"], name: "index_blocks_on_category", using: :btree
+  add_index "blocks", ["currency_id"], name: "index_blocks_on_currency_id", using: :btree
+  add_index "blocks", ["paid"], name: "index_blocks_on_paid", using: :btree
   add_index "blocks", ["txid"], name: "index_blocks_on_txid", using: :btree
-  add_index "blocks", ["user_id", "currency_id"], name: "index_blocks_on_user_id_and_currency_id", using: :btree
+  add_index "blocks", ["user_id"], name: "index_blocks_on_user_id", using: :btree
 
   create_table "chart_items", force: true do |t|
     t.datetime "time"
@@ -100,7 +106,8 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.datetime "updated_at"
   end
 
-  add_index "chart_items", ["trade_pair_id", "time"], name: "index_chart_items_on_trade_pair_id_and_time", using: :btree
+  add_index "chart_items", ["time"], name: "index_chart_items_on_time", using: :btree
+  add_index "chart_items", ["trade_pair_id"], name: "index_chart_items_on_trade_pair_id", using: :btree
 
   create_table "currencies", force: true do |t|
     t.string   "name"
@@ -128,7 +135,8 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.string   "old_id"
   end
 
-  add_index "currencies", ["name", "public"], name: "index_currencies_on_name_and_public", using: :btree
+  add_index "currencies", ["name"], name: "index_currencies_on_name", using: :btree
+  add_index "currencies", ["public"], name: "index_currencies_on_public", using: :btree
 
   create_table "deposits", force: true do |t|
     t.integer  "confirmations",           default: 0
@@ -142,9 +150,12 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.datetime "updated_at"
   end
 
-  add_index "deposits", ["processed", "confirmations"], name: "index_deposits_on_processed_and_confirmations", using: :btree
+  add_index "deposits", ["confirmations"], name: "index_deposits_on_confirmations", using: :btree
+  add_index "deposits", ["currency_id"], name: "index_deposits_on_currency_id", using: :btree
+  add_index "deposits", ["processed"], name: "index_deposits_on_processed", using: :btree
   add_index "deposits", ["txid"], name: "index_deposits_on_txid", using: :btree
-  add_index "deposits", ["user_id", "wallet_id", "currency_id"], name: "index_deposits_on_user_id_and_wallet_id_and_currency_id", using: :btree
+  add_index "deposits", ["user_id"], name: "index_deposits_on_user_id", using: :btree
+  add_index "deposits", ["wallet_id"], name: "index_deposits_on_wallet_id", using: :btree
 
   create_table "hashrates", force: true do |t|
     t.integer  "user_id",                           null: false
@@ -154,7 +165,8 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.datetime "updated_at"
   end
 
-  add_index "hashrates", ["user_id", "currency_id"], name: "index_hashrates_on_user_id_and_currency_id", using: :btree
+  add_index "hashrates", ["currency_id"], name: "index_hashrates_on_currency_id", using: :btree
+  add_index "hashrates", ["user_id"], name: "index_hashrates_on_user_id", using: :btree
 
   create_table "incomes", force: true do |t|
     t.integer  "amount",       limit: 8
@@ -166,7 +178,8 @@ ActiveRecord::Schema.define(version: 20131223034506) do
   end
 
   add_index "incomes", ["currency_id"], name: "index_incomes_on_currency_id", using: :btree
-  add_index "incomes", ["subject_id", "subject_type"], name: "index_incomes_on_subject_id_and_subject_type", using: :btree
+  add_index "incomes", ["subject_id"], name: "index_incomes_on_subject_id", using: :btree
+  add_index "incomes", ["subject_type"], name: "index_incomes_on_subject_type", using: :btree
 
   create_table "messages", force: true do |t|
     t.text     "body"
@@ -185,7 +198,8 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.datetime "updated_at"
   end
 
-  add_index "notifications", ["user_id", "ack"], name: "index_notifications_on_user_id_and_ack", using: :btree
+  add_index "notifications", ["ack"], name: "index_notifications_on_ack", using: :btree
+  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
 
   create_table "orders", force: true do |t|
     t.integer  "amount",        limit: 8
@@ -201,20 +215,25 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.datetime "updated_at"
   end
 
-  add_index "orders", ["user_id", "trade_pair_id", "rate", "complete", "cancelled", "bid"], name: "orders_index", using: :btree
+  add_index "orders", ["bid"], name: "index_orders_on_bid", using: :btree
+  add_index "orders", ["cancelled"], name: "index_orders_on_cancelled", using: :btree
+  add_index "orders", ["complete"], name: "index_orders_on_complete", using: :btree
+  add_index "orders", ["rate"], name: "index_orders_on_rate", using: :btree
+  add_index "orders", ["trade_pair_id"], name: "index_orders_on_trade_pair_id", using: :btree
+  add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
 
   create_table "trade_pairs", force: true do |t|
-    t.float    "buy_fee",                   default: 0.0
-    t.float    "sell_fee",                  default: 0.0
+    t.float    "buy_fee"
+    t.float    "sell_fee"
     t.integer  "last_price",      limit: 8
     t.integer  "market_id"
     t.integer  "currency_id"
-    t.boolean  "public",                    default: false
+    t.boolean  "public"
     t.string   "url_slug"
-    t.integer  "currency_volume", limit: 8, default: 0
-    t.integer  "market_volume",   limit: 8, default: 0
-    t.integer  "rate_min",        limit: 8, default: 0
-    t.integer  "rate_max",        limit: 8, default: 0
+    t.integer  "currency_volume", limit: 8
+    t.integer  "market_volume",   limit: 8
+    t.integer  "rate_min",        limit: 8
+    t.integer  "rate_max",        limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "old_id"
@@ -242,11 +261,12 @@ ActiveRecord::Schema.define(version: 20131223034506) do
   add_index "trades", ["ask_user_id"], name: "index_trades_on_ask_user_id", using: :btree
   add_index "trades", ["bid_id"], name: "index_trades_on_bid_id", using: :btree
   add_index "trades", ["bid_user_id"], name: "index_trades_on_bid_user_id", using: :btree
-  add_index "trades", ["trade_pair_id", "created_at"], name: "index_trades_on_trade_pair_id_and_created_at", using: :btree
+  add_index "trades", ["created_at"], name: "index_trades_on_created_at", using: :btree
+  add_index "trades", ["trade_pair_id"], name: "index_trades_on_trade_pair_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "email",                                  null: false
+    t.string   "encrypted_password",                     null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -284,7 +304,8 @@ ActiveRecord::Schema.define(version: 20131223034506) do
   end
 
   add_index "wallets", ["address"], name: "index_wallets_on_address", using: :btree
-  add_index "wallets", ["user_id", "currency_id"], name: "index_wallets_on_user_id_and_currency_id", using: :btree
+  add_index "wallets", ["currency_id"], name: "index_wallets_on_currency_id", using: :btree
+  add_index "wallets", ["user_id"], name: "index_wallets_on_user_id", using: :btree
 
   create_table "withdrawals", force: true do |t|
     t.integer  "amount",      limit: 8,                 null: false
@@ -298,9 +319,10 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.datetime "updated_at"
   end
 
+  add_index "withdrawals", ["currency_id"], name: "index_withdrawals_on_currency_id", using: :btree
   add_index "withdrawals", ["processed"], name: "index_withdrawals_on_processed", using: :btree
   add_index "withdrawals", ["txid"], name: "index_withdrawals_on_txid", using: :btree
-  add_index "withdrawals", ["user_id", "currency_id"], name: "index_withdrawals_on_user_id_and_currency_id", using: :btree
+  add_index "withdrawals", ["user_id"], name: "index_withdrawals_on_user_id", using: :btree
 
   create_table "worker_stats", force: true do |t|
     t.integer  "worker_id",                         null: false
@@ -314,7 +336,9 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.datetime "updated_at"
   end
 
-  add_index "worker_stats", ["worker_id", "currency_id", "updated_at"], name: "index_worker_stats_on_worker_id_and_currency_id_and_updated_at", using: :btree
+  add_index "worker_stats", ["currency_id"], name: "index_worker_stats_on_currency_id", using: :btree
+  add_index "worker_stats", ["updated_at"], name: "index_worker_stats_on_updated_at", using: :btree
+  add_index "worker_stats", ["worker_id"], name: "index_worker_stats_on_worker_id", using: :btree
 
   create_table "workers", force: true do |t|
     t.integer  "user_id",    null: false
@@ -324,7 +348,8 @@ ActiveRecord::Schema.define(version: 20131223034506) do
     t.datetime "updated_at"
   end
 
-  add_index "workers", ["name", "pass"], name: "index_workers_on_name_and_pass", using: :btree
+  add_index "workers", ["name"], name: "index_workers_on_name", using: :btree
+  add_index "workers", ["pass"], name: "index_workers_on_pass", using: :btree
   add_index "workers", ["user_id"], name: "index_workers_on_user_id", using: :btree
 
 end
