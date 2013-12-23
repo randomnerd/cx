@@ -6,7 +6,7 @@
   <% if current_user %>
     <meta name="current-user" content="<%= UserSerializer.new(current_user, root: false).to_json %>" />
     <% if masquerading? %>
-      <meta name="masquerade" content="<%= masq_back_hq_users_path %>" />
+      <meta name="masquerade" content="<%= unmasq_hq_users_path %>" />
     <% end %>
   <% end %>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">

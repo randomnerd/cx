@@ -29,6 +29,7 @@
     </thead>
     <tbody>
       <% @users.each do |user| -%>
+      <% cache(user) do -%>
         <tr>
           <td><%= user.id %></td>
           <td><%= user.email %></td>
@@ -48,15 +49,16 @@
                 <%= link_to 'Sign in', masq_hq_user_path(user), class: 'btn btn-default btn-xs' %>
               <% end -%>
               <% if user.banned? -%>
-                <%= link_to 'Unban', unban_hq_user_path(user), class: 'btn btn-default btn-xs' %>
+                <%= link_to 'Unban', unban_hq_user_path(user), confirm: 'Sure?', class: 'btn btn-default btn-xs' %>
               <% else -%>
-                <%= link_to 'Ban', ban_hq_user_path(user), class: 'btn btn-default btn-xs' %>
+                <%= link_to 'Ban', ban_hq_user_path(user), confirm: 'Sure?', class: 'btn btn-default btn-xs' %>
               <% end -%>
               <a href="#" class="btn btn-default btn-xs">Audit</a>
             </span>
 
           </td>
         </tr>
+      <% end -%>
       <% end -%>
     </tbody>
   </table>

@@ -9,10 +9,15 @@ class Currency < ActiveRecord::Base
   has_many :balances
   scope :with_mining, -> { where(mining_enabled: true) }
   scope :by_name, -> name { where(name: name) }
+  scope :public, -> { where(public: true) }
 
   include PusherSync
   def pusher_channel
     "currencies"
+  end
+
+  def trade_pairs
+    TradePair.where('currency_id = ? or market_id = ?', self.id, self.id)
   end
 
   def balance_diff

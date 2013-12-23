@@ -1,0 +1,51 @@
+<div class="panel panel-default panel-big-heading" id="users">
+  <div class="panel-heading">
+    Currencies
+    <div class="pull-right">
+      <%= link_to 'New trade pair', new_hq_trade_pair_path, class: 'btn btn-primary btn-xs' %>
+    </div>
+  </div>
+
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Currency</th>
+        <th>Market</th>
+        <th class="text-right">Volume</th>
+        <th class="text-right">Volume (market)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @trade_pairs.includes([:currency, :market]).each do |tp| -%>
+      <% cache(tp) do -%>
+        <tr class="<% unless tp.public %>text-muted<% end %>">
+          <td><%= tp.id %></td>
+          <td class="monospace"><%= tp.currency.name %></td>
+          <td class="monospace"><%= tp.market.name %></td>
+          <td class="monospace text-right">
+            <%= n2f(tp.currency_volume) %> <%= tp.currency.name %>
+          </td>
+          <td class="monospace text-right">
+            <%= n2f(tp.market_volume) %> <%= tp.market.name %>
+          </td>
+          <td class="text-right">
+            <span class="btn-group">
+              <%= link_to 'Edit', edit_hq_trade_pair_path(tp), confirm: 'Sure?', class: 'btn btn-xs btn-default' %>
+              <% if tp.public -%>
+                <%= link_to 'Disable', disable_hq_trade_pair_path(tp), confirm: 'Sure?', class: 'btn btn-xs btn-danger' %>
+              <% else -%>
+                <%= link_to 'Enable', enable_hq_trade_pair_path(tp), confirm: 'Sure?', class: 'btn btn-xs btn-success' %>
+              <% end -%>
+            </span>
+          </td>
+        </tr>
+      <% end -%>
+      <% end -%>
+    </tbody>
+  </table>
+
+</div>
+
+<div class="text-center"><%= will_paginate @trade_pairs, renderer: BootstrapPagination::Rails %></div>

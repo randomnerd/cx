@@ -55,13 +55,25 @@ Cx::Application.routes.draw do
       mount Sidekiq::Web => '/sidekiq'
     end
     root to: 'users#index'
-    resources :users do
+    resources :currencies, only: [:index, :new, :create, :update, :edit] do
+      member do
+        get :disable
+        get :enable
+      end
+    end
+    resources :trade_pairs, only: [:index, :new, :create, :update, :edit] do
+      member do
+        get :disable
+        get :enable
+      end
+    end
+    resources :users, only: [:index, :new, :create, :update, :edit] do
       member do
         get :ban
         get :unban
         get :masq, to: 'masquerades#create'
       end
-      collection { get :masq_back, to: 'masquerades#destroy' }
+      collection { get :unmasq, to: 'masquerades#destroy' }
     end
   end
 

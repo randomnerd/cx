@@ -1,5 +1,10 @@
 class Api::V2::CurrenciesController < Api::V2::BaseController
   has_scope :by_name, as: :name
+
+  def index
+    respond_with end_of_association_chain.public
+  end
+
   def generate_address
     return unless current_user
     current_user.wallets.create(currency_id: resource.id)
@@ -13,7 +18,7 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
 
   def withdraw
     head(:unauthorized) and return unless current_user
-    unless current_user.balances.where('amount < 0').empty?
+    if current_user.balances.where('amount < 0').count > 0
       current_user.notifications.create(
         title: "#{resource.name} withdrawal failed",
         body: "Please fix (deposit/buy) your negative balances first."

@@ -1,0 +1,51 @@
+<div class="panel panel-default panel-big-heading" id="users">
+  <div class="panel-heading">
+    Currencies
+    <div class="pull-right">
+      <%= link_to 'New currency', new_hq_currency_path, class: 'btn btn-primary btn-xs' %>
+    </div>
+  </div>
+
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>name</th>
+        <th>port</th>
+        <th>tx fee</th>
+        <th>tx conf</th>
+        <th>balances sum</th>
+        <th>neg balances sum</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @currencies.each do |curr| -%>
+      <% cache(curr) do -%>
+        <tr class="<% unless curr.public %>text-muted<% end %>">
+          <td><%= curr.id %></td>
+          <td class="monospace"><%= curr.name %></td>
+          <td><%= curr.port %></td>
+          <td><%= curr.tx_fee %></td>
+          <td><%= curr.tx_conf %></td>
+          <td><%= n2f curr.balances.sum('amount+held') %></td>
+          <td><%= n2f curr.balances.where('amount < 0').sum('amount+held') %></td>
+          <td class="text-right">
+            <span class="btn-group">
+              <%= link_to 'Edit', edit_hq_currency_path(curr), confirm: 'Sure?', class: 'btn btn-xs btn-default' %>
+              <% if curr.public -%>
+                <%= link_to 'Disable', disable_hq_currency_path(curr), confirm: 'Sure?', class: 'btn btn-xs btn-danger' %>
+              <% else -%>
+                <%= link_to 'Enable', enable_hq_currency_path(curr), confirm: 'Sure?', class: 'btn btn-xs btn-success' %>
+              <% end -%>
+            </span>
+          </td>
+        </tr>
+      <% end -%>
+      <% end -%>
+    </tbody>
+  </table>
+
+</div>
+
+<div class="text-center"><%= will_paginate @currencies, renderer: BootstrapPagination::Rails %></div>
