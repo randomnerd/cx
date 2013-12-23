@@ -39,7 +39,7 @@ class Currency < ActiveRecord::Base
   end
 
   def balance_sum_neg
-    self.balances.where('amount < 0').sum('amount')
+    self.balances.where('amount < 0').sum('amount').to_f/10**8
   end
 
   def balance_diff_neg
@@ -50,7 +50,7 @@ class Currency < ActiveRecord::Base
     when 'BTC' then real += 180
     when 'LTC' then real += 1500
     end
-    real - deposits - balance_sum
+    (real - deposits - balance_sum).round(8)
   rescue => e
     0
   end
