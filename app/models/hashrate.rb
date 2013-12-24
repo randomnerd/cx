@@ -3,7 +3,7 @@ class Hashrate < ActiveRecord::Base
   belongs_to :currency
 
   scope :active, -> {
-    where('hashrates.updated_at > ?', 2.minutes.ago).order('rate desc').limit(15)
+    where('hashrates.updated_at > ?', 3.minutes.ago).order('rate desc').limit(15)
   }
   scope :currency_name, -> name {
     joins(:currency).where(currencies: {name: name})
