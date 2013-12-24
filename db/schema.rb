@@ -223,17 +223,17 @@ ActiveRecord::Schema.define(version: 20131223155907) do
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
 
   create_table "trade_pairs", force: true do |t|
-    t.float    "buy_fee"
-    t.float    "sell_fee"
+    t.float    "buy_fee",                   default: 0.0
+    t.float    "sell_fee",                  default: 0.0
     t.integer  "last_price",      limit: 8
     t.integer  "market_id"
     t.integer  "currency_id"
-    t.boolean  "public"
+    t.boolean  "public",                    default: false
     t.string   "url_slug"
-    t.integer  "currency_volume", limit: 8
-    t.integer  "market_volume",   limit: 8
-    t.integer  "rate_min",        limit: 8
-    t.integer  "rate_max",        limit: 8
+    t.integer  "currency_volume", limit: 8, default: 0
+    t.integer  "market_volume",   limit: 8, default: 0
+    t.integer  "rate_min",        limit: 8, default: 0
+    t.integer  "rate_max",        limit: 8, default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "old_id"
@@ -262,11 +262,11 @@ ActiveRecord::Schema.define(version: 20131223155907) do
   add_index "trades", ["bid_id"], name: "index_trades_on_bid_id", using: :btree
   add_index "trades", ["bid_user_id"], name: "index_trades_on_bid_user_id", using: :btree
   add_index "trades", ["created_at"], name: "index_trades_on_created_at", using: :btree
-  add_index "trades", ["trade_pair_id"], name: "index_trades_on_trade_pair_id", using: :btree
+  add_index "trades", ["trade_pair_id", "created_at"], name: "index_trades_on_trade_pair_id_and_created_at", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                                  null: false
-    t.string   "encrypted_password",                     null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -348,8 +348,7 @@ ActiveRecord::Schema.define(version: 20131223155907) do
     t.datetime "updated_at"
   end
 
-  add_index "workers", ["name"], name: "index_workers_on_name", using: :btree
-  add_index "workers", ["pass"], name: "index_workers_on_pass", using: :btree
+  add_index "workers", ["name", "pass"], name: "index_workers_on_name_and_pass", using: :btree
   add_index "workers", ["user_id"], name: "index_workers_on_user_id", using: :btree
 
 end
