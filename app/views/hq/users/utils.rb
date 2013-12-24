@@ -207,8 +207,8 @@ map {|bc|
 
 
 BalanceChange.where(subject_type: 'Order').
-group('balance_id, subject_id, subject_type, amount, held').
-select('count(id) as count, balance_id, subject_id, subject_type, amount, held').
+group('balance_id, subject_id, subject_type').
+select('count(id) as count, balance_id, subject_id, subject_type').
 map {|bc|
   next if bc.count == 1
   # BalanceChange.where(balance_id: bc.balance_id, subject: bc.subject).
@@ -216,7 +216,7 @@ map {|bc|
   # limit(bc.count - 1).each &:delete
   # bc.balance.verify!
   [bc.count, bc.balance.user.nickname]
-}.compact
+}.compact.count
 
 
 Trade.joins('right outer join balance_changes on balance_changes.subject_id = trades.id and balance_changes.subject_type="Trade"').
@@ -226,3 +226,88 @@ Balance.where('held < 0').each {|b|
   b.balance_changes.create(held: b.held.abs, t_held: 0, amount: b.held, t_amount: b.amount + b.held, comment: 'extra trades pulled')
   b.verify!
 }
+
+Balance.where('held > 0').each {|b|
+  b.balance_changes.create(held: -b.held, t_held: 0, amount: b.held, t_amount: b.amount + b.held, comment: 'extra trades pulled')
+  b.verify_each!
+}
+
+
+Balance.where('amount < 0 and held > 0').each {|b|
+  b.user.orders.active
+}
+
+r = Withdrawal.where(txid: nil).map {|w|
+  bcs = BalanceChange.where(subject:w)
+  next if (sum = bcs.sum(:amount)) == 0
+  if sum > 0 && bcs.count == 1
+    w.delete
+    bcs.delete_all
+    w.balance.verify_each!
+  else
+    begin
+    amt = (w.amount.to_f) / 10**8 - w.currency.tx_fee
+    w.currency.rpc.listtransactions("user-#{w.user_id}", 10000).select {|t|
+      puts t['amount'].abs if t['category'] == 'send'
+      t['category'] == 'send' && t['amount'].abs == amt
+    }.each { |t|
+      puts "#{amt} | #{t['amount']}"
+      tx = Withdrawal.find_by_txid(t['txid'])
+      if tx
+        puts 'unprocessed'
+        next
+      else
+        puts 'processed'
+        if w.txid && !w.txid.empty?
+          puts 'create new'
+          next
+          ww = w.user.withdrwawals.create({
+            processed: true,
+            txid: t['txid'],
+            currency_id: w.currency_id,
+            address: t['address']
+          })
+          w.balance.add_funds(-w.amount, ww)
+        else
+          puts 'assign txid'
+          w.txid = t['txid']
+          next
+          puts w.update_attributes txid: t['txid'], failed: false
+          puts w.save(validate:false)
+        end
+      end
+    }
+    next if w.txid
+    puts 'refund'
+    puts w.inspect
+    w.delete
+    BalanceChange.where(subject: w).delete_all
+    w.balance.verify_each!
+    rescue => e
+      next
+    end
+
+  end
+  [w.id, sum.to_i, bcs.count]
+}.compact
+pp r;0
+
+
+Currency.order(:name).each {|c|
+  begin
+    puts "[#{Time.now}] Processing #{c.name}"
+    c.process_transactions
+    puts "[#{Time.now}] Processing #{c.name}: done"
+    next unless c.mining_enabled
+    puts "[#{Time.now}] Processing #{c.name} mining"
+    c.process_mining
+    puts "[#{Time.now}] Processing #{c.name} mining: done"
+  rescue => e
+    puts e.inspect
+    puts e.backtrace
+    next
+  end
+}
+
+
+pp Income.joins(:currency).group('currencies.name, incomes.currency_id').select('sum(amount) as amount, currencies.name, currency_id').order('currencies.name').map {|i| [i.currency.name, i.amount.to_f / 10 ** 8]};0
