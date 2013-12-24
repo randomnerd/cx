@@ -74,9 +74,15 @@ Cx.ChartBoxComponent = Ember.Component.extend
       url: "/api/v2/trade_pairs/#{@get 'pair.id'}/chart_items"
       type: 'GET'
       success: (data) =>
-        for item in data.chart_items
-          point = [ item.id, item.o, item.h, item.l, item.c ]
-          vpoint = [ item.id, item.v ]
+        for item in data
+          point = [
+            item[0] * 1000,
+            item[1] / Math.pow(10,8),
+            item[2] / Math.pow(10,8),
+            item[3] / Math.pow(10,8),
+            item[4] / Math.pow(10,8)
+          ]
+          vpoint = [ item[0] * 1000, item[5] / Math.pow(10,8) ]
           @series.addPoint(point, false, false, false)
           @vseries.addPoint(vpoint, false, false, false)
 
@@ -92,8 +98,14 @@ Cx.ChartBoxComponent = Ember.Component.extend
     h.chartPusher.callbacks._callbacks = {}
     h.chartPusher.unbind 'chartItem#update'
     h.chartPusher.bind 'chartItem#update', (item) =>
-      point = [ item.id, item.o, item.h, item.l, item.c ]
-      vpoint = [ item.id, item.v ]
+      point = [
+        item[0] * 1000,
+        item[1] / Math.pow(10,8),
+        item[2] / Math.pow(10,8),
+        item[3] / Math.pow(10,8),
+        item[4] / Math.pow(10,8)
+      ]
+      vpoint = [ item[0] * 1000, item[5] / Math.pow(10,8) ]
       if p = _.find(@series.points, (d) -> d.category == item.id)
         p.remove()
       @series.addPoint(point, false)
