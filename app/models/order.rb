@@ -38,9 +38,11 @@ class Order < ActiveRecord::Base
   end
 
   def process
-    return unless self.valid?
-    return if complete? or cancelled
-    fill_matches
+    self.with_lock do
+      return unless self.valid?
+      return if complete? or cancelled
+      fill_matches
+    end
   end
 
   def process_async
@@ -65,7 +67,7 @@ class Order < ActiveRecord::Base
         self.reload
         o.reload
         break if complete? || self.cancelled
-        next if o.complete || o.cancelled
+
         o_amt  = unmatched_amount
         t_amt  = o.unmatched_amount
         # use their amount if it is less than ours
