@@ -6,7 +6,7 @@ class Withdrawal < ActiveRecord::Base
 
   scope :unprocessed, -> { where(processed: false, failed: false) }
 
-  validate :check_amounts, on: :create
+  validate :check_amounts
   validate :check_balance, on: :create
   after_commit :process_async, on: :create
   validate :production?
@@ -23,23 +23,63 @@ class Withdrawal < ActiveRecord::Base
     BalanceChange.where(subject: self)
   end
 
+  def check_address
+    info = self.currency.rpc.validateaddress self.address
+    !!info.try(:[], 'isvalid')
+  rescue
+    false
+  end
+
   def verify(skip = 0, batch = 50)
     self.with_lock do
-      return if self.created_at > 10.minutes.ago
+      puts self.inspect
+
+      funds_taken = self.balance_changes.sum(:amount).abs
+      if funds_taken > self.amount
+        puts 'overpaid, review'
+        return false
+      end
+
+      unless self.check_address
+        puts 'invalid address, destroying'
+        self.cancel
+        return false
+      end
+
+      unless user.balances.where('amount < 0').empty?
+        puts 'negative balances'
+        return false
+      end
+
+      unless funds_taken >= self.amount || balance.take_funds(self.amount, self)
+        self.cancel
+        return false
+      end
+
       return true if self.txid
+
+      unless self.valid?
+        puts 'invalid. destroying'
+        return false
+        self.cancel
+        return false
+      end
+
       acc = "user-#{self.user_id}"
       amt = (self.amount.to_f / 10 ** 8) - (self.currency.tx_fee || 0).to_f
+
       begin
         txs = self.currency.rpc.listtransactions(acc, batch, skip)
+        raise 'no txs' unless txs
       rescue => e
-        next
+        puts 'unable to connect wallet'
+        return false
       end
-      puts self.inspect
-      next unless txs
+
       txs.select {|tx| tx['category'] == 'send'}.reverse.each do |tx|
         next if Withdrawal.find_by_txid(tx['txid'])
         puts "#{tx['amount'].abs} | #{amt}"
-        next unless tx['amount'].abs == amt
+        next unless tx['amount'].abs == amt || (tx['amount'].abs - amt).abs < 0.001
         self.failed = false
         self.processed = true
         self.txid = tx['txid']
@@ -47,12 +87,10 @@ class Withdrawal < ActiveRecord::Base
         self.save(validate: false)
         return true
       end
-      if txs.count < 50
-        puts "invalid, destroy"
-        self.balance_changes.each &:destroy
-        self.destroy
-        self.balance.verify_each!
-        return false
+
+      if !txs || txs.count < 50
+        puts "invalid, retry"
+        self.process
       else
         self.verify(skip+batch, batch)
       end
@@ -60,7 +98,7 @@ class Withdrawal < ActiveRecord::Base
   end
 
   def check_amounts
-    return if self.amount.to_f / 10 ** 8 >= 0.01
+    return if (self.amount.to_f / 10 ** 8) - (self.currency.tx_fee || 0) >= 0.01
     errors.add(:amount, "Minimum withdrawal is 0.01")
   end
 
@@ -75,19 +113,27 @@ class Withdrawal < ActiveRecord::Base
     ProcessWithdrawals.perform_async(self.id)
   end
 
+  def cancel
+    self.balance_changes.delete_all
+    self.balance.verify_each!
+    self.delete
+  end
+
   def process
     self.with_lock do
       self.reload
-      return if self.processed or self.failed
+      return if self.processed
       return unless self.valid?
       begin
-        raise 'failed to take funds' unless balance.take_funds(self.amount, self)
+        funds_taken = (self.balance_changes.sum(:amount).abs == self.amount)
+        raise 'failed to take funds' unless funds_taken || balance.take_funds(self.amount, self)
         account = balance.rpc_account
         amount  = (self.amount.to_f / 10 ** 8) - (currency.tx_fee || 0).to_f
         move    = currency.rpc.move '', account, amount
         raise 'unable to move funds' unless move
         txid    = currency.rpc.sendfrom account, self.address, amount
         raise 'sendfrom failed' unless txid
+        self.failed = false
         self.processed = true
         self.txid = txid
         self.user.notifications.create(
