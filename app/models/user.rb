@@ -72,4 +72,8 @@ class User < ActiveRecord::Base
     return false unless banned_until.present?
     banned_until > Time.now.utc
   end
+
+  def trades
+    Trade.where('ask_user_id = ? or bid_user_id = ?', self.id, self.id)
+  end
 end

@@ -18,4 +18,23 @@ class BalanceChange < ActiveRecord::Base
     return unless self.amount + self.held != 0
     PusherMsg.perform_async(pusher_channel, "c", pusher_serialize)
   end
+
+  def prev
+    balance.balance_changes.where('created_at < ?', self.created_at).last
+  end
+
+  def prev_st
+    balance.balance_changes.where(subject: self.subject).
+    where('created_at < ?', self.created_at).last
+  end
+
+  def next
+    balance.balance_changes.where('created_at > ?', self.created_at).first
+  end
+
+  def next_st
+    balance.balance_changes.where(subject: self.subject).
+    where('created_at > ?', self.created_at).first
+  end
+
 end
