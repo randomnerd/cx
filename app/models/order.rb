@@ -132,6 +132,8 @@ class Order < ActiveRecord::Base
 
   def cancel(force = false)
     self.with_lock do
+      self.reload
+      return false if self.cancelled && !force
       return false if self.complete? && !force
       cid = bid ? trade_pair.market_id : trade_pair.currency_id
       amt = bid ? unmatched_market_amount : unmatched_amount
