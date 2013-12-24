@@ -182,7 +182,7 @@ class Currency < ActiveRecord::Base
       block.save
     end
     self.blocks.orphan.each do |block|
-      block.block_payouts.delete_all
+      block.block_payouts.each &:delete
     end
   end
 
