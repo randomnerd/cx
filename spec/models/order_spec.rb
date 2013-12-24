@@ -150,7 +150,7 @@ describe Order do
 
     ask.reload
     ask.trades.count.should be(4)
-    ask.trades.sum(:amount).should be(ask.amount)
+    ask.trades.sum(:amount).to_i.should be(ask.amount.to_i)
     ask.complete.should be_true
     @user2.orders.active.count.should be(1)
 
