@@ -2,16 +2,8 @@ class ChartItem < ActiveRecord::Base
   belongs_to :trade_pair
 
   def self.lighting(tpid)
-    connection.select_all(where(trade_pair_id: tpid).select([:time, :o, :h, :l, :c, :v]).arel).map do |attrs|
-      [
-        DateTime.parse(attrs['time']).to_i,
-        attrs['o'].to_i,
-        attrs['h'].to_i,
-        attrs['l'].to_i,
-        attrs['c'].to_i,
-        attrs['v'].to_i
-      ]
-    end
+    connection.select_all(where(trade_pair_id: tpid).
+    select([:time, :o, :h, :l, :c, :v]).arel).each {|a| a}
   end
 
   def self.fill(tpid)

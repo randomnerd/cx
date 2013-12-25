@@ -16,14 +16,17 @@ module PusherSync
   end
 
   def pusher_create
+    return if Rails.cache.read('stop_pusher')
     PusherMsg.perform_async(pusher_channel, "c", pusher_serialize)
   end
 
   def pusher_update
+    return if Rails.cache.read('stop_pusher')
     PusherMsg.perform_async(pusher_channel, "u", pusher_serialize)
   end
 
   def pusher_delete
+    return if Rails.cache.read('stop_pusher')
     PusherMsg.perform_async(pusher_channel, "d", pusher_serialize)
   end
 

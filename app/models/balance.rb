@@ -172,7 +172,6 @@ class Balance < ActiveRecord::Base
   def rework
     self.with_lock do
 
-      # 0.44708850
       balance_changes.where('comment != ?', 'migrated balance').delete_all
       verify!
 

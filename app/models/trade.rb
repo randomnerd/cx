@@ -124,6 +124,6 @@ class Trade < ActiveRecord::Base
 
     return if Rails.env.test?
     Pusher["chartItems-#{self.trade_pair_id}"].trigger('chartItem#update',
-      ChartItemSerializer.new(rec, root: false))
+      rec.as_json(only: [:time, :o, :h, :l, :c, :v]))
   end
 end

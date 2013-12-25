@@ -75,14 +75,15 @@ Cx.ChartBoxComponent = Ember.Component.extend
       type: 'GET'
       success: (data) =>
         for item in data
+          time = +new Date(item.time)
           point = [
-            item[0] * 1000,
-            item[1] / Math.pow(10,8),
-            item[2] / Math.pow(10,8),
-            item[3] / Math.pow(10,8),
-            item[4] / Math.pow(10,8)
+            time,
+            parseInt(item.o) / Math.pow(10,8),
+            parseInt(item.h) / Math.pow(10,8),
+            parseInt(item.l) / Math.pow(10,8),
+            parseInt(item.c) / Math.pow(10,8)
           ]
-          vpoint = [ item[0] * 1000, item[5] / Math.pow(10,8) ]
+          vpoint = [ time, parseInt(item.v) / Math.pow(10,8) ]
           @series.addPoint(point, false, false, false)
           @vseries.addPoint(vpoint, false, false, false)
 
@@ -98,18 +99,20 @@ Cx.ChartBoxComponent = Ember.Component.extend
     h.chartPusher.callbacks._callbacks = {}
     h.chartPusher.unbind 'chartItem#update'
     h.chartPusher.bind 'chartItem#update', (item) =>
+      time = +new Date(item.time)
       point = [
-        item[0] * 1000,
-        item[1] / Math.pow(10,8),
-        item[2] / Math.pow(10,8),
-        item[3] / Math.pow(10,8),
-        item[4] / Math.pow(10,8)
+        time,
+        item.o / Math.pow(10,8),
+        item.h / Math.pow(10,8),
+        item.l / Math.pow(10,8),
+        item.c / Math.pow(10,8)
       ]
-      vpoint = [ item[0] * 1000, item[5] / Math.pow(10,8) ]
-      if p = _.find(@series.points, (d) -> d.category == item.id)
+      vpoint = [ time, item.v / Math.pow(10,8) ]
+      console.log point, vpoint
+      if p = _.find(@series.points, (d) -> d.category == time)
         p.remove()
       @series.addPoint(point, false)
-      if p = _.find(@vseries.points, (d) -> d.category == item.id)
+      if p = _.find(@vseries.points, (d) -> d.category == time)
         p.remove()
       @vseries.addPoint(vpoint, false)
       @chart.redraw()
