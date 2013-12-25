@@ -75,7 +75,7 @@ Cx.ChartBoxComponent = Ember.Component.extend
       type: 'GET'
       success: (data) =>
         for item in data
-          time = +new Date(item.time)
+          time = +(new Date(item.time.replace(' ','T')+"Z"))
           point = [
             time,
             parseInt(item.o) / Math.pow(10,8),
