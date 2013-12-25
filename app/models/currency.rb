@@ -73,14 +73,18 @@ class Currency < ActiveRecord::Base
   end
 
   def add_deposit(deposit)
-    return unless deposit.confirmations >= self.tx_conf
-    balance = deposit.user.balance_for(self.id)
-    return unless balance.add_funds(deposit.amount, deposit)
-    deposit.update_attribute :processed, true
-    deposit.user.notifications.create({
-      title: "#{self.name} deposit confirmed",
-      body: "#{n2f deposit.amount} #{self.name} added to your balance"
-    })
+    deposit.with_lock do
+      deposit.reload
+      return if deposit.processed
+      return unless deposit.confirmations >= self.tx_conf
+      balance = deposit.user.balance_for(self.id)
+      return unless balance.add_funds(deposit.amount, deposit)
+      deposit.update_attribute :processed, true
+      deposit.user.notifications.create({
+        title: "#{self.name} deposit confirmed",
+        body: "#{n2f deposit.amount} #{self.name} added to your balance"
+      })
+    end
   end
 
   def process_deposits(skip = 0, batch = 50)
