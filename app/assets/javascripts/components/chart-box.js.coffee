@@ -108,7 +108,6 @@ Cx.ChartBoxComponent = Ember.Component.extend
         item.c / Math.pow(10,8)
       ]
       vpoint = [ time, item.v / Math.pow(10,8) ]
-      console.log point, vpoint
       if p = _.find(@series.points, (d) -> d.category == time)
         p.remove()
       @series.addPoint(point, false)
