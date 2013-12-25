@@ -20,4 +20,16 @@ class Deposit < ActiveRecord::Base
   def pusher_channel
     "private-deposits-#{self.user_id}"
   end
+
+  def update_confirmations
+    update = currency.rpc.gettransaction txid
+    return unless update
+    return if update['confirmations'] == confirmations
+
+    update_attribute :confirmations, update['confirmations']
+    currency.add_deposit(self)
+  rescue => e
+    puts e.inspect
+    puts e.backtrace
+  end
 end

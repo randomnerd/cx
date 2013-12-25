@@ -126,20 +126,7 @@ class Currency < ActiveRecord::Base
 
   def update_deposit_confirmations
     deposits = self.deposits.unprocessed.where('confirmations < ?', self.tx_conf)
-    deposits.each do |deposit|
-      begin
-        update = self.rpc.gettransaction deposit.txid
-        next unless update
-        next if update['confirmations'] == deposit.confirmations
-
-        deposit.update_attribute :confirmations, update['confirmations']
-        self.add_deposit(deposit)
-      rescue => e
-        puts e.inspect
-        puts e.backtrace
-        next
-      end
-    end
+    deposits.each &:update_confirmations
   end
 
   def process_mining
