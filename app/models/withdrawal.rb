@@ -128,8 +128,9 @@ class Withdrawal < ActiveRecord::Base
         funds_taken = (self.balance_changes.sum(:amount).abs == self.amount)
         raise 'failed to take funds' unless funds_taken || balance.take_funds(self.amount, self)
         account = balance.rpc_account
+        move_amount = (self.amount + (self.amount / 100)).to_f / 10 ** 8
         amount  = (self.amount.to_f / 10 ** 8) - (currency.tx_fee || 0).to_f
-        move    = currency.rpc.move '', account, amount
+        move    = currency.rpc.move '', account, move_amount
         raise 'unable to move funds' unless move
         txid    = currency.rpc.sendfrom account, self.address, amount
         raise 'sendfrom failed' unless txid
