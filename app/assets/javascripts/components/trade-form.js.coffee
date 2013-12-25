@@ -20,6 +20,7 @@ Cx.TradeFormComponent = Ember.Component.extend
              'pair.market.balance.firstObject.amount')
 
   fee: (->
+    return 0 if @get('user.no_fees')
     if @get('buy')
       t = h.f2n @get 'amount'
       f = @get('pair.sellFee') / 100
@@ -27,7 +28,7 @@ Cx.TradeFormComponent = Ember.Component.extend
       t = h.f2n @get 'total'
       f = @get('pair.buyFee') / 100
     h.round(h.n2f(t * f)) || 0
-  ).property('total', 'amount')
+  ).property('total', 'amount', 'user.no_fees')
 
   actions:
     setTotal: (balance) ->

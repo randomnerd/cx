@@ -100,10 +100,12 @@ class Trade < ActiveRecord::Base
   end
 
   def bid_fee
+    return 0 if bid_user.no_fees
     (amount / 100 * (bid_order.fee || 0)).round
   end
 
   def ask_fee
+    return 0 if ask_user.no_fees
     (market_amount / 100 * (ask_order.fee || 0)).round
   end
 
