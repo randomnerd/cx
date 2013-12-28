@@ -98,7 +98,7 @@ class Withdrawal < ActiveRecord::Base
   end
 
   def check_amounts
-    return if (self.amount.to_f / 10 ** 8) - (self.currency.tx_fee || 0) >= 0.01
+    return if (self.amount.to_f / 10 ** 8) >= 0.01
     errors.add(:amount, "Minimum withdrawal is 0.01")
   end
 
