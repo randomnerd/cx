@@ -46,12 +46,14 @@ class Order < ActiveRecord::Base
   end
 
   def process_async
-    return if complete? or cancelled
-    unless lock_funds
-      self.cancel(true)
-      return false
+    self.with_lock do
+      return if complete? or cancelled
+      unless lock_funds
+        self.cancel(true)
+        return false
+      end
+      ProcessOrders.perform_async(self.id) unless Rails.env.test?
     end
-    ProcessOrders.perform_async(self.id) unless Rails.env.test?
   end
 
   def lock_funds
@@ -66,7 +68,8 @@ class Order < ActiveRecord::Base
       o.with_lock do
         self.reload
         o.reload
-        break if complete? || self.cancelled
+        break if self.complete? || self.cancelled
+        next if o.complete? || o.cancelled
 
         o_amt  = unmatched_amount
         t_amt  = o.unmatched_amount
