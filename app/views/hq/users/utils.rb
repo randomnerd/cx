@@ -158,13 +158,13 @@ map {|bc|
 
 
 
-BalanceChange.where(subject_type: 'Trade', comment: 'unlock_funds(move=false)').
+BalanceChange.where(subject_type: 'Deposit').
 group('balance_id, subject_id, subject_type').
 select('count(id) as count, balance_id, subject_id, subject_type').
 map {|bc|
   next if bc.count == 1
-  #BalanceChange.where(balance_id: bc.balance_id).where(subject: bc.subject).limit(bc.count - 1).each &:delete
-  #bc.balance.verify!
+  # BalanceChange.where(balance_id: bc.balance_id).where(subject: bc.subject).limit(bc.count - 1).each &:delete
+  # bc.balance.verify_each!
   [bc.count, bc.balance.user.nickname, bc.count - 1]
 }.compact
 
@@ -309,5 +309,53 @@ Currency.order(:name).each {|c|
   end
 }
 
+pp Currency.order(:name).map {|c| [c.name, c.balance_diff_neg, c.balances.where('amount < 0').sum(:amount).to_f/10**8]};0
 
-pp Income.joins(:currency).group('currencies.name, incomes.currency_id').select('sum(amount) as amount, currencies.name, currency_id').order('currencies.name').map {|i| [i.currency.name, i.amount.to_f / 10 ** 8]};0
+pp Income.joins(:currency).group('currencies.name, incomes.currency_id').select('sum(amount) as amount, currencies.name, currency_id').order('currencies.name').map {|i| [i.currency.name, i.amount.to_f / 10 ** 8]}.compact;0
+pp Income.joins(:currency).group('currencies.name, incomes.currency_id').where('incomes.created_at > ?', 1.day.ago).select('sum(amount) as amount, currencies.name, currency_id').order('currencies.name').map {|i| [i.currency.name, i.amount.to_f / 10 ** 8]}.compact;0
+
+# move incomes to dumper
+pp Income.joins(:currency).
+group('currencies.name, incomes.currency_id').
+select('sum(amount) as amount, currencies.name, currency_id').
+order('currencies.name').map {|i|
+  next unless i.currency.balance_diff_neg > 0;
+  User.find_by_email('dumper@coinex.pw').balance_for(i.currency_id).add_funds(i.amount, nil, 'incomes for dumping')
+  Income.where(currency_id: i.currency_id).delete_all
+  [i.currency.name, i.amount.to_f / 10 ** 8]
+}.compact;0
+
+
+TradePair.where(market_id: 28).sum(:market_volume).to_f/10**8 # BTC
+TradePair.where(market_id: 33).sum(:market_volume).to_f/10**8 # LTC
+
+pp User.joins(:balances).where(balances:{currency_id: 28}, last_sign_in_at:nil).order('balances.amount desc').limit(30).map {|u| [u.email, u.balance_for(28).amount.to_f/10**8]};0
+
+
+def add_deposit(currency, txid)
+  return true if Deposit.find_by_txid(txid)
+  tx = currency.rpc.gettransaction txid
+  puts tx.inspect
+  rtx = currency.rpc.gettransaction(tx['txid'])
+  rtx['details'].each do |txin|
+    next unless txin['category'] == 'receive'
+    wallet = Wallet.find_by_address(txin['address'])
+    next unless wallet
+
+    deposit = wallet.deposits.create({
+      user_id: wallet.user_id,
+      currency_id: wallet.currency_id,
+      amount: txin['amount'] * 10 ** 8,
+      txid: tx['txid'],
+      confirmations: tx['confirmations']
+    })
+    next unless deposit.persisted?
+
+    wallet.user.notifications.create({
+      title: "New #{currency.name} deposit",
+      body: "Incoming transaction for #{txin['amount']} #{currency.name}"
+    })
+    currency.add_deposit(deposit)
+
+  end
+end
