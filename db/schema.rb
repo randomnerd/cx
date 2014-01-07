@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140107044402) do
+ActiveRecord::Schema.define(version: 20140107072859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -321,8 +321,10 @@ ActiveRecord::Schema.define(version: 20140107044402) do
     t.boolean  "failed",                default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "cancelled",             default: false
   end
 
+  add_index "withdrawals", ["cancelled"], name: "index_withdrawals_on_cancelled", using: :btree
   add_index "withdrawals", ["currency_id"], name: "index_withdrawals_on_currency_id", using: :btree
   add_index "withdrawals", ["processed"], name: "index_withdrawals_on_processed", using: :btree
   add_index "withdrawals", ["txid"], name: "index_withdrawals_on_txid", using: :btree

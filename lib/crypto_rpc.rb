@@ -21,7 +21,8 @@ class CryptoRPC
 
   def api_call(method, args = [])
     r = HTTParty.post(@url, construct_rpc(method, args))
-    throw r.parsed_response['error'] if r.parsed_response.try(:[], 'error')
+    err = r.parsed_response.try(:[], 'error').try(:[], 'message')
+    raise err if err
     r.parsed_response.try(:[], 'result')
   end
 

@@ -5,11 +5,16 @@ class Withdrawal < ActiveRecord::Base
   has_one :balance_change, as: :subject
 
   scope :unprocessed, -> { where(processed: false, failed: false) }
+  scope :not_sent, -> { where(txid: nil, cancelled: false) }
 
   validate :check_amounts
   validate :check_balance, on: :create
   after_commit :process_async, on: :create
   validate :production?
+
+  def self.verify_all
+    not_sent.each &:verify
+  end
 
   def production?
     errors.add(:id, 'Not in production environment') unless Rails.env.production?
@@ -32,6 +37,11 @@ class Withdrawal < ActiveRecord::Base
 
   def verify(skip = 0, batch = 50)
     self.with_lock do
+      unless self.user
+        self.destroy
+        return
+      end
+
       puts self.inspect
 
       funds_taken = self.balance_changes.sum(:amount).abs
@@ -59,8 +69,8 @@ class Withdrawal < ActiveRecord::Base
       return true if self.txid
 
       unless self.valid?
+        puts self.errors.messages.inspect
         puts 'invalid. destroying'
-        return false
         self.cancel
         return false
       end
@@ -98,7 +108,7 @@ class Withdrawal < ActiveRecord::Base
   end
 
   def check_amounts
-    return if (self.amount.to_f / 10 ** 8) >= 0.01
+    return if send_amount >= 0.01
     errors.add(:amount, "Minimum withdrawal is 0.01")
   end
 
@@ -114,9 +124,17 @@ class Withdrawal < ActiveRecord::Base
   end
 
   def cancel
-    self.balance_changes.delete_all
-    self.balance.verify_each!
-    self.delete
+    return false if cancelled
+    self.update_attribute :cancelled, true
+    self.balance.add_funds(self.amount, self, 'cancelled withdrawal')
+    self.user.notifications.create(
+      title: "#{self.currency.name} self failed",
+      body: "#{n2f self.amount} #{self.currency.name} credited back to your account"
+    )
+  end
+
+  def send_amount
+    (self.amount.to_f / 10 ** 8) - (currency.tx_fee || 0).to_f
   end
 
   def process
@@ -129,7 +147,7 @@ class Withdrawal < ActiveRecord::Base
         raise 'failed to take funds' unless funds_taken || balance.take_funds(self.amount, self)
         account = balance.rpc_account
         move_amount = (self.amount + (self.amount / 100)).to_f / 10 ** 8
-        amount  = (self.amount.to_f / 10 ** 8) - (currency.tx_fee || 0).to_f
+        amount  = send_amount
         move    = currency.rpc.move '', account, move_amount
         raise 'unable to move funds' unless move
         txid    = currency.rpc.sendfrom account, self.address, amount
@@ -142,15 +160,17 @@ class Withdrawal < ActiveRecord::Base
           body: "#{n2f self.amount} #{currency.name} sent to #{self.address}"
         )
       rescue => e
-        # balance.add_funds(self.amount, self)
-        self.failed = true
-        puts e.inspect
-        puts e.backtrace
-        # self.user.notifications.create(
-        #   title: "#{self.name} self failed",
-        #   body: "#{n2f self.amount} #{self.name} were credited back to your account"
-        # )
+        case e.message
+        when 'Invalid amount', 'Transaction too large'
+          puts e.message
+          self.cancel
+        else
+          self.failed = true
+          puts e.inspect
+          puts e.backtrace
+        end
       ensure
+        return unless self.persisted?
         self.save(validate: false)
         return unless self.balance_change
         self.balance_change.touch
