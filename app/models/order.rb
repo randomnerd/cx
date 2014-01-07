@@ -62,7 +62,7 @@ class Order < ActiveRecord::Base
   end
 
   def funds_amount
-    @amt ||= bid ? market_amount : amount
+    @amt ||= bid ? unmatched_market_amount : unmatched_amount
   end
 
   def lock_funds
@@ -74,7 +74,7 @@ class Order < ActiveRecord::Base
       o.with_lock do
         self.reload
         o.reload
-        unless balance.validate_amount(funds_amount)
+        unless balance.validate_amount(funds_amount) || lock_funds
           self.destroy
           raise 'bad balance'
         end
