@@ -8,10 +8,10 @@
 {{#if currentUser.isSignedIn}}
 <div class="row">
   <div class="col-sm-6">
-    {{trade-form buy=true pair=model user=currentUser}}
+    {{trade-form buy=true pair=model user=currentUser bestDeal=controllers.orders.bestAsk}}
   </div>
   <div class="col-sm-6">
-    {{trade-form buy=false pair=model user=currentUser}}
+    {{trade-form buy=false pair=model user=currentUser bestDeal=controllers.orders.bestBid}}
   </div>
 </div>
 {{/if}}

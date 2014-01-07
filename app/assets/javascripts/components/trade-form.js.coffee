@@ -1,4 +1,6 @@
 Cx.TradeFormComponent = Ember.Component.extend
+  currBalance: Em.computed.alias('pair.currency.balance.firstObject.amount')
+  marketBalance: Em.computed.alias('pair.market.balance.firstObject.amount')
   total: (->
     a = h.f2n @get 'amount'
     r = h.f2n @get 'rate'
@@ -8,16 +10,16 @@ Cx.TradeFormComponent = Ember.Component.extend
   allowSubmit: (->
     if @get 'buy'
       t = h.f2n @get 'total'
-      b = @get('pair.market.balance.firstObject.amount')
+      b = @get('currBalance')
     else
       t = h.f2n @get 'amount'
-      b = @get('pair.currency.balance.firstObject.amount')
+      b = @get('marketBalance')
     return false unless t
     return false if @get 'inProgress'
     b >= t && @get('total') > 0 && parseFloat(@get 'amount') >= 0.01
   ).property('total', 'amount', 'inProgress'
-             'pair.currency.balance.firstObject.amount',
-             'pair.market.balance.firstObject.amount')
+             'currBalance',
+             'marketBalance')
 
   fee: (->
     return 0 if @get('user.no_fees')
@@ -32,15 +34,20 @@ Cx.TradeFormComponent = Ember.Component.extend
 
   actions:
     setTotal: (balance) ->
-      @set 'amount', h.n2f(balance)
+      rate = h.f2n(@get('rate')) || @get('bestDeal.rate')
+      @set 'rate', h.n2f(rate).noExponents()
+      if @get('buy')
+        @set 'amount', h.round(@get('marketBalance') / rate).noExponents()
+      else
+        @set 'amount', h.n2f(@get('currBalance')).noExponents()
     submit: ->
       store = @get('targetObject.store')
       order = store.createRecord 'order',
-        user:      @get('user').get('content').get('content')
+        bid:           !!@get('buy')
+        user:          @get('user').get('content').get('content')
+        rate:          h.f2n(@get('rate'))
+        amount:        h.f2n(@get('amount'))
         trade_pair_id: @get('pair.id')
-        rate:      h.f2n(@get('rate'))
-        amount:    h.f2n(@get('amount'))
-        bid:       !!@get('buy')
       order.save().then(
         type = if @get('buy') then 'buy' else 'sell'
         (=> h.ga_track('Order', @get('pair.url_slug'), "#{@get('user.email')}: new #{type}, #{@get('amount')} @ #{@get('rate')}"))

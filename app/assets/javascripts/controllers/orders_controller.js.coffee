@@ -34,3 +34,13 @@ Cx.OrdersController = Em.ArrayController.extend
       o.get('complete') == false &&
       o.get('bid') == true
   ).property('tradePairId', '@each.complete', '@each.cancelled')
+
+  bestAsk: (->
+    sorted = _.sortBy(@get('ask'), (o) -> o.get('rate'))
+    sorted[0]
+  ).property('ask.@each.complete', 'ask.@each.cancelled')
+
+  bestBid: (->
+    sorted = _.sortBy(@get('bid'), (o) -> o.get('rate'))
+    sorted[sorted.length-1]
+  ).property('bid.@each.complete', 'bid.@each.cancelled')
