@@ -8,10 +8,10 @@
 {{#if currentUser.isSignedIn}}
 <div class="row">
   <div class="col-sm-6">
-    {{trade-form buy=true pair=model user=currentUser bestDeal=controllers.orders.bestAsk}}
+    {{trade-form buy=true pair=model user=currentUser bestDeal=controllers.orders.bestAsk amount=bidAmount rate=bidRate total=bidTotal}}
   </div>
   <div class="col-sm-6">
-    {{trade-form buy=false pair=model user=currentUser bestDeal=controllers.orders.bestBid}}
+    {{trade-form buy=false pair=model user=currentUser bestDeal=controllers.orders.bestBid amount=askAmount rate=askRate total=askTotal}}
   </div>
 </div>
 {{/if}}
@@ -19,10 +19,12 @@
 <!-- order books -->
 <div class="row">
   <div class="col-sm-6">
-    {{order-book buy=false pair=model user=currentUser orders=controllers.orders.ask}}
+    {{ order-book buy=false pair=model user=currentUser orders=controllers.orders.ask
+       bidAmount=bidAmount bidRate=bidRate bidTotal=bidTotal askRate=askRate }}
   </div>
   <div class="col-sm-6">
-    {{order-book buy=true pair=model user=currentUser orders=controllers.orders.bid}}
+    {{ order-book buy=true pair=model user=currentUser orders=controllers.orders.bid
+       askAmount=askAmount askRate=askRate askTotal=askTotal bidRate=bidRate }}
   </div>
 </div>
 

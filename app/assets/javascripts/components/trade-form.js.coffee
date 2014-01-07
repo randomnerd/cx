@@ -1,11 +1,12 @@
 Cx.TradeFormComponent = Ember.Component.extend
-  currBalance: Em.computed.alias('pair.currency.balance.firstObject.amount')
+  currBalance:   Em.computed.alias('pair.currency.balance.firstObject.amount')
   marketBalance: Em.computed.alias('pair.market.balance.firstObject.amount')
-  total: (->
+
+  oTotal: (->
     a = h.f2n @get 'amount'
     r = h.f2n @get 'rate'
-    h.round(h.nn2f(a*r)) || 0
-  ).property('amount', 'rate')
+    @set 'total', h.round(h.nn2f(a*r)) || 0
+  ).observes('amount', 'rate')
 
   allowSubmit: (->
     if @get 'buy'
