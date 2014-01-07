@@ -75,8 +75,10 @@ class Order < ActiveRecord::Base
         self.reload
         o.reload
         unless balance.validate_amount(funds_amount) || lock_funds
+          puts 'bad balance'
+          puts self.inspect
           self.destroy
-          raise 'bad balance'
+          return false
         end
         break if self.complete? || self.cancelled
         next if o.complete? || o.cancelled
