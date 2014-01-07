@@ -1,6 +1,6 @@
 class Api::V2::MessagesController < Api::V2::BaseController
   def index
-    respond_with Message.recent
+    render json: FastJson.dump(Message.recent)
   end
 
   def create

@@ -3,7 +3,7 @@ class Api::V2::OrdersController < Api::V2::BaseController
   custom_actions resource: [:cancel]
 
   def index
-    respond_with collection.active
+    render json: FastJson.dump(collection.active)
   end
 
   def create

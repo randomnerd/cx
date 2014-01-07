@@ -1,11 +1,6 @@
 class ChartItem < ActiveRecord::Base
   belongs_to :trade_pair
 
-  def self.lighting(tpid)
-    connection.select_all(where(trade_pair_id: tpid).
-    select([:time, :o, :h, :l, :c, :v]).arel).each {|a| a}
-  end
-
   def self.fill(tpid)
     chain = Trade.where(trade_pair_id: tpid)
     chain = chain.select("from_unixtime(floor(unix_timestamp(trades.created_at)/(#{group_interval}*60))*(#{group_interval}*60)) as time")
@@ -30,5 +25,9 @@ class ChartItem < ActiveRecord::Base
 
   def self.group_interval
     30
+  end
+
+  def self.json_fields
+    [:time, :o, :h, :l, :c, :v]
   end
 end

@@ -177,4 +177,8 @@ class Order < ActiveRecord::Base
     return if amount.to_f / 10 ** 8 >= 0.01 && market_amount > 0
     errors.add(:amount, "too low")
   end
+
+  def self.json_fields
+    [:id, :user_id, :trade_pair_id, :amount, :filled, :bid, :rate, :created_at, :complete, :cancelled, :updated_at]
+  end
 end

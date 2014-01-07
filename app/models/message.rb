@@ -38,4 +38,7 @@ class Message < ActiveRecord::Base
     self.system = true if self.user.admin?
   end
 
+  def self.json_fields
+    [:id, :body, :created_at, :updated_at, :system, 'users.nickname as name']
+  end
 end
