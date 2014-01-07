@@ -22,6 +22,10 @@ class Balance < ActiveRecord::Base
     user.withdrawals.where(currency_id: self.currency_id)
   end
 
+  def validate_amount(amount)
+    self.audit[:held] >= amount
+  end
+
   def add_funds(amount, subject, comment = nil)
     self.with_lock do
       increment :amount, amount

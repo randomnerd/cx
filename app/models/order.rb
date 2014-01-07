@@ -56,11 +56,17 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def balance
+    @cid ||= bid ? trade_pair.market_id : trade_pair.currency_id
+    @balance ||= user.balance_for(@cid)
+  end
+
+  def funds_amount
+    @amt ||= bid ? market_amount : amount
+  end
+
   def lock_funds
-    cid = bid ? trade_pair.market_id : trade_pair.currency_id
-    amt = bid ? market_amount : amount
-    b = user.balances.find_by_currency_id(cid)
-    b.lock_funds(amt, self)
+    balance.lock_funds(funds_amount, self)
   end
 
   def fill_matches
@@ -68,6 +74,10 @@ class Order < ActiveRecord::Base
       o.with_lock do
         self.reload
         o.reload
+        unless balance.validate_amount(funds_amount)
+          self.destroy
+          raise 'bad balance'
+        end
         break if self.complete? || self.cancelled
         next if o.complete? || o.cancelled
 
