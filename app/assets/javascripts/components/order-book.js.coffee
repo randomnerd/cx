@@ -20,7 +20,15 @@ Cx.OrderBookComponent = Ember.Component.extend
         amount: h.round(order.amount)
         marketAmount: h.round(order.marketAmount)
 
-    h.sortedArray(ret, ['rate'], !@buy)
+    ret.sort (a,b) =>
+      return 0 if a.rate == b.rate
+      if @buy
+        if b.rate > a.rate then 1 else -1
+      else
+        if a.rate > b.rate then 1 else -1
+
+    ret[..15]
+
   ).property('orders.@each.filled', 'user.id')
   actions:
     setForms: (o) ->
