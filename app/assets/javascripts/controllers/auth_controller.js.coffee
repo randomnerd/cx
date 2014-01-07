@@ -2,7 +2,7 @@
 ## They are grouped together here for ease of exposition
 
 Cx.AuthController = Ember.ObjectController.extend
-  needs: ['commonLoginBox']
+  needs: ['commonLoginBox', 'commonFlashMessages']
   isSignedIn: Em.computed.notEmpty("content.email")
   workerStats: (->
     @store.filter 'workerStat', -> true
@@ -61,7 +61,9 @@ Cx.AuthController = Ember.ObjectController.extend
         location.reload()
 
       error: (data) =>
-        console.log 'failed', data
+        flash = @get('controllers.commonFlashMessages')
+        for key, value of data.responseJSON?.errors
+          flash.add_alert { message: [key, value].join(' ') }
 
   changePassword: (c) ->
     $.ajax

@@ -8,6 +8,8 @@
     </div>
 
     <div class="col-sm-9">
+      {{render common/flashMessages}}
+
       {{#if currentUser.isSignedIn}}
         {{#unless currentUser.confirmed_at}}
         <div class="alert alert-danger">

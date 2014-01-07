@@ -1,0 +1,12 @@
+{{#each alert in alerts}}
+  <div class="alert alert-danger">
+    <button class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <div class="flash_alert">{{alert.message}}</div>
+  </div>
+{{/each}}
+{{#each notice in notices}}
+  <div class="alert alert-success">
+    <button class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <div class="flash_notice">{{notice.message}}</div>
+  </div>
+{{/each}}

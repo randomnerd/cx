@@ -1,6 +1,13 @@
 # Additional translations at https://github.com/plataformatec/devise/wiki/I18n
 
 en:
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            reset_password_token:
+              invalid: 'is invalid. If you have requested a reset password email multiple times, make sure you are clicking a link in the latest email.'
   devise:
     confirmations:
       confirmed: "Your account was successfully confirmed."
