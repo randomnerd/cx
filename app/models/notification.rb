@@ -9,4 +9,7 @@ class Notification < ActiveRecord::Base
     "private-notifications-#{self.user_id}"
   end
 
+  def self.json_fields
+    [:id, :title, :body, :created_at, :updated_at, :ack, :user_id]
+  end
 end

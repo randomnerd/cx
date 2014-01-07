@@ -16,7 +16,7 @@ class BalanceChange < ActiveRecord::Base
 
   def pusher_create
     return unless self.amount + self.held != 0
-    PusherMsg.perform_async(pusher_channel, "c", pusher_serialize)
+    PusherMsg.perform_async(pusher_channel, "c", FastJson.dump_one(self, false))
   end
 
   def prev

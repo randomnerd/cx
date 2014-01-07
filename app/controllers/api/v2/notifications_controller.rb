@@ -1,7 +1,7 @@
 class Api::V2::NotificationsController < Api::V2::BaseController
   has_scope :user
   def index
-    respond_with end_of_association_chain.recent
+    render json: FastJson.dump(collection.recent)
   end
 
   def permitted_params

@@ -2,7 +2,7 @@ class Message < ActiveRecord::Base
   validate :user_not_banned, on: :create
   validate :valid_msg
   validate :account_old_enough, on: :create
-  belongs_to :user, touch: true
+  belongs_to :user
   before_create :set_system
 
   include ActionView::Helpers::DateHelper
@@ -40,5 +40,9 @@ class Message < ActiveRecord::Base
 
   def self.json_fields
     [:id, :body, :created_at, :updated_at, :system, 'users.nickname as name']
+  end
+
+  def as_json(args)
+    super(args.merge(methods: [:name]))
   end
 end

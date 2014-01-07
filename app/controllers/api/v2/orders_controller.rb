@@ -9,7 +9,7 @@ class Api::V2::OrdersController < Api::V2::BaseController
   def create
     order = current_user.orders.create(permitted_params[:order])
     if order.persisted?
-      render json: {orders: [OrderSerializer.new(order, root: false)]}
+      render json: FastJson.dump_one(order)
     else
       render json: {errors: order.errors}, status: :unprocessable_entity
     end

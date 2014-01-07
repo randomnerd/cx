@@ -6,7 +6,7 @@ class Api::V2::MessagesController < Api::V2::BaseController
   def create
     msg = current_user.messages.create(permitted_params[:message])
     if msg.valid?
-      render json: {messages: [MessageSerializer.new(msg, root: false)]}
+      render json: FastJson.dump_one(msg, true)
     else
       render json: {errors: msg.errors}, status: :unprocessable_entity
     end
