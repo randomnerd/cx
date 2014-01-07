@@ -62,6 +62,7 @@ class Withdrawal < ActiveRecord::Base
       end
 
       unless funds_taken >= self.amount || balance.take_funds(self.amount, self)
+        puts 'bad balance'
         self.cancel
         return false
       end

@@ -87,11 +87,8 @@ Cx.AuthController = Ember.ObjectController.extend
         "user[password_confirmation]": $('#login-password').val()
       success: (data) =>
         $('meta[name="csrf-token"]').attr('content', data.token)
-        object = @store.push(Cx.User, data.user)
-        user = @store.find(Cx.User, object.id)
-        @set 'model', user
-        @target.send('loadUserData', user)
         @get('controllers.commonLoginBox').set "loginErrorMsg", null
+        @get('controllers.commonLoginBox').set "loginInfoMsg", "Check your mailbox please."
         @get('controllers.commonLoginBox').set "regMode", false
       error: (jqXHR, textStatus, errorThrown) =>
         @get('controllers.commonLoginBox').set "loginErrorMsg", "Error registering, please try again"

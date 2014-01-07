@@ -63,8 +63,15 @@ class User < ActiveRecord::Base
     totp.verify(code)
   end
 
-  def balance_for(cid)
-    balances.where(currency_id: cid).first_or_create
+  def balance_for(q)
+    case q.class.name
+    when 'String'
+      balances.where(currency: Currency.find_by_name(q)).first_or_create
+    when 'Fixnum'
+      balances.where(currency_id: q).first_or_create
+    when 'Currency'
+      balances.where(currency_id: q.id).first_or_create
+    end
   end
 
   def admin?

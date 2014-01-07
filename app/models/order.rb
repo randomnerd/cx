@@ -57,12 +57,12 @@ class Order < ActiveRecord::Base
   end
 
   def balance
-    @cid ||= bid ? trade_pair.market_id : trade_pair.currency_id
-    @balance ||= user.balance_for(@cid)
+    cid ||= bid ? trade_pair.market_id : trade_pair.currency_id
+    user.balance_for(cid)
   end
 
   def funds_amount
-    @amt ||= bid ? unmatched_market_amount : unmatched_amount
+    bid ? unmatched_market_amount : unmatched_amount
   end
 
   def lock_funds
@@ -74,7 +74,7 @@ class Order < ActiveRecord::Base
       o.with_lock do
         self.reload
         o.reload
-        unless balance.validate_amount(funds_amount) || lock_funds
+        unless balance.validate_held(funds_amount) || lock_funds
           puts 'bad balance'
           puts self.inspect
           self.destroy
@@ -129,6 +129,9 @@ class Order < ActiveRecord::Base
     amt = bid ? market_amount : amount
     balance = user.balances.find_by_currency_id(cid)
     balance.verify!
+    unless user.balances.where('id != ? and amount < 0', cid).empty?
+      errors.add(:amount, "Trading disallowed while you have any negative balances")
+    end
     if balance.amount < amt
       errors.add(:amount, "insufficient funds, amount(#{amt}) balance(#{balance.amount})")
     end

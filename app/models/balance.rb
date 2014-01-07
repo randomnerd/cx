@@ -22,8 +22,8 @@ class Balance < ActiveRecord::Base
     user.withdrawals.where(currency_id: self.currency_id)
   end
 
-  def validate_amount(amount)
-    self.audit[:held] >= amount
+  def validate_held(amount)
+    self.held >= amount
   end
 
   def add_funds(amount, subject, comment = nil)
@@ -112,11 +112,11 @@ class Balance < ActiveRecord::Base
     result = amount == self.amount && held == self.held
     if detailed
       return {
-        held:        held,
+        held:        held.to_i,
         valid:       result,
-        amount:      amount,
-        held_diff:   self.held - held,
-        amount_diff: self.amount - amount
+        amount:      amount.to_i,
+        held_diff:   (self.held - held).to_i,
+        amount_diff: (self.amount - amount).to_i
       }
     else
       return result
@@ -145,32 +145,37 @@ class Balance < ActiveRecord::Base
     end
   end
 
-  def audit
-    u = self.user
-    b = self
-    cid = b.currency_id
+  def audit(force = false)
+    self.with_lock do
+      u = self.user
+      b = self
+      cid = b.currency_id
 
-    adj = b.balance_changes.where(comment: ['migrated balance', 'administrative adjustment']).sum(:amount).to_i
-    deposits = u.deposits.where(processed: true, currency_id: cid).sum(:amount).to_i
-    withdrawals = u.withdrawals.where(currency_id: cid).sum(:amount).to_i
+      allow_nils_with_comments = ['migrated balance', 'administrative adjustment', 'incomes for dumping']
 
-    # if we ask on market pair, we earn
-    ask_mkt_trades = u.trades.joins(:trade_pair).where(trade_pairs: {market_id: cid}, ask_user_id: u.id).map(&:market_amount).sum
-    # if we bid on market pair, we spend
-    bid_mkt_trades = u.trades.joins(:trade_pair).where(trade_pairs: {market_id: cid}, bid_user_id: u.id).map(&:market_amount).sum
+      adj = b.balance_changes.where(comment: allow_nils_with_comments).sum(:amount).to_i
+      deposits = u.deposits.where(processed: true, currency_id: cid).sum(:amount).to_i
+      withdrawals = u.withdrawals.where(currency_id: cid).sum(:amount).to_i
 
-    # if we ask on curr pair, we spend
-    ask_trades = u.trades.joins(:trade_pair).where(trade_pairs: {currency_id: cid}, ask_user_id: u.id).sum(:amount)
-    # if we bid on curr pair, we earn
-    bid_trades = u.trades.joins(:trade_pair).where(trade_pairs: {currency_id: cid}, bid_user_id: u.id).sum(:amount)
+      # if we ask on market pair, we earn
+      ask_mkt_trades = u.trades.joins(:trade_pair).where(trade_pairs: {market_id: cid}, ask_user_id: u.id).map(&:market_amount).sum
+      # if we bid on market pair, we spend
+      bid_mkt_trades = u.trades.joins(:trade_pair).where(trade_pairs: {market_id: cid}, bid_user_id: u.id).map(&:market_amount).sum
 
-    held = u.orders.active.joins(:trade_pair).where(bid: false, trade_pairs: {currency_id: cid}).map(&:unmatched_amount).sum
-    held += u.orders.active.joins(:trade_pair).where(bid: true, trade_pairs: {market_id: cid}).map(&:unmatched_market_amount).sum
+      # if we ask on curr pair, we spend
+      ask_trades = u.trades.joins(:trade_pair).where(trade_pairs: {currency_id: cid}, ask_user_id: u.id).sum(:amount)
+      # if we bid on curr pair, we earn
+      bid_trades = u.trades.joins(:trade_pair).where(trade_pairs: {currency_id: cid}, bid_user_id: u.id).sum(:amount)
 
-    mining = user.block_payouts.joins(:block).where(blocks: {currency_id: currency_id}, paid: true).map(&:reward_minus_fee).sum
+      held = u.orders.active.joins(:trade_pair).where(bid: false, trade_pairs: {currency_id: cid}).map(&:unmatched_amount).sum
+      held += u.orders.active.joins(:trade_pair).where(bid: true, trade_pairs: {market_id: cid}).map(&:unmatched_market_amount).sum
 
-    amount = adj + deposits - withdrawals + ask_mkt_trades + bid_trades - bid_mkt_trades - ask_trades + mining
-    { amount: amount.to_i, held: held }
+      mining = user.block_payouts.joins(:block).where(blocks: {currency_id: currency_id}, paid: true).map(&:reward_minus_fee).sum
+
+      amount = adj + deposits - withdrawals + ask_mkt_trades + bid_trades - bid_mkt_trades - ask_trades + mining
+      update_attributes(amount: amount.to_i - held, held: held) if force
+      { amount: amount.to_i, held: held }
+    end
   end
 
   def rework

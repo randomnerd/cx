@@ -47,7 +47,8 @@ Cx::Application.routes.draw do
   devise_for :users, controllers: {
     sessions: 'sessions',
     registrations: 'registrations',
-    passwords: 'passwords'
+    passwords: 'passwords',
+    confirmations: 'confirmations'
   }
 
   namespace :hq do
