@@ -186,7 +186,7 @@ class Balance < ActiveRecord::Base
 
       actions = []
       amt = balance_changes.first.try(:amount) || 0
-      held = balance_changes.first.try(:held) || 0
+      held = 0
 
       user.deposits.where(processed: true, currency_id: currency_id).each do |d|
         actions << [:add_funds, d.amount, d]
