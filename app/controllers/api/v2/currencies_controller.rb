@@ -42,10 +42,6 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
       title: "#{resource.name} withdrawal queued",
       body: "Withdraw #{params[:amount]} #{resource.name} to #{params[:address]}"
     )
-    render json: {
-      notifications: [
-        NotificationSerializer.new(notify, root: false)
-      ]
-    }
+    render json: FastJson.dump_one(notify)
   end
 end
