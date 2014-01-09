@@ -3,6 +3,8 @@ class Order < ActiveRecord::Base
   validate :filled_in_bound, on: :update
   validate :check_order_count, on: :create
   validate :check_amounts, on: :create
+  validate :check_negatives
+  validate :check_held
 
   belongs_to :user
   belongs_to :trade_pair
@@ -57,7 +59,7 @@ class Order < ActiveRecord::Base
   end
 
   def balance
-    cid ||= bid ? trade_pair.market_id : trade_pair.currency_id
+    cid = bid ? trade_pair.market_id : trade_pair.currency_id
     user.balance_for(cid)
   end
 
@@ -82,6 +84,8 @@ class Order < ActiveRecord::Base
         end
         break if self.complete? || self.cancelled
         next if o.complete? || o.cancelled
+        next unless o.valid?
+        break unless self.valid?
 
         o_amt  = unmatched_amount
         t_amt  = o.unmatched_amount
@@ -125,16 +129,27 @@ class Order < ActiveRecord::Base
   end
 
   def enough_balance
-    cid = bid ? trade_pair.market_id : trade_pair.currency_id
-    amt = bid ? market_amount : amount
-    balance = user.balances.find_by_currency_id(cid)
     balance.verify!
-    unless user.balances.where('id != ? and amount < 0', cid).empty?
-      errors.add(:amount, "Trading disallowed while you have any negative balances")
-    end
-    if balance.amount < amt
+    if balance.amount < (bid ? market_amount : amount)
       errors.add(:amount, "insufficient funds, amount(#{amt}) balance(#{balance.amount})")
     end
+  end
+
+  def check_held
+    return if new_record?
+    amt = bid ? unmatched_market_amount : unmatched_amount
+    return if amt <= balance.held
+    errors.add :amount, "Held balance is wrong"
+    cancel(true) if persisted?
+  end
+
+  def check_negatives
+    buy_cid = bid ? trade_pair.currency_id : trade_pair.market_id
+    # allow order if no negatives
+    return if user.balances.where('amount < 0').empty?
+    # allow order if buying back negative currency
+    return if user.balance_for(buy_cid).amount < 0
+    errors.add(:amount, 'Trading disallowed while you have any negative balances, except buying back on negative currencies')
   end
 
   def update_status(update_amount)
