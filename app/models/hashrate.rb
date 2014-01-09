@@ -16,7 +16,7 @@ class Hashrate < ActiveRecord::Base
 
   def pusher_update
     return unless currency.hashrates.active.include?(self)
-    PusherMsg.perform_async(pusher_channel, "u", pusher_serialize)
+    PusherMsg.perform_async(pusher_channel, "u", FastJson.dump_one(self))
   end
 
   def self.set_rate(currency_id, user_id, hashrate)

@@ -20,7 +20,7 @@ class Block < ActiveRecord::Base
 
   def pusher_update
     return unless self.class.recent.include? self
-    PusherMsg.perform_async(pusher_channel, "u", pusher_serialize)
+    PusherMsg.perform_async(pusher_channel, "u", FastJson.dump_one(self))
   end
 
   def process_payouts
