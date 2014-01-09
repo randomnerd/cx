@@ -75,7 +75,12 @@ class User < ActiveRecord::Base
   end
 
   def admin?
-    email == 'erundook@gmail.com' || email == 'captain@captainfuture-productions.com'
+    admins = [
+      'erundook@gmail.com',
+      'captain@captainfuture-productions.com',
+      'junq@ya.ru'
+    ]
+    admins.include? email
   end
 
   def banned?
