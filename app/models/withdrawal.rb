@@ -8,16 +8,23 @@ class Withdrawal < ActiveRecord::Base
   scope :not_sent, -> { where(txid: nil, cancelled: false) }
 
   validate :check_amounts
+  validate :check_blocked_withdrawals
   validate :check_balance, on: :create
   after_commit :process_async, on: :create
   validate :production?
+
+  def check_blocked_withdrawals
+    return unless user.block_withdrawals
+    errors.add :user_id, 'Withdrawals are blocked for this user'
+  end
 
   def self.verify_all
     not_sent.each &:verify
   end
 
   def production?
-    errors.add(:id, 'Not in production environment') unless Rails.env.production?
+    return if Rails.env.production?
+    errors.add(:id, 'Not in production environment')
   end
 
   def balance

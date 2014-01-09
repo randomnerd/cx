@@ -148,7 +148,7 @@ class Order < ActiveRecord::Base
     # allow order if no negatives
     return if user.balances.where('amount < 0').empty?
     # allow order if buying back negative currency
-    return if user.balance_for(buy_cid).amount < 0
+    return if user.balance_for(buy_cid).amount < 0 || user.allow_negative_trades
     errors.add(:amount, 'Trading disallowed while you have any negative balances, except buying back on negative currencies')
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140107072859) do
+ActiveRecord::Schema.define(version: 20140109163313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -289,9 +289,13 @@ ActiveRecord::Schema.define(version: 20140107072859) do
     t.boolean  "confirm_orders",         default: true
     t.datetime "banned_until"
     t.boolean  "no_fees"
+    t.boolean  "allow_negative_trades",  default: false
+    t.boolean  "block_withdrawals",      default: false
   end
 
+  add_index "users", ["allow_negative_trades"], name: "index_users_on_allow_negative_trades", using: :btree
   add_index "users", ["banned_until"], name: "index_users_on_banned_until", using: :btree
+  add_index "users", ["block_withdrawals"], name: "index_users_on_block_withdrawals", using: :btree
   add_index "users", ["current_sign_in_ip"], name: "index_users_on_current_sign_in_ip", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["last_sign_in_ip"], name: "index_users_on_last_sign_in_ip", using: :btree
