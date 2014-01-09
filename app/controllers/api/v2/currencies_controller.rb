@@ -33,15 +33,24 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
       end
     end
 
-    current_user.withdrawals.create(
+    w = current_user.withdrawals.create(
       currency_id: resource.id,
       amount:  params[:amount].to_f * 10 ** 8,
       address: params[:address]
     )
-    notify = current_user.notifications.create(
-      title: "#{resource.name} withdrawal queued",
-      body: "Withdraw #{params[:amount]} #{resource.name} to #{params[:address]}"
-    )
-    render json: FastJson.dump_one(notify)
+    if w.persisted?
+      notify = current_user.notifications.create(
+        title: "#{resource.name} withdrawal queued",
+        body: "Withdraw #{params[:amount]} #{resource.name} to #{params[:address]}"
+      )
+      render json: FastJson.dump_one(notify)
+    else
+      errors = w.errors.messages.map {|field, msg| [field,msg].join(' ')}.join(', ')
+      notify = current_user.notifications.create(
+        title: "#{resource.name} withdrawal failed",
+        body: "Errors: #{errors}"
+      )
+      render json: FastJson.dump_one(notify)
+    end
   end
 end

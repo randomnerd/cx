@@ -39,9 +39,10 @@ class Withdrawal < ActiveRecord::Base
   def check_address
     info = self.currency.rpc.validateaddress self.address
     result = !!info.try(:[], 'isvalid')
-    errors.add :address, 'invalid' unless result
+    errors.add :address, 'is invalid' unless result
+    return result
   rescue
-    errors.add :address, 'invalid' unless result
+    errors.add :address, 'is invalid' unless result
     false
   end
 
