@@ -9,6 +9,7 @@ class Withdrawal < ActiveRecord::Base
 
   validate :check_amounts
   validate :check_blocked_withdrawals
+  validate :check_address, on: :create
   validate :check_balance, on: :create
   after_commit :process_async, on: :create
   validate :production?
