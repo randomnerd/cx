@@ -170,6 +170,11 @@ class Withdrawal < ActiveRecord::Base
           body: "#{n2f self.amount} #{currency.name} sent to #{self.address}"
         )
       rescue => e
+        if e.message.match(/transaction creation failed/i)
+          puts 'transaction creation failed'
+          self.cancel
+          return false
+        end
         case e.message
         when 'Invalid amount', 'Transaction too large'
           puts e.message
