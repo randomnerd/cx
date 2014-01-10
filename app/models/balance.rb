@@ -155,7 +155,7 @@ class Balance < ActiveRecord::Base
 
       adj = b.balance_changes.where(comment: allow_nils_with_comments).sum(:amount).to_i
       deposits = u.deposits.where(processed: true, currency_id: cid).sum(:amount).to_i
-      withdrawals = u.withdrawals.where(currency_id: cid).sum(:amount).to_i
+      withdrawals = u.withdrawals.where(currency_id: cid).where('txid is not null').sum(:amount).to_i
 
       # if we ask on market pair, we earn
       ask_mkt_trades = u.trades.joins(:trade_pair).where(trade_pairs: {market_id: cid}, ask_user_id: u.id).map(&:market_amount).sum
@@ -193,7 +193,7 @@ class Balance < ActiveRecord::Base
         amt += d.amount
       end
 
-      user.withdrawals.where(currency_id: currency_id).each do |w|
+      user.withdrawals.where(currency_id: currency_id).where('txid is not null').each do |w|
         actions << [:add_funds, -w.amount, w]
         amt -= w.amount
       end
