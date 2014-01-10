@@ -131,7 +131,7 @@ class Order < ActiveRecord::Base
   def enough_balance
     balance.verify!
     if balance.amount < (bid ? market_amount : amount)
-      errors.add(:amount, "insufficient funds, amount(#{amt}) balance(#{balance.amount})")
+      errors.add(:amount, "insufficient funds")
     end
   end
 
