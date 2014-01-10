@@ -9,7 +9,7 @@ class Withdrawal < ActiveRecord::Base
 
   validate :check_amounts
   validate :check_blocked_withdrawals
-  validate :check_address, on: :create
+  validate :check_address
   validate :check_balance, on: :create
   after_commit :process_async, on: :create
   validate :production?
@@ -47,6 +47,7 @@ class Withdrawal < ActiveRecord::Base
   end
 
   def verify(skip = 0, batch = 50)
+    return true if self.txid
     self.with_lock do
       unless self.user
         self.destroy
@@ -61,14 +62,9 @@ class Withdrawal < ActiveRecord::Base
         return false
       end
 
-      unless self.check_address
-        puts 'invalid address, destroying'
-        self.cancel
-        return false
-      end
-
       unless user.balances.where('amount < 0').empty?
         puts 'negative balances'
+        self.cancel
         return false
       end
 
@@ -78,7 +74,6 @@ class Withdrawal < ActiveRecord::Base
         return false
       end
 
-      return true if self.txid
 
       unless self.valid?
         puts self.errors.messages.inspect
@@ -138,11 +133,14 @@ class Withdrawal < ActiveRecord::Base
   def cancel
     return false if cancelled
     self.update_attribute :cancelled, true
-    self.balance.add_funds(self.amount, self, 'cancelled withdrawal')
-    self.user.notifications.create(
-      title: "#{self.currency.name} self failed",
-      body: "#{n2f self.amount} #{self.currency.name} credited back to your account"
-    )
+    funds_taken = self.balance_changes.sum(:amount).abs
+    if funds_taken >= self.amount
+      self.balance.add_funds(self.amount, self, 'cancelled withdrawal')
+      self.user.notifications.create(
+        title: "#{self.currency.name} self failed",
+        body: "#{n2f self.amount} #{self.currency.name} credited back to your account"
+      )
+    end
   end
 
   def send_amount
