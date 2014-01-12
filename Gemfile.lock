@@ -182,6 +182,8 @@ GEM
     quiet_assets (1.0.2)
       railties (>= 3.1, < 5.0)
     rack (1.5.2)
+    rack-attack (2.3.0)
+      rack
     rack-protection (1.5.1)
       rack
     rack-test (0.6.2)
@@ -317,6 +319,7 @@ DEPENDENCIES
   pry
   pusher
   quiet_assets
+  rack-attack
   rails (= 4.0.2)
   rails-mailgun!
   rails-patch-json-encode

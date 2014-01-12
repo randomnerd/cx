@@ -83,6 +83,8 @@ gem 'rails-mailgun', git: "git://github.com/code-mancers/rails-mailgun.git"
 gem 'will_paginate', '~> 3.0'
 gem 'will_paginate-bootstrap'
 
+gem 'rack-attack'
+
 group :development, :test do
   gem 'pry'
   gem 'rspec-rails'

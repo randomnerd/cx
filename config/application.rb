@@ -38,5 +38,7 @@ module Cx
       Pusher.key = 'f432464ea002212eaf37'
       Pusher.secret = 'ca07a14f43e87125afb7'
     end
+
+    config.middleware.use Rack::Attack
   end
 end
