@@ -6,4 +6,5 @@ Rack::Attack.throttle('req/ip', :limit => 20, :period => 5.seconds) do |req|
   # If falsy, the cache key is neither incremented nor checked.
 
   req.ip unless Rails.env.development?
+  false
 end
