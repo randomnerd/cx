@@ -11,6 +11,8 @@ Cx::Application.routes.draw do
       end
       resources :users, only: [:update] do
         member do
+          get :generate_api_keys
+          post :get_api_secret
           post :verify_totp
           get :tfa_key
           post :set_nickname
@@ -36,8 +38,11 @@ Cx::Application.routes.draw do
         resources :chart_items, only: [:index]
       end
       resources :trades, only: [:index]
-      resources :orders, only: [:create, :update, :destroy, :index] do
-        post :cancel, to: 'orders#cancel'
+      resources :orders, only: [:create, :update, :destroy, :index, :show] do
+        post :cancel
+        collection do
+          get :own
+        end
       end
       resources :trades, only: [:create, :update, :destroy, :index]
     end

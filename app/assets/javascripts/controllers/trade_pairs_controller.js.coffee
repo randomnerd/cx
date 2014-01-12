@@ -13,12 +13,8 @@ Cx.TradePairsController = Ember.ArrayController.extend
     h.setupPusher @store, 'tradePair', 'tradePairs'
   ).on('init')
   btc: (->
-    @get('public').filter (o) -> o.get('market.name') == 'BTC'
-  ).property('public.@each')
+    @filter (o) -> o.get('market.name') == 'BTC'
+  ).property('@each')
   ltc: (->
-    @get('public').filter (o) -> o.get('market.name') == 'LTC'
-  ).property('public.@each')
-
-  public: (->
-    @filter (o) -> o.get('public')
-  ).property('@each', '@each.public')
+    @filter (o) -> o.get('market.name') == 'LTC'
+  ).property('@each')

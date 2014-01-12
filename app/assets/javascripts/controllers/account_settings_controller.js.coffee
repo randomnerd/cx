@@ -34,3 +34,25 @@ Cx.AccountSettingsController = Em.Controller.extend
       xhr.done (data) =>
         h.ga_track('Chat', 'changeName', "#{@get('user.nickname')} (#{@get('user.email')}): #{data.user.nickname}")
         @set 'user.nickname', data.user.nickname
+
+    revealApiSecret: ->
+      xhr = $.post "/api/v2/users/#{@get 'user.id'}/get_api_secret", { password: @get('apiPassword') }
+      @set('apiPassword', undefined)
+      xhr.fail =>
+        @set 'badPassword', true
+        $('#api-password').focus()
+      xhr.done (data) =>
+        @set 'apiSecret', data.api_secret
+        @set 'badPassword', undefined
+        Em.run.next -> $('#api-secret').select()
+        xhr.fail => @set 'badPassword', true
+
+    hideApiSecret: -> @set 'apiSecret', undefined
+
+    generateApiKeys: ->
+      if @get 'currentUser.api_key'
+        return unless confirm('This will invalidate your current API Key pair. Do you want to continue?')
+      xhr = $.get "/api/v2/users/#{@get 'user.id'}/generate_api_keys"
+      xhr.done (data) =>
+        @set 'apiSecret', undefined
+        @set 'currentUser.api_key', data.api_key

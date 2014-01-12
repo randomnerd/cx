@@ -2,50 +2,85 @@
   <div class="panel-heading">Account settings</div>
   <div class="content">
 
-    <form>
 
-      <div class="form-group {{chatNameInputClass}}">
-        <label class="control-label" for="chatName">
-          Chat name
-        </label>
-        <div class="input-group">
-          {{input type="text" id="name-input" value=nickname class="form-control"}}
-          <span class="input-group-btn">
-            <button {{bind-attr class=":btn :btn-primary nameChanged::disabled"}} {{action 'setNickname'}}>Save</button>
-          </span>
-        </div>
+    <div class="form-group">
+      <label class="control-label" for="chatName">
+        Chat name
+      </label>
+      <div class="input-group">
+        {{input type="text" id="name-input" value=nickname class="form-control"}}
+        <span class="input-group-btn">
+          <button {{bind-attr class=":btn :btn-primary nameChanged::disabled"}} {{action 'setNickname'}}>Save</button>
+        </span>
       </div>
+    </div>
 
-      <div class="form-group">
-        <div class="controls">
-          <label for="dontConfirmOrders" class="checkbox nomargin">
-            <input type="checkbox" id="dontConfirmOrders" checked disabled>
-            Don't ask for order confirmation
-          </label>
-        </div>
-      </div>
-
-      <div {{bind-attr class=":form-group wrongTOTP:has-error :nomargin :clearfix"}}>
-        <label class="control-label" for="totpResponse">
-          Two-factor authentication
+    <div class="form-group">
+      <div class="controls">
+        <label for="dontConfirmOrders" class="checkbox nomargin">
+          <input type="checkbox" id="dontConfirmOrders" checked disabled>
+          Don't ask for order confirmation
         </label>
-        <div class="controls">
-        {{#if user.totp_active}}
-          {{input type="text" id="totp-input" value=totp class="form-control" disabled=totpProcessing placeholder="Type your code to disable"}}
-          <span class="help-block" style="margin-bottom: 0px;">TFA is enabled on your account.</span>
-        {{else}}
-          <div class="QRtitle">
-            Scan this QR code with
-            <a href="https://support.google.com/accounts/answer/1066447" target="_blank">
-              Google Authenticator</a><br/>
+      </div>
+    </div>
+
+    <div {{bind-attr class=":form-group wrongTOTP:has-error :clearfix"}}>
+      <label class="control-label" for="totpResponse">
+        Two-factor authentication
+      </label>
+      <div class="controls">
+      {{#if user.totp_active}}
+        {{input type="text" id="totp-input" value=totp class="form-control" disabled=totpProcessing placeholder="Type your code to disable"}}
+        <span class="help-block" style="margin-bottom: 0px;">TFA is enabled on your account.</span>
+      {{else}}
+        <div class="QRtitle">
+          Scan this QR code with
+          <a href="https://support.google.com/accounts/answer/1066447" target="_blank">
+            Google Authenticator</a><br/>
+        </div>
+        <img {{bind-attr src=user.totp_qr}} class="pull-left googleQRcode">
+        {{input type="text" id="totp-input" value=totp class="form-control withQR has-error" disabled=totpProcessing placeholder="and type your code here"}}
+        <a id="resetTOTP">or generate a new key</a>
+      {{/if}}
+      </div>
+    </div>
+
+    <fieldset>
+      <legend>
+        API Access
+        <button class="btn btn-primary btn-xs pull-right" {{action 'generateApiKeys'}}>Generate new API key pair</button>
+      </legend>
+      {{#if currentUser.api_key}}
+        <div class="form-group">
+          <label class="control-label" for="api-key">API Key</label>
+          <div class="controls">
+            {{input type="text" id="api-key" value=currentUser.api_key class="form-control disabled monospace" disabled=true}}
           </div>
-          <img {{bind-attr src=user.totp_qr}} class="pull-left googleQRcode">
-          {{input type="text" id="totp-input" value=totp class="form-control withQR has-error" disabled=totpProcessing placeholder="and type your code here"}}
-          <a id="resetTOTP">or generate a new key</a>
-        {{/if}}
         </div>
-      </div>
+        <div {{bind-attr class=":form-group :nomargin badPassword:has-error"}}>
+          <label for="api-secret" class="control-label">API Secret</label>
+          {{#if apiSecret}}
+          <div class="input-group">
+            {{input type="text" id="api-secret" value=apiSecret class="form-control disabled monospace" disabled=true}}
+            <span class="input-group-btn">
+              <button class="btn btn-primary" {{action 'hideApiSecret'}}>Hide API Secret</button>
+            </span>
+          </div>
+          {{else}}
+          <form>
+          <div class="input-group">
+            {{input type="password" id="api-password" value=apiPassword class="form-control" placeholder="Type your password to reveal API Secret"}}
+            <span class="input-group-btn">
+              <button {{bind-attr class=":btn :btn-primary apiPassword::disabled"}} {{action 'revealApiSecret'}}>Reveal API Secret</button>
+            </span>
+          </div>
+          </form>
+          {{/if}}
+        </div>
+      {{else}}
+        <span class="text-muted">You have no API keys yet.</span>
+      {{/if}}
+    </fieldset>
 
-    </form>
   </div>
 </div>

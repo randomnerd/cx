@@ -4,6 +4,7 @@ Cx.User = DS.Model.extend
   email:    DS.attr('string')
   totp_qr:  DS.attr('string')
   no_fees:  DS.attr('boolean')
+  api_key:  DS.attr('string')
   nickname: DS.attr('string')
   created_at: DS.attr('date')
   updated_at: DS.attr('date')

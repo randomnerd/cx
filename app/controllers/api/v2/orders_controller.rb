@@ -1,9 +1,13 @@
 class Api::V2::OrdersController < Api::V2::BaseController
   belongs_to :trade_pair, param: :tradePair, optional: true
-  custom_actions resource: [:cancel]
+  before_filter :authenticate_user!, except: [:index, :show]
 
   def index
     render json: FastJson.dump(collection.active)
+  end
+
+  def show
+    render json: FastJson.dump_one(resource)
   end
 
   def create
@@ -23,5 +27,9 @@ class Api::V2::OrdersController < Api::V2::BaseController
 
   def permitted_params
     params.permit(order: [:trade_pair_id, :rate, :amount, :bid])
+  end
+
+  def own
+    render json: FastJson.dump(collection.active.where(user_id: current_user.id))
   end
 end

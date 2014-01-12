@@ -1,0 +1,183 @@
+API
+
+# All timestamps are in UTC
+# All currency amounts and exchange rates are multiplied by 10^8 to get rid of floating point numbers
+# All API requests should contain HTTP header 'Content-type: application/json'
+
+# Private API methods should have API-Key and API-Sign headers
+# API-Key header should contain your API access key which can be generated
+# at your account settings page
+# API-Sign header should contain request's POST data signed by your account's
+# API Secret key using HMAC-SHA512 algorithm
+
+# PHP API client example: https://gist.github.com/erundook/8390710
+
+# Available currencies
+
+Availability: public
+Method: GET
+URL: https://coinex.pw/api/v2/currencies
+Data type: Array
+JSON Root key: 'currencies'
+
+Description:
+
+{
+    "id": 28                                                  # ID for reference
+  , "name": "BTC"                                             # Short name
+  , "desc": "Bitcoin"                                         # Full name
+  , "tx_fee": 0.0001                                          # Withdrawal fee
+  , "tx_conf": 3                                              # Confirmations for deposits
+  , "hashrate": 186287759                                     # Pool hashrate
+  , "net_hashrate": null                                      # Network hashrate (if available)
+  , "last_block_at": null                                     # Timestamp for last block found by pool
+  , "mining_enabled": true                                    # True if there is a pool for the currency
+  , "mining_url": "stratum+tcp://stratum.coinex.pw:9029"      # Stratum URL for mining pool
+  , "mining_fee": 2                                           # Mining pool fee, percent
+  , "donations": "194nULbp8UAvtCX21fpS91Bhq7iHt2DBAD"         # Donations address
+  , "algo": "sha256"                                          # PoW algorithm (sha256 / scrypt)
+  , "diff": 1418481395.26264                                  # Mining difficulty
+  , "updated_at": "2014-01-11T20:57:37.262Z"                  # Timestamp for last data update
+}
+
+# Available trading pairs
+
+Availability: public
+Method: GET
+URL: https://coinex.pw/api/v2/trade_pairs
+Data type: Array
+JSON Root key: 'trade_pairs'
+
+Description:
+
+{
+    "id": 28                                                  # ID for reference
+  , "buy_fee": 0.2                                            # Fee for bid orders
+  , "sell_fee": 0.2                                           # Fee for ask orders
+  , "last_price": 2990000                                     # Exchange rate of the last trade
+  , "currency_id": 33                                         # Currency ID (see above)
+  , "market_id": 28                                           # Market currency ID (see above)
+  , "url_slug": "ltc_btc"                                     # URL slug for reference (https://coinex.pw/trade/<URL_SLUG>)
+  , "rate_min": 2860050                                       # Minimal exchange rate within last 24 hours
+  , "rate_max": 3080000                                       # Maximal exchange rate within last 24 hours
+  , "currency_volume": 9403824973                             # Currency trading volume within last 24 hours
+  , "market_volume": 279895654                                # Market trading volume within last 24 hours
+  , "updated_at": "2014-01-11T20:57:37.262Z"                  # Timestamp for last data update
+}
+
+# Open orders
+
+Availability: public
+Method: GET
+URL: https://coinex.pw/api/v2/orders?tradePair=<TRADE_PAIR_ID>
+Data type: Array
+JSON Root key: 'orders'
+
+Description:
+
+{
+    "id": 208451                                              # ID for reference
+  , "trade_pair_id": 21                                       # ID of trading pair
+  , "amount": 1000000000                                      # Amount of currency to be bought / sold
+  , "filled": 0                                               # Amount of currency already bought / sold
+  , "bid": false                                              # Defines if order is bid or ask
+  , "rate": 300                                               # Order exchange rate
+  , "cancelled": false                                        # Defines if order is cancelled
+  , "complete": false                                         # Defines if order is complete
+  , "created_at": "2014-01-07T21:53:42.794Z"                  # Timestamp for order creation
+  , "updated_at": "2014-01-07T21:53:42.794Z"                  # Timestamp for last data update
+}
+
+# Last trades on market
+
+Availability: public
+Method: GET
+URL: https://coinex.pw/api/v2/trades?tradePair=<TRADE_PAIR_ID>
+Data type: Array
+JSON Root key: 'trades'
+
+Description:
+
+{
+    "id": 137847                                              # ID for reference
+  , "created_at": "2014-01-11T09:43:32.489Z"                  # Timestamp when trade happened
+  , "bid": false                                              # Defines if last matching order was bid or ask
+  , "rate": 226                                               # Exchange rate
+  , "amount": 98310852                                        # Currency amount
+  , "trade_pair_id": 21                                       # ID of trading pair
+}
+
+# Submit order
+
+Availability: private
+Method: POST
+URL: https://coinex.pw/api/v2/orders
+Data type: Object
+JSON Root key: 'order'
+
+Description:
+
+{
+    "trade_pair_id": 15                                       # ID for trade pair
+  , "amount": 3251074960                                      # Amount of currency to buy / sell
+  , "bid": false                                              # Defines if order is bid (buy) or ask (sell)
+  , "rate": 50004                                             # Exchange rate
+}
+
+Response is similar to API call for open orders list.
+
+
+# Get order status
+
+Availability: private
+Method: GET
+URL: https://coinex.pw/api/v2/orders/<ORDER_ID>
+Data type: Array
+JSON Root key: 'orders'
+
+No post data is required (empty string is okay).
+Response is similar to API call for open orders list.
+
+# Cancel order
+
+Availability: private
+Method: POST
+URL: https://coinex.pw/api/v2/orders/<ORDER_ID>/cancel
+Data type: Array
+JSON Root key: 'orders'
+
+No post data is required (empty string is okay).
+Response is similar to public API call for open orders list.
+
+# List open orders
+
+Availability: private
+Method: GET
+URL: https://coinex.pw/api/v2/orders/own
+Data type: Array
+JSON Root key: 'orders'
+
+No post data is required (empty string is okay).
+Response is similar to public API call for open orders list.
+
+# Get account balances
+
+Availability: private
+Method: GET
+URL: https://coinex.pw/api/v2/balances
+Data type: Array
+JSON Root key: 'balances'
+
+No post data is required (empty string is okay).
+
+Description:
+
+{
+  "id": 5172                                                  # ID for reference
+  , "currency_id": 18                                         # ID for currency
+  , "currency_name": "WDC"                                    # Currency short name
+  , "amount": 19282698425                                     # Available balance
+  , "held": 0                                                 # Amount held for open orders
+  , "deposit_address": "Wiw9RyYNaNGaHPb5HsmA5oWoJ8HzbZsqxh"   # Deposit address for currency
+  , "updated_at": "2014-01-12T21:09:32.788Z"                  # Timestamp for last update
+}

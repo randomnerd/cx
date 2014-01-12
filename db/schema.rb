@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140109163313) do
+ActiveRecord::Schema.define(version: 20140112170603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -262,11 +262,11 @@ ActiveRecord::Schema.define(version: 20140109163313) do
   add_index "trades", ["bid_id"], name: "index_trades_on_bid_id", using: :btree
   add_index "trades", ["bid_user_id"], name: "index_trades_on_bid_user_id", using: :btree
   add_index "trades", ["created_at"], name: "index_trades_on_created_at", using: :btree
-  add_index "trades", ["trade_pair_id", "created_at"], name: "index_trades_on_trade_pair_id_and_created_at", using: :btree
+  add_index "trades", ["trade_pair_id"], name: "index_trades_on_trade_pair_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "email",                                  null: false
+    t.string   "encrypted_password",                     null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -291,9 +291,12 @@ ActiveRecord::Schema.define(version: 20140109163313) do
     t.boolean  "no_fees"
     t.boolean  "allow_negative_trades",  default: false
     t.boolean  "block_withdrawals",      default: false
+    t.string   "api_key"
+    t.string   "api_secret"
   end
 
   add_index "users", ["allow_negative_trades"], name: "index_users_on_allow_negative_trades", using: :btree
+  add_index "users", ["api_key"], name: "index_users_on_api_key", using: :btree
   add_index "users", ["banned_until"], name: "index_users_on_banned_until", using: :btree
   add_index "users", ["block_withdrawals"], name: "index_users_on_block_withdrawals", using: :btree
   add_index "users", ["current_sign_in_ip"], name: "index_users_on_current_sign_in_ip", using: :btree
@@ -358,7 +361,8 @@ ActiveRecord::Schema.define(version: 20140109163313) do
     t.datetime "updated_at"
   end
 
-  add_index "workers", ["name", "pass"], name: "index_workers_on_name_and_pass", using: :btree
+  add_index "workers", ["name"], name: "index_workers", using: :btree
+  add_index "workers", ["pass"], name: "index_workers_pass", using: :btree
   add_index "workers", ["user_id"], name: "index_workers_on_user_id", using: :btree
 
 end

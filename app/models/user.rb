@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   has_many :worker_stats, through: :workers
   has_many :balance_changes, through: :balances
   after_create :set_initial_values
+  attr_accessor :auth_by_api_key
 
   scope :filter_query, -> q {
     where("id = ? or nickname like ? or email like ? or\
@@ -90,5 +91,10 @@ class User < ActiveRecord::Base
 
   def trades
     Trade.where('ask_user_id = ? or bid_user_id = ?', self.id, self.id)
+  end
+
+  def generate_api_keys(force = false)
+    return if (api_key && api_secret) && !force
+    update_attributes api_key: SecureRandom.hex(32), api_secret: SecureRandom.hex(32)
   end
 end
