@@ -16,6 +16,14 @@ class Currency < ActiveRecord::Base
     "currencies"
   end
 
+  def avg_rate
+    brate = avg_btc_rate
+    lrate_base = avg_ltc_rate
+    return [brate, 'BTC'] unless lrate_base > 0
+    lrate = lrate_base * Currency.find_by_name('LTC').avg_btc_rate
+    brate > lrate ? [brate, 'BTC'] : [lrate, 'LTC']
+  end
+
   def avg_btc_rate
     return 1 if name == 'BTC'
     tp = TradePair.where(currency: self, market: Currency.find_by_name('BTC')).first
@@ -48,11 +56,12 @@ class Currency < ActiveRecord::Base
 
   def calc_mining_score
     return 0 unless mining_enabled && diff
-    return 0 if avg_btc_rate == 0
-    score = avg_block_reward / diff * avg_btc_rate
+    rate, market = avg_rate
+    return 0 if rate == 0
+    score = avg_block_reward / diff * rate
     score = (score / mining_score_base).round(2)
-    update_attribute :mining_score, score
-    return score
+    update_attributes mining_score: score, mining_score_market: market
+    return [score, market]
   end
 
   def trade_pairs
@@ -224,9 +233,11 @@ class Currency < ActiveRecord::Base
   end
 
   def self.json_fields
-    [:id, :name, :desc, :tx_fee, :tx_conf, :blk_conf, :hashrate,
-             :net_hashrate, :last_block_at, :mining_enabled, :mining_url,
-             :mining_fee, :donations, :algo, :diff, :updated_at,
-             :mining_score]
+    [
+      :id, :name, :desc, :tx_fee, :tx_conf, :blk_conf, :hashrate,
+      :net_hashrate, :last_block_at, :mining_enabled, :mining_url,
+      :mining_fee, :donations, :algo, :diff, :updated_at,
+      :mining_score, :mining_score_market
+    ]
   end
 end
