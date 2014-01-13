@@ -6,7 +6,7 @@
 
     <div class="messages" id="messageList">
       {{#each msg in controllers.messages}}
-      {{render message msg}}
+      {{render 'message' msg}}
       {{else}}
       <div class="text-muted">No messages yet</div>
       {{/each}}

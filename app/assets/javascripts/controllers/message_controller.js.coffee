@@ -1,13 +1,13 @@
-Cx.MessageController = Em.Controller.extend
+Cx.MessageController = Em.ObjectController.extend
   needs: ['auth']
   mention: (->
     nick = @get('controllers.auth.nickname')
     return false unless nick
-    !!@get('content.body').match(nick)
-  ).property('content.body', 'controllers.auth.nickname')
+    !!@get('body').match(nick)
+  ).property('body', 'controllers.auth.nickname')
   own: (->
-    @get('content.name') == @get('controllers.auth.nickname')
-  ).property('content.body', 'controllers.auth.nickname')
+    @get('name') == @get('controllers.auth.nickname')
+  ).property('body', 'controllers.auth.nickname')
 
   actions:
     remove: (msg) ->

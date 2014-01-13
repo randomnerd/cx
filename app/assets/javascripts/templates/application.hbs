@@ -1,14 +1,14 @@
-{{render common/navbar}}
+{{render 'common/navbar'}}
 <div class="container">
 
   <div class="row">
 
     <div class="col-sm-3">
-      {{render common/sidebar}}
+      {{render 'common/sidebar'}}
     </div>
 
     <div class="col-sm-9">
-      {{render common/flashMessages}}
+      {{render 'common/flashMessages'}}
 
       {{#if currentUser.isSignedIn}}
         {{#unless currentUser.confirmed_at}}
@@ -25,4 +25,4 @@
   </div>
 
 </div>
-{{render common/chat}}
+{{render 'common/chat'}}

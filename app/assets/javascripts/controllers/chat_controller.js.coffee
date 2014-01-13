@@ -46,7 +46,7 @@ Cx.CommonChatController = Ember.ArrayController.extend
         for key, value of data.errors
           errors.push msg for msg in value
         message.set('name', 'Message not sent')
-        message.set('errors', errors)
+        message.set('sErrors', errors)
         message.set('failed', true)
 
       message.save().then(onSucc, onFail)

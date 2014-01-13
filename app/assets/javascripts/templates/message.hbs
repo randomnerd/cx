@@ -1,23 +1,23 @@
-<div {{bind-attr class=":message :panel :panel-default :nopadding mention:highlight own:own content.system:system content.failed:failed"}}>
+<div {{bind-attr class=":message :panel :panel-default :nopadding mention:highlight own:own system:system failed:failed"}}>
   <div class="text-muted pull-right">
-    {{view Cx.TimeagoView title=content.time}}
+    {{view Cx.TimeagoView title=time}}
   </div>
   <div class="nickname">
-    <a {{action 'addName' this}}>{{content.name}}</a>
+    <a {{action 'addName' this}}>{{name}}</a>
   </div>
   {{#if currentUser.admin}}
     <a class="pull-right nodecor" {{action 'remove' this}}>
       <i class="fa fa-trash-o"></i>
     </a>
   {{/if}}
-  {{#if content.errors}}
+  {{#if sErrors}}
     Errors:
     <ul>
-    {{#each err in content.errors}}
+    {{#each err in sErrors}}
       <li>{{err}}</li>
     {{/each}}
     </ul>
   {{else}}
-    {{content.body}}
+    {{body}}
   {{/if}}
 </div>
