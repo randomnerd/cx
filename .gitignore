@@ -17,3 +17,5 @@
 /public/assets
 /config/database.yml
 
+
+/coinex_api.php
