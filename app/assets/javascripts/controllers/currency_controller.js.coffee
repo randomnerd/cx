@@ -13,4 +13,4 @@ Cx.CurrencyController = Em.ObjectController.extend
     samealgo = @get('samealgo_currencies')
     sorted = _.sortBy(samealgo, (o) -> o.get('mining_score'))
     sorted.reverse()[0]?.get('id') == @get('id')
-  ).property('samealgo_currencies.@each')
+  ).property('samealgo_currencies.@each', 'samealgo_currencies.@each.mining_score')
