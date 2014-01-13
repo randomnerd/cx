@@ -235,7 +235,7 @@ class Currency < ActiveRecord::Base
       :id, :name, :desc, :tx_fee, :tx_conf, :blk_conf, :hashrate,
       :net_hashrate, :last_block_at, :mining_enabled, :mining_url,
       :mining_fee, :donations, :algo, :diff, :updated_at,
-      :mining_score, :mining_score_market
+      :mining_score, :mining_score_market, :mining_skip_switch
     ]
   end
 end

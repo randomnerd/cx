@@ -10,7 +10,7 @@ Cx.CurrencyController = Em.ObjectController.extend
     @get('currencies.content').filter (o) => o.get('algo') == @get('algo')
   ).property('currencies.@each')
   top_mining_score: (->
-    samealgo = @get('samealgo_currencies')
+    samealgo = @get('samealgo_currencies').filter (o) -> o.get('mining_skip_switch') == false
     sorted = _.sortBy(samealgo, (o) -> o.get('mining_score'))
     sorted.reverse()[0]?.get('id') == @get('id')
   ).property('samealgo_currencies.@each', 'samealgo_currencies.@each.mining_score')

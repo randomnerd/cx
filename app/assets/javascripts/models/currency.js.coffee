@@ -16,6 +16,7 @@ Cx.Currency = DS.Model.extend
   mining_fee:      DS.attr('number')
   mining_score:    DS.attr('number')
   mining_score_market: DS.attr('string')
+  mining_skip_switch: DS.attr('boolean')
   balance: (->
     @store.filter 'balance', (b) => b.get('currency.id') == @get('id')
   ).property()
