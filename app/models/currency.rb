@@ -16,6 +16,29 @@ class Currency < ActiveRecord::Base
     "currencies"
   end
 
+  def avg_btc_rate
+    tp = TradePair.where(currency: self, market: Currency.find_by_name('BTC')).first
+    tp.try(:avg_bid_rate) || 0
+  end
+
+  def avg_ltc_rate
+    tp = TradePair.where(currency: self, market: Currency.find_by_name('LTC')).first
+    tp.try(:avg_bid_rate, 5) || 0
+  end
+
+  def avg_block_reward
+    arr = blocks.limit(10).order('created_at desc').pluck(:reward)
+    return 0 if arr.empty?
+    arr.sum / arr.size
+  end
+
+  def mining_profit_score
+    return 0 unless mining_enabled && diff
+    return 0 if avg_btc_rate == 0
+    score = (avg_block_reward / diff * avg_btc_rate)
+    (algo == 'scrypt' ? score / 1000 : score).round(2)
+  end
+
   def trade_pairs
     TradePair.where('currency_id = ? or market_id = ?', self.id, self.id)
   end

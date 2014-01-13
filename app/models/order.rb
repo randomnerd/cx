@@ -23,7 +23,7 @@ class Order < ActiveRecord::Base
   }
   scope :matches_for, -> o {
     s = active.tp(o.trade_pair_id).bid_rate(o.bid, o.rate)
-    return s.bid(!o.bid).bid_sort(o.bid)
+    return s.bid(!o.bid).bid_sort(o.bid).order(:created_at)
   }
 
   include PusherSync
