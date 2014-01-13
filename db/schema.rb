@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140113113430) do
+ActiveRecord::Schema.define(version: 20140113131815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,6 +135,9 @@ ActiveRecord::Schema.define(version: 20140113113430) do
     t.string   "old_id"
     t.float    "mining_score"
     t.string   "mining_score_market"
+    t.boolean  "mining_pos",          default: false
+    t.boolean  "mining_txmsg",        default: false
+    t.string   "mining_address"
   end
 
   add_index "currencies", ["name"], name: "index_currencies_on_name", using: :btree
