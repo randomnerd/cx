@@ -1,0 +1,17 @@
+<tr {{bind-attr class=":clickRow top_mining_score:success"}} {{action 'openStats' content}}>
+  <td class="monospace">{{name}}</td>
+  {{#if currentUser.isSignedIn}}
+  <td>{{hrate ownHashrate}}</td>
+  {{/if}}
+  <td>{{hrate hashrate}}</td>
+  <td>{{hrate net_hashrate}}</td>
+  <td>{{diff}}</td>
+  <td>{{view Cx.TimeagoView title=last_block_time}}</td>
+  <td class="text-right monospace">
+    {{#if mining_score}}
+      {{mining_score_padded}}
+    {{else}}
+      <span class="text-muted">N/A</span>
+    {{/if}}
+  </td>
+</tr>

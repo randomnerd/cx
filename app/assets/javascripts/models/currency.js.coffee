@@ -14,6 +14,7 @@ Cx.Currency = DS.Model.extend
   mining_enabled:  DS.attr('boolean')
   mining_url:      DS.attr('string')
   mining_fee:      DS.attr('number')
+  mining_score:    DS.attr('number')
   last_block_time: (-> @get('last_block_at')?.toISOString()).property('last_block_at')
   balance: (->
     @store.filter 'balance', (b) => b.get('currency.id') == @get('id')

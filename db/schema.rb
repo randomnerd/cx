@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140112170603) do
+ActiveRecord::Schema.define(version: 20140113074249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -133,6 +133,7 @@ ActiveRecord::Schema.define(version: 20140112170603) do
     t.string   "donations"
     t.string   "algo"
     t.string   "old_id"
+    t.float    "mining_score"
   end
 
   add_index "currencies", ["name"], name: "index_currencies_on_name", using: :btree
@@ -223,17 +224,17 @@ ActiveRecord::Schema.define(version: 20140112170603) do
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
 
   create_table "trade_pairs", force: true do |t|
-    t.float    "buy_fee",                   default: 0.0
-    t.float    "sell_fee",                  default: 0.0
+    t.float    "buy_fee"
+    t.float    "sell_fee"
     t.integer  "last_price",      limit: 8
     t.integer  "market_id"
     t.integer  "currency_id"
-    t.boolean  "public",                    default: false
+    t.boolean  "public"
     t.string   "url_slug"
-    t.integer  "currency_volume", limit: 8, default: 0
-    t.integer  "market_volume",   limit: 8, default: 0
-    t.integer  "rate_min",        limit: 8, default: 0
-    t.integer  "rate_max",        limit: 8, default: 0
+    t.integer  "currency_volume", limit: 8
+    t.integer  "market_volume",   limit: 8
+    t.integer  "rate_min",        limit: 8
+    t.integer  "rate_max",        limit: 8
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "old_id"

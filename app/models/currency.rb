@@ -17,6 +17,7 @@ class Currency < ActiveRecord::Base
   end
 
   def avg_btc_rate
+    return 1 if name == 'BTC'
     tp = TradePair.where(currency: self, market: Currency.find_by_name('BTC')).first
     tp.try(:avg_bid_rate) || 0
   end
@@ -27,16 +28,31 @@ class Currency < ActiveRecord::Base
   end
 
   def avg_block_reward
+    return 25 * 10**8 if name == 'BTC'
+    return 50 * 10**8 if name == 'LTC'
     arr = blocks.limit(10).order('created_at desc').pluck(:reward)
     return 0 if arr.empty?
     arr.sum / arr.size
   end
 
-  def mining_profit_score
+  def mining_score_base
+    return (50 / diff * avg_btc_rate * 10**8) if name == 'LTC'
+    return (25 / diff * 10**8) if name == 'BTC'
+    case algo
+    when 'scrypt'
+      Currency.find_by_name('LTC').mining_score_base
+    else
+      Currency.find_by_name('BTC').mining_score_base
+    end
+  end
+
+  def calc_mining_score
     return 0 unless mining_enabled && diff
     return 0 if avg_btc_rate == 0
-    score = (avg_block_reward / diff * avg_btc_rate)
-    (algo == 'scrypt' ? score / 1000 : score).round(2)
+    score = avg_block_reward / diff * avg_btc_rate
+    score = (score / mining_score_base).round(2)
+    update_attribute :mining_score, score
+    return score
   end
 
   def trade_pairs
@@ -158,6 +174,7 @@ class Currency < ActiveRecord::Base
 
   def process_mining
     update_diff_and_hashrate
+    calc_mining_score
     update_user_hashrates
     update_blocks
     process_payouts
@@ -204,5 +221,12 @@ class Currency < ActiveRecord::Base
     self.blocks.generate.unpaid.each do |block|
       block.process_payouts
     end
+  end
+
+  def self.json_fields
+    [:id, :name, :desc, :tx_fee, :tx_conf, :blk_conf, :hashrate,
+             :net_hashrate, :last_block_at, :mining_enabled, :mining_url,
+             :mining_fee, :donations, :algo, :diff, :updated_at,
+             :mining_score]
   end
 end
