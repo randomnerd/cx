@@ -214,15 +214,10 @@ class Currency < ActiveRecord::Base
   end
 
   def update_blocks
-    self.blocks.immature.each do |block|
-      info = self.rpc.gettransaction(block.txid)
-      next unless info
-      block.category = info['details'][0]['category']
-      block.confirmations = info['confirmations']
-      block.save
-    end
+    self.blocks.immature.each &:update_confirmations
+
     self.blocks.orphan.each do |block|
-      block.block_payouts.each &:delete
+      block.block_payouts.delete_all
     end
   end
 

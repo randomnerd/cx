@@ -50,4 +50,12 @@ class Block < ActiveRecord::Base
       self.update_attribute(:paid, true) if unpaid == 0
     end
   end
+
+  def update_confirmations
+    info = currency.rpc.gettransaction(self.txid)
+    return unless info
+    self.category = info['details'][0]['category']
+    self.confirmations = info['confirmations']
+    save
+  end
 end
