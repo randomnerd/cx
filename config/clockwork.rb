@@ -8,4 +8,5 @@ module Clockwork
   end
 
   every(4.minutes, 'ProcessCurrencies')
+  every(1.minute, 'ProcessMiningScores')
 end

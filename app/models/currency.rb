@@ -182,11 +182,14 @@ class Currency < ActiveRecord::Base
   end
 
   def process_mining
-    update_diff_and_hashrate
-    calc_mining_score
     update_user_hashrates
     update_blocks
     process_payouts
+  end
+
+  def process_mining_score
+    update_diff_and_hashrate
+    calc_mining_score
   end
 
   def update_diff_and_hashrate
@@ -217,7 +220,7 @@ class Currency < ActiveRecord::Base
     self.blocks.immature.each &:update_confirmations
 
     self.blocks.orphan.each do |block|
-      block.block_payouts.delete_all
+      BlockPayout.where(block: block).delete_all
     end
   end
 
