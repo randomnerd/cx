@@ -4,7 +4,7 @@ class ProcessMiningScores
 
   def perform
     Currency.where(public: true, mining_enabled: true).each do |currency|
-      currency.update_mining_score
+      currency.process_mining_score
     end
   end
 end
