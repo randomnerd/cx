@@ -92,6 +92,7 @@ class Order < ActiveRecord::Base
         # use their amount if it is less than ours
         amt    = o_amt > t_amt ? t_amt : o_amt
         # use min rate for bid, and max rate for ask
+        bid = o.bid if o.created_at.to_f > created_at.to_f
         t_rate = bid ? [rate, o.rate].min : [rate, o.rate].max
 
         Trade.create(
