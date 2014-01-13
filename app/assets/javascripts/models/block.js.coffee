@@ -7,6 +7,7 @@ Cx.Block = DS.Model.extend
   confirmations: DS.attr('number')
   created_at: DS.attr('date')
   updated_at: DS.attr('date')
+  switchpool: DS.attr('boolean')
   time: (-> @get('created_at')?.toISOString()).property('created_at')
   payouts: (->
     @store.filter 'blockPayout', (b) => b.get('block.id') == @get('id')

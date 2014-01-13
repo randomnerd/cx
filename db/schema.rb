@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140113131815) do
+ActiveRecord::Schema.define(version: 20140113164512) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,11 +86,13 @@ ActiveRecord::Schema.define(version: 20140113131815) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "time_spent"
+    t.boolean  "switchpool",              default: false
   end
 
   add_index "blocks", ["category"], name: "index_blocks_on_category", using: :btree
   add_index "blocks", ["currency_id"], name: "index_blocks_on_currency_id", using: :btree
   add_index "blocks", ["paid"], name: "index_blocks_on_paid", using: :btree
+  add_index "blocks", ["switchpool"], name: "index_blocks_on_switchpool", using: :btree
   add_index "blocks", ["txid"], name: "index_blocks_on_txid", using: :btree
   add_index "blocks", ["user_id"], name: "index_blocks_on_user_id", using: :btree
 

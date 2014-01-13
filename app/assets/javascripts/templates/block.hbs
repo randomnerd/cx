@@ -5,6 +5,9 @@
   {{else}}
     {{number}}
   {{/if}}
+  {{#if switchpool}}
+    <i class="fa fa-exchange" title="Found by SwitchPool"></i>
+  {{/if}}
   </td>
   <td>{{validityMessage}}</td>
   <td>
@@ -23,7 +26,11 @@
   {{#if currentUser.isSignedIn}}
     <td>
     {{#if payout}}
-      {{round payout.reward_minus_fee}}
+      {{#if currentUser.no_fees}}
+        {{round payout.reward}}
+      {{else}}
+        {{round payout.reward_minus_fee}}
+      {{/if}}
     {{else}}
       <span class="text-muted">N/A</span>
     {{/if}}
