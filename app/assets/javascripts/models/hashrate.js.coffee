@@ -3,3 +3,4 @@ Cx.Hashrate = DS.Model.extend
   name:         DS.attr('string')
   user_id:      DS.attr('number')
   currency:     DS.belongsTo('currency')
+  switchpool:   DS.attr('boolean')

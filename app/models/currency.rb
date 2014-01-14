@@ -207,12 +207,21 @@ class Currency < ActiveRecord::Base
 
   def update_user_hashrates
     users = {}
-    self.worker_stats.active.each do |hr|
-      users[hr.worker.user_id] ||= 0
-      users[hr.worker.user_id]  += hr.hashrate
+    users_switchpool = {}
+    self.worker_stats.active.each do |ws|
+      if ws.switchpool
+        users_switchpool[ws.worker.user_id] ||= 0
+        users_switchpool[ws.worker.user_id]  += ws.hashrate
+      else
+        users[ws.worker.user_id] ||= 0
+        users[ws.worker.user_id]  += ws.hashrate
+      end
     end
     users.each do |user_id, rate|
       Hashrate.set_rate(self.id, user_id, rate)
+    end
+    users_switchpool.each do |user_id, rate|
+      Hashrate.set_switchpool_rate(self.id, user_id, rate)
     end
   end
 

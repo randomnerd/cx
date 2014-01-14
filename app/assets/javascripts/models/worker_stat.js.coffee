@@ -9,3 +9,4 @@ Cx.WorkerStat = DS.Model.extend
   hashrate:    DS.attr('number')
   created_at:  DS.attr('date')
   updated_at:  DS.attr('date')
+  switchpool:  DS.attr('boolean')

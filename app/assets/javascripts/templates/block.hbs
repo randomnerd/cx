@@ -1,12 +1,12 @@
 <tr {{bind-attr class="validityClass"}}>
   <td>
+  {{#if switchpool}}
+    <i class="fa fa-exchange" title="Found by SwitchPool"></i>
+  {{/if}}
   {{#if orphan}}
     <span class="text-muted">N/A</span>
   {{else}}
     {{number}}
-  {{/if}}
-  {{#if switchpool}}
-    <i class="fa fa-exchange" title="Found by SwitchPool"></i>
   {{/if}}
   </td>
   <td>{{validityMessage}}</td>

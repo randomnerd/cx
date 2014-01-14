@@ -1,4 +1,7 @@
 <tr {{bind-attr class="own:success"}}>
-  <td>{{content.name}}</td>
-  <td>{{hrate content.rate}}</td>
+  <td>
+    {{#if switchpool}}<i class="fa fa-exchange"></i>{{/if}}
+    {{name}}
+  </td>
+  <td>{{hrate rate}}</td>
 </tr>

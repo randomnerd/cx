@@ -26,4 +26,12 @@ class Hashrate < ActiveRecord::Base
     hrate.rate = hashrate
     hrate.save
   end
+
+  def self.set_switchpool_rate(currency_id, user_id, hashrate)
+    hrate = self.where(user_id: user_id, currency_id: currency_id, switchpool: true).first_or_create(
+      rate: hashrate
+    )
+    hrate.rate = hashrate
+    hrate.save
+  end
 end

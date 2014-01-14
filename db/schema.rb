@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140113230711) do
+ActiveRecord::Schema.define(version: 20140114164114) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -166,14 +166,16 @@ ActiveRecord::Schema.define(version: 20140113230711) do
   add_index "deposits", ["wallet_id"], name: "index_deposits_on_wallet_id", using: :btree
 
   create_table "hashrates", force: true do |t|
-    t.integer  "user_id",                           null: false
-    t.integer  "currency_id",                       null: false
+    t.integer  "user_id",                               null: false
+    t.integer  "currency_id",                           null: false
     t.integer  "rate",        limit: 8, default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "switchpool",            default: false
   end
 
   add_index "hashrates", ["currency_id"], name: "index_hashrates_on_currency_id", using: :btree
+  add_index "hashrates", ["switchpool"], name: "index_hashrates_on_switchpool", using: :btree
   add_index "hashrates", ["user_id"], name: "index_hashrates_on_user_id", using: :btree
 
   create_table "incomes", force: true do |t|
@@ -346,8 +348,8 @@ ActiveRecord::Schema.define(version: 20140113230711) do
   add_index "withdrawals", ["user_id"], name: "index_withdrawals_on_user_id", using: :btree
 
   create_table "worker_stats", force: true do |t|
-    t.integer  "worker_id",                         null: false
-    t.integer  "currency_id",                       null: false
+    t.integer  "worker_id",                             null: false
+    t.integer  "currency_id",                           null: false
     t.integer  "diff",                  default: 0
     t.integer  "hashrate",    limit: 8, default: 0
     t.integer  "accepted",    limit: 8, default: 0
@@ -355,9 +357,11 @@ ActiveRecord::Schema.define(version: 20140113230711) do
     t.integer  "blocks",                default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "switchpool",            default: false
   end
 
   add_index "worker_stats", ["currency_id"], name: "index_worker_stats_on_currency_id", using: :btree
+  add_index "worker_stats", ["switchpool"], name: "index_worker_stats_on_switchpool", using: :btree
   add_index "worker_stats", ["updated_at"], name: "index_worker_stats_on_updated_at", using: :btree
   add_index "worker_stats", ["worker_id"], name: "index_worker_stats_on_worker_id", using: :btree
 
