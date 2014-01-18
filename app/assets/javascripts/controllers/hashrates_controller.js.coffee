@@ -8,9 +8,14 @@ Cx.HashratesController = Em.ArrayController.extend
       @set 'model', @store.filter 'hashrate', (o) =>
         o.get('currency.id') == @get('currency.id')
   ).observes('currency')
+  pusherChannel: (-> "hashrates-#{@get('currency.id')}").property('currency.id')
   setupPusher: (->
-    @channel = h.setupPusher @store, 'hashrate', "hashrates-#{@get('currency.id')}", null, false
+    return unless @get('currency.id')
+    @stopPusher()
+    @set 'channel', h.setupPusher @store, 'hashrate', @get('pusherChannel'), null, false
   ).observes('currency')
+  stopPusher: -> try pusher.unsubscribe(@get('pusherChannel'))
+
   limited: (->
     rates = @get('arrangedContent').toArray().splice(0,15)
     unless _.find(rates, (d) => d.get('name') == @get('user.nickname'))

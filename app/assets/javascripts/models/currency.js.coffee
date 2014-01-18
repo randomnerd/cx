@@ -17,6 +17,7 @@ Cx.Currency = DS.Model.extend
   mining_score:    DS.attr('number')
   mining_score_market: DS.attr('string')
   mining_skip_switch: DS.attr('boolean')
+  shortDiff: (-> @get('diff').toFixed(2)).property('diff')
   balance: (->
     @store.filter 'balance', (b) => b.get('currency.id') == @get('id')
   ).property()

@@ -5,10 +5,11 @@ class BlockPayout < ActiveRecord::Base
 
   scope :unpaid, -> { where(paid: false) }
   scope :by_currency_name, -> name {
-    joins(:currency).joins(:block).where(currencies: {name: name})
+    currency = Currency.find_by_name(name)
+    includes(:block).where(blocks: {currency_id: currency.id})
   }
 
-  scope :recent, -> { limit(20).order('created_at desc') }
+  scope :recent, -> { limit(20).order('block_payouts.created_at desc') }
 
   def fee
     return 0 if user.no_fees
