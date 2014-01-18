@@ -1,7 +1,7 @@
 <div class="well well-small volume">
   Last 24hrs trade volume:
-  {{round pair.currency_volume}} {{pair.currency.name}} /
-  {{round pair.market_volume}} {{pair.market.name}}
+  {{addCommas pair.shortCurrVolume}} {{pair.currency.name}} /
+  {{addCommas pair.shortMktVolume}} {{pair.market.name}}
     <div class="label label-success pull-right">
       24h High: {{round pair.rate_max}} {{pair.market.name}}
     </div>

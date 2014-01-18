@@ -14,6 +14,12 @@ Cx.TradePair = DS.Model.extend
     "#{@get 'currency.name'} / #{@get 'market.name'}"
   ).property('currency.name', 'market.name')
   trades: DS.hasMany('trade')
+  shortCurrVolume: (->
+    h.n2f(@get('currency_volume')).toFixed(2)
+  ).property('currency_volume')
+  shortMktVolume: (->
+    h.n2f(@get('market_volume')).toFixed(2)
+  ).property('market_volume')
 
 Cx.TradePair.FIXTURES = [
   {

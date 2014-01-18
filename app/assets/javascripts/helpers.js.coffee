@@ -93,4 +93,6 @@ Ember.Handlebars.helper 'hrate', (rate, na = true) -> h.hrate(rate / 1000, na)
   while rgx.test(x1)
     x1 = x1.replace(rgx, '$1' + ',' + '$2')
   return x1 + x2
-Handlebars.registerHelper 'addCommas', (num) -> h.addCommas num
+Ember.Handlebars.helper 'addCommas', (amount) -> h.addCommas(amount)
+Ember.Handlebars.helper 'roundAddCommas', (amount) ->
+  h.addCommas h.round(h.n2f(amount))

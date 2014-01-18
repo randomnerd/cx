@@ -53,7 +53,7 @@ class Block < ActiveRecord::Base
 
   def update_confirmations
     info = currency.rpc.gettransaction(self.txid)
-    return unless info
+    return unless info.try(:[], 'details').try(:[], 0)
     self.category = info['details'][0]['category']
     self.confirmations = info['confirmations']
     save

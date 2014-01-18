@@ -24,6 +24,21 @@ class CryptoRPC
     err = r.parsed_response.try(:[], 'error').try(:[], 'message')
     raise err if err
     r.parsed_response.try(:[], 'result')
+
+  rescue Net::OpenTimeout
+    puts "[#{Time.now}] #{@currency.name}: connection timeout"
+  rescue URI::InvalidURIError
+    puts "[#{Time.now}] #{@currency.name}: invalid RPC URL"
+  rescue Errno::ECONNREFUSED
+    puts "[#{Time.now}] #{@currency.name}: connection refused"
+  rescue Errno::EHOSTDOWN
+    puts "[#{Time.now}] #{@currency.name}: host down"
+  rescue Timeout::Error
+    puts "[#{Time.now}] #{@currency.name}: failed to connect"
+  rescue Errno::EHOSTUNREACH
+    puts "[#{Time.now}] #{@currency.name}: host unreachable"
+  rescue Errno::EPIPE
+    puts "[#{Time.now}] #{@currency.name}: broken pipe"
   end
 
   def method_missing(method, *args)

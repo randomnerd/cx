@@ -54,7 +54,7 @@
           </tr>
           <tr>
             <td><strong>Difficulty</strong></td>
-            <td>{{currency.diff}}</td>
+            <td>{{addCommas currency.shortDiff}}</td>
           </tr>
           <tr>
             <td><strong>Pool hashrate</strong></td>
@@ -87,7 +87,7 @@
         <th>Found</th>
         <th>Reward</th>
         {{#if currentUser.isSignedIn}}
-        <th>Your reward</th>
+        <th class="text-right">Your reward</th>
         {{/if}}
       </tr>
     </thead>

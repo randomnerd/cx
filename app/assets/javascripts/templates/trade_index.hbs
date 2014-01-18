@@ -15,10 +15,10 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Trade pair</th>
+      <th>Pair</th>
       <th>Last price</th>
-      <th class="text-right">24h volume</th>
-      <th class="text-right">24h market volume</th>
+      <th class="text-right">Volume</th>
+      <th class="text-right pad-right">Market volume</th>
       <th>24h min price</th>
       <th>24h max price</th>
     </tr>
@@ -27,11 +27,14 @@
   {{#each controllers.tradePairs}}
     <tr class="clickRow" {{action 'openPair' this}}>
       <td class="monospace">{{name}}</td>
-      <td>{{round last_price}}</td>
-      <td class="text-right">{{round currency_volume}}</td>
-      <td class="text-right">{{round market_volume}}</td>
-      <td>{{round rate_min}}</td>
-      <td>{{round rate_max}}</td>
+      <td><small class="monospace">{{round last_price}}</small></td>
+      <td class="text-right monospace">
+        <small>{{addCommas shortCurrVolume}} {{currency.name}}</small></td>
+      <td class="text-right monospace pad-right">
+        <small>{{addCommas shortMktVolume}} {{market.name}}</small>
+      </td>
+      <td><small class="monospace">{{round rate_min}}</small></td>
+      <td><small class="monospace">{{round rate_max}}</small></td>
     </tr>
   {{/each}}
   </tbody>

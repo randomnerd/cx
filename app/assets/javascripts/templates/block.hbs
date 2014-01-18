@@ -6,7 +6,7 @@
   {{#if orphan}}
     <span class="text-muted">N/A</span>
   {{else}}
-    {{number}}
+    {{addCommas model.number}}
   {{/if}}
   </td>
   <td>{{validityMessage}}</td>
@@ -20,17 +20,18 @@
   {{#if orphan}}
     <span class="text-muted">N/A</span>
   {{else}}
-    {{round reward}}
+    {{roundAddCommas reward}}
   {{/if}}
   </td>
   {{#if currentUser.isSignedIn}}
-    <td>
+    <td class="text-right">
     {{#if payout}}
       {{#if currentUser.no_fees}}
-        {{round payout.reward}}
+        {{roundAddCommas payout.reward}}
       {{else}}
-        {{round payout.reward_minus_fee}}
+        {{roundAddCommas payout.reward_minus_fee}}
       {{/if}}
+      <span class="monospace">{{currency.name}}</span>
     {{else}}
       <span class="text-muted">N/A</span>
     {{/if}}
