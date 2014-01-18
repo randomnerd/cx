@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140118091743) do
+ActiveRecord::Schema.define(version: 20140118130354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,7 @@ ActiveRecord::Schema.define(version: 20140118091743) do
     t.string   "mining_address"
     t.boolean  "mining_skip_switch",  default: false
     t.boolean  "virtual",             default: false
+    t.datetime "switched_at"
   end
 
   add_index "currencies", ["algo"], name: "index_currencies_on_algo", using: :btree

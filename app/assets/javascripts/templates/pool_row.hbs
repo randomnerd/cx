@@ -1,5 +1,7 @@
 <tr {{bind-attr class=":clickRow top_mining_score:success"}} {{action 'openStats' content}}>
-  <td {{bind-attr class="switchPool::monospace"}}>{{name}}</td>
+  <td {{bind-attr class="switchPool::monospace"}}>
+    {{#if switchPool}}{{desc}}{{else}}{{name}}{{/if}}
+  </td>
   {{#if switchPool}}<td class="monospace">{{top_mining_coin.name}}</td>{{/if}}
   {{#if currentUser.isSignedIn}}
   <td class="monospace text-right"><small>{{hrate ownHashrate}}</small></td>
@@ -8,14 +10,30 @@
   {{#unless switchPool}}
     <td class="monospace text-right"><small>{{hrate net_hashrate}}</small></td>
   {{/unless}}
-  <td class="text-right monospace"><small>{{addCommas shortDiff}}</small></td>
+  <td class="text-right monospace">
+    <small>
+      {{#if switchPool}}
+        {{addCommas top_mining_coin.shortDiff}}
+      {{else}}
+        {{addCommas shortDiff}}
+      {{/if}}
+    </small>
+  </td>
   <td>{{view Cx.TimeagoView title=last_block_time}}</td>
   <td class="text-right monospace">
     <small>
-    {{#if mining_score}}
-      {{mining_score_padded}} | {{mining_score_market}}
+    {{#if switchPool}}
+      {{#if top_mining_coin.mining_score}}
+        {{top_mining_coin.mining_score_padded}} | {{top_mining_coin.mining_score_market}}
+      {{else}}
+        <span class="text-muted">N/A</span>
+      {{/if}}
     {{else}}
-      <span class="text-muted">N/A</span>
+      {{#if mining_score}}
+        {{mining_score_padded}} | {{mining_score_market}}
+      {{else}}
+        <span class="text-muted">N/A</span>
+      {{/if}}
     {{/if}}
     </small>
   </td>

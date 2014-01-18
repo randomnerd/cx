@@ -200,27 +200,17 @@ class Currency < ActiveRecord::Base
   end
 
   def update_diff_and_hashrate
-    if virtual
-      switch_curr = Currency.with_algo(self.algo).by_mining_score.first
-      return unless switch_curr
-      update_attributes(
-        diff: switch_curr.diff,
-        net_hashrate: switch_curr.net_hashrate,
-        mining_score: switch_curr.mining_score,
-        mining_score_market: switch_curr.mining_score_market
-      )
-    else
-      begin
-        hrate = self.rpc.getnetworkhashps
-      rescue => e
-      end
-      data = self.rpc.getdifficulty
-      diff = data.try(:[], 'proof-of-work')
-      diff ||= data
-      self.diff = diff if diff
-      self.net_hashrate = hrate / 1000 if hrate
-      self.save
+    return if virtual
+    begin
+      hrate = self.rpc.getnetworkhashps
+    rescue => e
     end
+    data = self.rpc.getdifficulty
+    diff = data.try(:[], 'proof-of-work')
+    diff ||= data
+    self.diff = diff if diff
+    self.net_hashrate = hrate / 1000 if hrate
+    self.save
   end
 
   def update_user_hashrates
@@ -253,7 +243,8 @@ class Currency < ActiveRecord::Base
       :id, :name, :desc, :tx_fee, :tx_conf, :blk_conf, :hashrate,
       :net_hashrate, :last_block_at, :mining_enabled, :mining_url,
       :mining_fee, :donations, :algo, :diff, :updated_at,
-      :mining_score, :mining_score_market, :mining_skip_switch, :virtual
+      :mining_score, :mining_score_market, :mining_skip_switch, :virtual,
+      :switched_at
     ]
   end
 end

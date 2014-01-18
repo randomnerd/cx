@@ -1,6 +1,10 @@
 <div class="panel panel-default panel-big-heading">
   <div class="panel-heading">
-    {{title}} mining pools
+    {{#if switch}}
+      SwitchPools | auto-select currency to mine based on profit score
+    {{else}}
+      {{title}} mining pools
+    {{/if}}
     <span class="pull-right">
 <!--       <span class="badge badge-info">100</span> -->
       {{#if totalHashrate}}

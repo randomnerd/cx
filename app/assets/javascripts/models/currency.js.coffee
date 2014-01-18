@@ -12,6 +12,7 @@ Cx.Currency = DS.Model.extend
   net_hashrate:    DS.attr('number')
   diff:            DS.attr('number')
   last_block_at:   DS.attr('date')
+  switched_at:     DS.attr('date')
   mining_enabled:  DS.attr('boolean')
   mining_url:      DS.attr('string')
   mining_fee:      DS.attr('number')
@@ -19,6 +20,9 @@ Cx.Currency = DS.Model.extend
   mining_score_market: DS.attr('string')
   mining_skip_switch: DS.attr('boolean')
   shortDiff: (-> @get('diff').toFixed(2)).property('diff')
+  mining_score_padded: (->
+    parseFloat(@get('mining_score')).toFixed(2)
+  ).property('mining_score')
   balance: (->
     @store.filter 'balance', (b) => b.get('currency.id') == @get('id')
   ).property()
@@ -32,10 +36,17 @@ Cx.Currency = DS.Model.extend
     @get('stats').forEach (s) ->
       hrate += s.get('hashrate') || 0
     hrate
-  ).property('stats.@each')
+  ).property('stats.@each', 'stats.@each.hashrate')
   switchPool: (->
     !!@get('name').match('SwitchPool') && @get('virtual')
   ).property('name', 'virtual')
+  last_block_time: (->
+    @get('last_block_at')?.toISOString()
+  ).property('last_block_at')
+  switch_time: (->
+    @get('switched_at')?.toISOString()
+  ).property('switched_at')
+
 
 Cx.Currency.FIXTURES = [
   {
