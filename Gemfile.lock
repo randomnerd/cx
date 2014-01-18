@@ -310,7 +310,6 @@ DEPENDENCIES
   httparty
   inherited_resources (~> 1.4.1)
   jbuilder (~> 1.2)
-  jquery-rails
   multi_json
   newrelic_rpm
   oj
