@@ -5,7 +5,7 @@ Cx.BlocksController = Em.ArrayController.extend
   setupPusher: (->
     return unless @get('currency.id')
     @stopPusher()
-    @channel = h.setupPusher @store, 'block', @get('pusherChannel'), null, false
+    @channel = h.setupPusher @store, 'block', @get('pusherChannel'), @, false
   ).observes('currency')
   limited: (->
     @get('arrangedContent').toArray().splice(0,20)
