@@ -8,4 +8,4 @@ Cx.MiningPoolController = Em.Controller.extend
     switch @get('currency.algo')
       when 'scrypt' then @get('topScrypt')
       when 'sha256' then @get('topSha256')
-  ).property('currency')
+  ).property('currency', 'topScrypt', 'topSha256')
