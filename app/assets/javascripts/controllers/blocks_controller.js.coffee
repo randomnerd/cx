@@ -1,5 +1,5 @@
 Cx.BlocksController = Em.ArrayController.extend
-  sortProperties: ['number']
+  sortProperties: ['created_at']
   sortAscending: false
   pusherChannel: (-> "blocks-#{@get('currency.id')}").property('currency.id')
   setupPusher: (->
