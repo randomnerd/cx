@@ -42,6 +42,7 @@ class Currency < ActiveRecord::Base
   def avg_block_reward
     return 25 * 10**8 if name == 'BTC'
     return 50 * 10**8 if name == 'LTC'
+    return 500000 * 10**8 if name == 'DOGE'
     arr = blocks.limit(10).order('created_at desc').pluck(:reward)
     return 0 if arr.empty?
     arr.sum / arr.size
