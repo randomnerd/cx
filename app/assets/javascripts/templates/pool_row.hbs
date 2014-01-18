@@ -1,10 +1,13 @@
 <tr {{bind-attr class=":clickRow top_mining_score:success"}} {{action 'openStats' content}}>
-  <td class="monospace">{{name}}</td>
+  <td {{bind-attr class="switchPool::monospace"}}>{{name}}</td>
+  {{#if switchPool}}<td class="monospace">{{top_mining_coin.name}}</td>{{/if}}
   {{#if currentUser.isSignedIn}}
   <td class="monospace text-right"><small>{{hrate ownHashrate}}</small></td>
   {{/if}}
   <td class="monospace text-right"><small>{{hrate hashrate}}</small></td>
-  <td class="monospace text-right"><small>{{hrate net_hashrate}}</small></td>
+  {{#unless switchPool}}
+    <td class="monospace text-right"><small>{{hrate net_hashrate}}</small></td>
+  {{/unless}}
   <td class="text-right monospace"><small>{{addCommas shortDiff}}</small></td>
   <td>{{view Cx.TimeagoView title=last_block_time}}</td>
   <td class="text-right monospace">

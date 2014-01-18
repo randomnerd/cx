@@ -25,6 +25,15 @@
   </div>
 
   <div class="col-sm-6">
+    {{#if currency.switchPool}}
+      <div class="panel panel-default panel-big-heading">
+        <div class="panel-heading">Currently mining</div>
+        <div class="text-center">
+          <h2 class="monospace">{{currentCoin.desc}}</h2>
+        </div>
+      </div>
+    {{/if}}
+
     <div class="panel panel-default panel-big-heading">
       <div class="panel-heading">Common stats</div>
 
@@ -45,8 +54,14 @@
             <td>{{currency.mining_fee}} %</td>
           </tr>
           <tr>
-            <td><strong>Payout system</strong></td>
-            <td>PPLNS with 10min window</td>
+            <td><strong>Payout scheme</strong></td>
+            <td>
+            {{#if currency.switchPool}}
+              Proportional
+            {{else}}
+              PPLNS with 10min window
+            {{/if}}
+            </td>
           </tr>
           <tr>
             <td><strong>Network hashrate</strong></td>
@@ -75,12 +90,15 @@
 
 <div class="panel panel-default panel-big-heading">
   <div class="panel-heading">
-    Last found {{currency.name}} blocks
+    Last found {{#unless currency.switchPool}}{{currency.name}}{{/unless}} blocks
   </div>
 
   <table class="table nomargin">
     <thead>
       <tr>
+        {{#if currency.switchPool}}
+          <th>Coin</th>
+        {{/if}}
         <th>Number</th>
         <th>Validity</th>
         <th>Finder</th>

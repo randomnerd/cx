@@ -12,11 +12,12 @@
     <thead>
       <tr>
         <th>Name</th>
+        {{#if switch}}<th>Now mining</th>{{/if}}
         {{#if user.isSignedIn}}
         <th class="text-right">Your hash</th>
         {{/if}}
-        <th class="text-right">Net hashrate</th>
         <th class="text-right">Pool hash</th>
+        {{#unless switch}}<th class="text-right">Network hash</th>{{/unless}}
         <th class="text-right">Diff</th>
         <th>Last block</th>
         <th class="text-right">Profit score</th>

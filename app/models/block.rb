@@ -11,11 +11,17 @@ class Block < ActiveRecord::Base
     joins(:currency).where(currencies: {name: name})
   }
   scope :recent, -> { limit(20).order('created_at desc') }
+  scope :non_switchpool, -> { where(switchpool: false) }
 
   include ApplicationHelper
   include PusherSync
   def pusher_channel
-    "blocks-#{self.currency_id}"
+    if switchpool
+      sw = Currency.find_by_name("SwitchPool-#{algo}")
+      "blocks-#{sw.id}"
+    else
+      "blocks-#{self.currency_id}"
+    end
   end
 
   def pusher_update

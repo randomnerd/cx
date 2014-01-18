@@ -14,7 +14,7 @@
     </tr>
   </thead>
   <tbody>
-  {{#each controllers.currencies}}
+  {{#each controllers.currencies.nonVirtual}}
     <tr {{bind-attr class="balance.negative:danger"}}>
       <td class="text-right monospace">{{round balance.firstObject.amount}}</td>
       <td class="monospace">{{name}}</td>

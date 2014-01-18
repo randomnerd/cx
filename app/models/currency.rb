@@ -10,6 +10,10 @@ class Currency < ActiveRecord::Base
   scope :with_mining, -> { where(mining_enabled: true) }
   scope :by_name, -> name { where(name: name) }
   scope :public, -> { where(public: true) }
+  scope :non_virtual, -> { where(virtual: false) }
+  scope :by_mining_score, -> { with_mining.non_virtual.public.where(mining_skip_switch: false).order('mining_score desc') }
+  scope :with_algo, -> algo { where(algo: algo) }
+  scope :virtual, -> { where(virtual: true) }
 
   include PusherSync
   def pusher_channel
@@ -172,6 +176,7 @@ class Currency < ActiveRecord::Base
   end
 
   def process_transactions
+    return true if virtual
     update_deposit_confirmations
     process_deposits
   end
@@ -183,45 +188,49 @@ class Currency < ActiveRecord::Base
 
   def process_mining
     update_user_hashrates
+    return if virtual
     update_blocks
     process_payouts
   end
 
   def process_mining_score
+    return if virtual
     update_diff_and_hashrate
     calc_mining_score
   end
 
   def update_diff_and_hashrate
-    begin
-      hrate = self.rpc.getnetworkhashps
-    rescue => e
+    if virtual
+      switch_curr = Currency.with_algo(self.algo).by_mining_score.first
+      return unless switch_curr
+      update_attributes(
+        diff: switch_curr.diff,
+        net_hashrate: switch_curr.net_hashrate,
+        mining_score: switch_curr.mining_score,
+        mining_score_market: switch_curr.mining_score_market
+      )
+    else
+      begin
+        hrate = self.rpc.getnetworkhashps
+      rescue => e
+      end
+      data = self.rpc.getdifficulty
+      diff = data.try(:[], 'proof-of-work')
+      diff ||= data
+      self.diff = diff if diff
+      self.net_hashrate = hrate / 1000 if hrate
+      self.save
     end
-    data = self.rpc.getdifficulty
-    diff = data.try(:[], 'proof-of-work')
-    diff ||= data
-    self.diff = diff if diff
-    self.net_hashrate = hrate / 1000 if hrate
-    self.save
   end
 
   def update_user_hashrates
     users = {}
-    users_switchpool = {}
     self.worker_stats.active.each do |ws|
-      if ws.switchpool
-        users_switchpool[ws.worker.user_id] ||= 0
-        users_switchpool[ws.worker.user_id]  += ws.hashrate
-      else
-        users[ws.worker.user_id] ||= 0
-        users[ws.worker.user_id]  += ws.hashrate
-      end
+      users[ws.worker.user_id] ||= 0
+      users[ws.worker.user_id]  += ws.hashrate
     end
     users.each do |user_id, rate|
       Hashrate.set_rate(self.id, user_id, rate)
-    end
-    users_switchpool.each do |user_id, rate|
-      Hashrate.set_switchpool_rate(self.id, user_id, rate)
     end
   end
 
@@ -244,7 +253,7 @@ class Currency < ActiveRecord::Base
       :id, :name, :desc, :tx_fee, :tx_conf, :blk_conf, :hashrate,
       :net_hashrate, :last_block_at, :mining_enabled, :mining_url,
       :mining_fee, :donations, :algo, :diff, :updated_at,
-      :mining_score, :mining_score_market, :mining_skip_switch
+      :mining_score, :mining_score_market, :mining_skip_switch, :virtual
     ]
   end
 end

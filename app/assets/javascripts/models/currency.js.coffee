@@ -6,6 +6,7 @@ Cx.Currency = DS.Model.extend
   tx_conf:         DS.attr('number')
   blk_conf:        DS.attr('number')
   public:          DS.attr('boolean')
+  virtual:         DS.attr('boolean')
   hashrate:        DS.attr('number')
   donations:       DS.attr('string')
   net_hashrate:    DS.attr('number')
@@ -24,7 +25,7 @@ Cx.Currency = DS.Model.extend
   stats: (->
     @store.filter 'workerStat', (o) =>
       o.get('currency.id') == @get('id') &&
-      +new Date(o.get('updated_at')) > +new Date() - 2 * 60 * 1000
+      +new Date(o.get('updated_at')) > +new Date() - 5 * 60 * 1000
   ).property()
   ownHashrate: (->
     hrate = 0
@@ -32,7 +33,9 @@ Cx.Currency = DS.Model.extend
       hrate += s.get('hashrate') || 0
     hrate
   ).property('stats.@each')
-
+  switchPool: (->
+    !!@get('name').match('SwitchPool') && @get('virtual')
+  ).property('name', 'virtual')
 
 Cx.Currency.FIXTURES = [
   {

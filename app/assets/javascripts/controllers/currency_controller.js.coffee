@@ -1,16 +1,18 @@
 Cx.CurrencyController = Em.ObjectController.extend
   needs: ['auth', 'currencies', 'balances']
   balances: Em.computed.alias('controllers.balances')
-  currencies: Em.computed.alias('controllers.currencies')
+  topSha: Em.computed.alias('controllers.currencies.top_mining_coin_sha256')
+  topScrypt: Em.computed.alias('controllers.currencies.top_mining_coin_scrypt')
   balance: (->
     scope = @get('balances.content').filter (o) => o.get('currency.id') == @get('id')
     scope.get('firstObject')
   ).property('balances.@each')
-  samealgo_currencies: (->
-    @get('currencies.content').filter (o) => o.get('algo') == @get('algo')
-  ).property('currencies.@each')
+  top_mining_coin: (->
+    if @get('algo') == 'sha256' then @get('topSha') else @get('topScrypt')
+  ).property('topSha', 'topScrypt', 'algo')
   top_mining_score: (->
-    samealgo = @get('samealgo_currencies').filter (o) -> o.get('mining_skip_switch') == false
-    sorted = _.sortBy(samealgo, (o) -> o.get('mining_score'))
-    sorted.reverse()[0]?.get('id') == @get('id')
-  ).property('samealgo_currencies.@each', 'samealgo_currencies.@each.mining_score')
+    if @get('algo') == 'sha256'
+      @get('topSha.id') == @get('id')
+    else
+      @get('topScrypt.id') == @get('id')
+  ).property('top_mining_coin', 'algo')

@@ -1,7 +1,11 @@
 class Api::V2::BlocksController < Api::V2::BaseController
-  has_scope :by_currency_name, as: :currency_name
 
   def index
-    respond_with end_of_association_chain.recent
+    curr = Currency.find_by_name(params[:currency_name])
+    if curr.name.match /switchpool/i
+      respond_with Block.where(algo: curr.algo, switchpool: true).recent
+    else
+      respond_with curr.blocks.non_switchpool.recent
+    end
   end
 end

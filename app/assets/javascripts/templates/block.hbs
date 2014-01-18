@@ -1,8 +1,8 @@
 <tr {{bind-attr class="validityClass"}}>
-  <td>
   {{#if switchpool}}
-    <i class="fa fa-exchange" title="Found by SwitchPool"></i>
+    <td class="monospace">{{currency.name}}</td>
   {{/if}}
+  <td>
   {{#if orphan}}
     <span class="text-muted">N/A</span>
   {{else}}
