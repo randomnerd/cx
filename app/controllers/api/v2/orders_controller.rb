@@ -20,7 +20,7 @@ class Api::V2::OrdersController < Api::V2::BaseController
   end
 
   def cancel
-    order = Order.find_by_id(params[:order_id])
+    order = current_user.orders.find_by_id(params[:order_id])
     order.try(:cancel)
     render json: order
   end
