@@ -1,8 +1,8 @@
 Cx.TradePairRoute = Ember.Route.extend
   model: (params) ->
-    tps = @store.filter 'tradePair', (tp) ->
+    tps = @store.filter('tradePair', (tp) ->
       tp.get('url_slug') == params.url_slug
-    tps.get('firstObject')
+    ).then (tps) -> tps.get('firstObject')
 
   setupController: (c, pair) ->
     c.set 'model', pair
