@@ -57,8 +57,8 @@ Cx.AuthController = Ember.ObjectController.extend
         object = @store.push(Cx.User, data.user)
         user = @store.find(Cx.User, object.id)
         @set 'model', user
-        @target.transitionTo('tradeIndex')
-        location.reload()
+        @target.transitionTo('tradeIndex').then ->
+          location.reload()
 
       error: (data) =>
         flash = @get('controllers.commonFlashMessages')
