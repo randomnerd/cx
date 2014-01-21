@@ -1,6 +1,6 @@
 class Hq::CurrenciesController < Hq::BaseController
   def index
-    @currencies = collection.order(:name)
+    @currencies = collection.order(:name).non_virtual
   end
 
   def disable
