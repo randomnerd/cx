@@ -63,5 +63,7 @@ class Block < ActiveRecord::Base
     self.category = info['details'][0]['category']
     self.confirmations = info['confirmations']
     save
+  rescue => e
+    puts e.inspect
   end
 end

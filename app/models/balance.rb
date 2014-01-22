@@ -23,7 +23,7 @@ class Balance < ActiveRecord::Base
   end
 
   def validate_held(amount)
-    self.held >= amount
+    self.held + 10 >= amount
   end
 
   def add_funds(amount, subject, comment = nil)

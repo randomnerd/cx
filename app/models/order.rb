@@ -79,7 +79,7 @@ class Order < ActiveRecord::Base
         unless balance.validate_held(funds_amount) || lock_funds
           puts 'bad balance'
           puts self.inspect
-          self.destroy
+          self.cancel(true)
           return false
         end
         break if self.complete? || self.cancelled
