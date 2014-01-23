@@ -31,6 +31,6 @@ class ApplicationController < ActionController::Base
     sign_in user
     current_user.auth_by_api_key = true
   rescue => e
-    render json: {error: e.message, request: req, sign: sign, valid_sign: valid_sign}, status: 403
+    render json: {error: e.message, request: req}, status: 403
   end
 end
