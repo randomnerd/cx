@@ -34,6 +34,7 @@ Cx.AccountSettingsController = Em.Controller.extend
       xhr.done (data) =>
         h.ga_track('Chat', 'changeName', "#{@get('user.nickname')} (#{@get('user.email')}): #{data.user.nickname}")
         @set 'user.nickname', data.user.nickname
+        @set 'nickname', data.user.nickname
 
     revealApiSecret: ->
       xhr = $.post "/api/v2/users/#{@get 'user.id'}/get_api_secret", { password: @get('apiPassword') }

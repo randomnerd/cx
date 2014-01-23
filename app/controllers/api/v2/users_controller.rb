@@ -12,14 +12,14 @@ class Api::V2::UsersController < Api::V2::BaseController
 
   def set_nickname
     resource.set_nickname params[:name]
-    render json: resource
+    render json: { user: resource }
   end
 
   def verify_totp
     totp = params[:totp]
     if resource.totp_verify(totp)
       resource.update_attributes totp_active: !resource.totp_active
-      render json: resource
+      render json: { user: resource }
     else
       render json: { error: 'Wrong code' }, status: 403
     end
