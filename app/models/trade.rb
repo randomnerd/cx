@@ -11,7 +11,7 @@ class Trade < ActiveRecord::Base
   delegate :market,   to: :trade_pair
 
   after_create :process
-  #validate :orders_are_not_filled
+  validate :orders_are_not_filled
 
   def orders_are_not_filled
     ask_ok = ask_order.trades.sum(:amount) < ask_order.amount
@@ -42,10 +42,13 @@ class Trade < ActiveRecord::Base
   end
 
   def process
+    self.delete and return false if bid_order.complete? || ask_order.complete?
+    self.delete and return false if bid_order.cancelled || ask_order.cancelled
     self.delete and return false unless amount > 0
     self.delete and return false unless market_amount > 0
     self.delete and return false unless bid_market_amount > 0
     process_funds
+    update_orders
     update_stats
     notify_users
     update_chart_items
@@ -61,6 +64,11 @@ class Trade < ActiveRecord::Base
 
     return unless unused_amount > 0
     bid_user.balance_for(market_id).unlock_funds(unused_amount, self)
+  end
+
+  def update_orders
+    bid_order.update_status(amount)
+    ask_order.update_status(amount)
   end
 
   def update_stats

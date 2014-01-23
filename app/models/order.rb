@@ -95,9 +95,6 @@ class Order < ActiveRecord::Base
         rbid = o.created_at.to_f > created_at.to_f ? o.bid : bid
         t_rate = rbid ? [rate, o.rate].min : [rate, o.rate].max
 
-        update_status(amt)
-        o.update_status(amt)
-
         Trade.create(
           bid:            rbid,
           rate:           t_rate,
