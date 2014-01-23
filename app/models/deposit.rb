@@ -27,6 +27,7 @@ class Deposit < ActiveRecord::Base
 
     return true if Deposit.find_by_txid(txid)
     tx = currency.rpc.gettransaction txid
+    return false unless tx
     puts tx.inspect
     rtx = currency.rpc.gettransaction(tx['txid'])
     rtx['details'].each do |txin|

@@ -82,6 +82,11 @@ Cx::Application.routes.draw do
       end
       collection { get :unmasq, to: 'masquerades#destroy' }
     end
+    resources :deposits do
+      collection do
+        get :lookup
+      end
+    end
   end
 
   post '/pusher/auth', to: 'pusher#auth'
