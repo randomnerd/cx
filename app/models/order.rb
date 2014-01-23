@@ -73,6 +73,7 @@ class Order < ActiveRecord::Base
 
   def fill_matches
     Order.matches_for(self).each do |o|
+      next if o.created_at.to_f > created_at.to_f
       o.with_lock do
         self.reload
         o.reload
@@ -92,17 +93,16 @@ class Order < ActiveRecord::Base
         # use their amount if it is less than ours
         amt    = o_amt > t_amt ? t_amt : o_amt
         # use min rate for bid, and max rate for ask
-        rbid = o.created_at.to_f > created_at.to_f ? o.bid : bid
-        t_rate = rbid ? [rate, o.rate].min : [rate, o.rate].max
+        t_rate = bid ? [rate, o.rate].min : [rate, o.rate].max
 
         Trade.create(
-          bid:            rbid,
+          bid:            bid,
           rate:           t_rate,
           amount:         amt,
-          ask_id:         rbid ? o.id : id,
-          bid_id:         rbid ? id : o.id,
-          ask_user_id:    rbid ? o.user_id : user_id,
-          bid_user_id:    rbid ? user_id : o.user_id,
+          ask_id:         bid ? o.id : id,
+          bid_id:         bid ? id : o.id,
+          ask_user_id:    bid ? o.user_id : user_id,
+          bid_user_id:    bid ? user_id : o.user_id,
           trade_pair_id:  trade_pair_id
         )
       end
