@@ -34,7 +34,7 @@ Cx::Application.routes.draw do
         end
       end
       resources :messages, only: [:create, :update, :destroy, :index]
-      resources :trade_pairs, only: [:create, :update, :destroy, :index] do
+      resources :trade_pairs, only: [:index, :show] do
         resources :chart_items, only: [:index]
       end
       resources :trades, only: [:index]
