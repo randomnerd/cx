@@ -73,12 +73,12 @@ class Trade < ActiveRecord::Base
 
   def update_stats
     tp = self.trade_pair
-    s = tp.trades.where('created_at between ? and ?', 1.day.ago, Time.now)
-    s = s.select('sum(amount) as currency_volume')
-    s = s.select('sum(amount*rate)/POW(10,8) as market_volume')
-    s = s.select('min(rate) as rate_min')
-    s = s.select('trade_pair_id')
-    s = s.select('max(rate) as rate_max').group(:trade_pair_id).order(:trade_pair_id).first
+    s = tp.trades.where('created_at between ? and ?', 1.day.ago, Time.now).
+    select('sum(amount) as currency_volume').
+    select('sum(amount/POW(10,8)*rate) as market_volume').
+    select('min(rate) as rate_min, trade_pair_id').
+    select('max(rate) as rate_max').
+    group(:trade_pair_id).order(:trade_pair_id).first
     tp.update_attributes(
       rate_max:        s.rate_max,
       rate_min:        s.rate_min,
