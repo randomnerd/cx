@@ -35,6 +35,25 @@
     </ul>
   </div>
 
+  {{#if controllers.tradePairs.doge.length}}
+  <div class="panel panel-default panel-small">
+    <div class="panel-heading">Exchange / DOGE</div>
+    <ul class="nav nav-pills nav-stacked">
+    {{#each pair in controllers.tradePairs.doge}}
+      <li>
+        {{#link-to 'tradePair' pair title=pair.currency.desc}}
+          <span class="monospace">
+            {{pair.currency.name}}
+          </span>
+          <span class="pull-right">
+            <strong>{{round pair.last_price}}</strong>
+          </span>
+        {{/link-to}}
+      </li>
+    {{/each}}
+    </ul>
+  </div>
+  {{/if}}
 
   {{#if currentUser.isSignedIn}}
     {{#if controllers.balances}}

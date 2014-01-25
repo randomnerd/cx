@@ -18,3 +18,7 @@ Cx.TradePairsController = Ember.ArrayController.extend
   ltc: (->
     @filter (o) -> o.get('market.name') == 'LTC'
   ).property('@each')
+  doge: (->
+    @filter (o) -> o.get('market.name') == 'DOGE'
+  ).property('@each')
+
