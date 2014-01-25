@@ -31,7 +31,7 @@ class Deposit < ActiveRecord::Base
     puts tx.inspect
     rtx = currency.rpc.gettransaction(tx['txid'])
     rtx['details'].each do |txin|
-      next unless txin['category'] == 'receive'
+      next unless %w(receive generate).include? txin['category']
       wallet = Wallet.find_by_address(txin['address'])
       next unless wallet
 
