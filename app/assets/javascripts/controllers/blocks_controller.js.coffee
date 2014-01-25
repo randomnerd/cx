@@ -9,5 +9,5 @@ Cx.BlocksController = Em.ArrayController.extend
   ).observes('currency')
   limited: (->
     @get('arrangedContent').toArray().splice(0,20)
-  ).property('@each')
+  ).property('@each', '@each.confirmations', '@each.category')
   stopPusher: -> try pusher.unsubscribe(@get('pusherChannel'))

@@ -13,4 +13,4 @@ Cx.BlockController = Em.ObjectController.extend
   orphan: (-> @get('category') == 'orphan').property('category')
   payout: (->
     @get('payouts.firstObject')
-  ).property('payouts.firstObject')
+  ).property('payouts.@each', 'payouts.@each.reward')

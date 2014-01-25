@@ -19,7 +19,7 @@ Cx.Currency = DS.Model.extend
   mining_score:    DS.attr('number')
   mining_score_market: DS.attr('string')
   mining_skip_switch: DS.attr('boolean')
-  shortDiff: (-> @get('diff').toFixed(2)).property('diff')
+  shortDiff: (-> (@get('diff') || 0).toFixed(2)).property('diff')
   mining_score_padded: (->
     parseFloat(@get('mining_score')).toFixed(2)
   ).property('mining_score')
