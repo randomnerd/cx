@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source "https://2edaf45f:4e8fa5c0@www.mikeperham.com/rubygems/"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.2'
@@ -53,7 +54,7 @@ gem 'pg'
 gem 'dalli'
 
 gem 'httparty'
-gem 'sidekiq', github: 'mperham/sidekiq'
+gem 'sidekiq-pro'
 gem 'sinatra', require: false
 gem 'slim'
 gem 'clockwork'

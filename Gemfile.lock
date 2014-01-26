@@ -20,19 +20,9 @@ GIT
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
 
-GIT
-  remote: git://github.com/mperham/sidekiq.git
-  revision: dbabcb8c84a29d7b6da75bab88f0db8e04f9d821
-  specs:
-    sidekiq (2.17.2)
-      celluloid (>= 0.15.2)
-      connection_pool (>= 1.0.0)
-      json
-      redis (>= 3.0.6)
-      redis-namespace (>= 1.3.1)
-
 GEM
   remote: https://rubygems.org/
+  remote: https://2edaf45f:4e8fa5c0@www.mikeperham.com/rubygems/
   specs:
     actionmailer (4.0.2)
       actionpack (= 4.0.2)
@@ -237,6 +227,14 @@ GEM
       rdoc (~> 4.0, < 5.0)
     shoulda-matchers (2.5.0)
       activesupport (>= 3.0.0)
+    sidekiq (2.17.3)
+      celluloid (>= 0.15.2)
+      connection_pool (>= 1.0.0)
+      json
+      redis (>= 3.0.6)
+      redis-namespace (>= 1.3.1)
+    sidekiq-pro (1.4.2)
+      sidekiq (>= 2.17.0)
     signature (0.1.7)
     sinatra (1.4.4)
       rack (~> 1.4)
@@ -328,7 +326,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.0)
   sdoc
   shoulda-matchers
-  sidekiq!
+  sidekiq-pro
   sinatra
   slim
   uglifier (>= 1.3.0)
