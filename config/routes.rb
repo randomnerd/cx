@@ -1,4 +1,4 @@
-require 'sidekiq/web'
+require 'sidekiq/pro/web'
 
 Cx::Application.routes.draw do
   namespace :api, defaults: { format: 'json' } do
