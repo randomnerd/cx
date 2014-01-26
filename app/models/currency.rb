@@ -253,4 +253,12 @@ class Currency < ActiveRecord::Base
       :switched_at
     ]
   end
+
+  def start_pool
+    EM.run {
+      @pool = Pool::Server.new(self)
+      @pool.start
+      @pool.log "Pool started"
+    }
+  end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140118130354) do
+ActiveRecord::Schema.define(version: 20140126181426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,10 +144,12 @@ ActiveRecord::Schema.define(version: 20140118130354) do
     t.boolean  "mining_skip_switch",  default: false
     t.boolean  "virtual",             default: false
     t.datetime "switched_at"
+    t.integer  "mining_port"
   end
 
   add_index "currencies", ["algo"], name: "index_currencies_on_algo", using: :btree
   add_index "currencies", ["mining_enabled"], name: "index_currencies_on_mining_enabled", using: :btree
+  add_index "currencies", ["mining_port"], name: "index_currencies_on_mining_port", using: :btree
   add_index "currencies", ["mining_skip_switch"], name: "index_currencies_on_mining_skip_switch", using: :btree
   add_index "currencies", ["name"], name: "index_currencies_on_name", using: :btree
   add_index "currencies", ["public"], name: "index_currencies_on_public", using: :btree
@@ -365,6 +367,7 @@ ActiveRecord::Schema.define(version: 20140118130354) do
     t.datetime "updated_at"
     t.boolean  "switchpool",            default: false
     t.string   "algo"
+    t.integer  "d1a",         limit: 8, default: 0
   end
 
   add_index "worker_stats", ["algo"], name: "index_worker_stats_on_algo", using: :btree
