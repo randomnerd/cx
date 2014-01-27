@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-source "https://2edaf45f:4e8fa5c0@www.mikeperham.com/rubygems/"
+source "http://2edaf45f:4e8fa5c0@www.mikeperham.com/rubygems/"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.2'
@@ -20,7 +20,7 @@ gem 'coffee-rails', '~> 4.0.0'
 # gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+# gem 'jbuilder', '~> 1.2'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -31,8 +31,12 @@ end
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
 # Use unicorn as the app server
-gem 'unicorn'
-
+# gem 'unicorn'
+# gem 'unicorn-worker-killer'
+gem 'puma'
+gem 'activerecord-jdbcpostgresql-adapter'
+gem 'jruby-openssl'
+gem 'jrjackson'
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 
@@ -50,7 +54,7 @@ gem 'quiet_assets'
 gem 'inherited_resources', '~> 1.4.1'
 gem 'has_scope'
 
-gem 'pg'
+# gem 'pg'
 gem 'dalli'
 
 gem 'httparty'
@@ -70,11 +74,10 @@ gem 'newrelic_rpm'
 gem 'rotp'
 gem 'font-awesome-sass'
 
-gem 'rails-patch-json-encode'
-gem 'oj'
-gem 'oj_mimic_json'
+# gem 'rails-patch-json-encode'
+# gem 'oj'
+# gem 'oj_mimic_json'
 gem 'multi_json'
-gem 'unicorn-worker-killer'
 
 gem 'rails-mailgun', git: "git://github.com/code-mancers/rails-mailgun.git"
 

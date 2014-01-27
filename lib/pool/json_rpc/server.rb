@@ -3,7 +3,7 @@ module JsonRPC
     @@parsing_error_response = "Error parsing request"
 
     def receive_data(data)
-      process_request Oj.load(data, symbol_keys: true)
+      process_request JrJackson.parse(data, symbolize_keys: true)
     rescue => e
       send_data @@parsing_error_response
       close_connection_after_writing

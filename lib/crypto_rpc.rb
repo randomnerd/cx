@@ -6,7 +6,7 @@ class CryptoRPC
   end
 
   def construct_rpc(method, args)
-    {
+    JrJackson::Json.dump({
       timeout: 30,
       port: @currency.port,
       basic_auth: @auth,
@@ -15,8 +15,8 @@ class CryptoRPC
         jsonrpc: '1.0',
         method: method.to_s,
         params: args
-      }.to_json
-    }
+      }
+    })
   end
 
   def api_call(method, args = [])
@@ -25,8 +25,8 @@ class CryptoRPC
     raise err if err
     r.parsed_response.try(:[], 'result')
 
-  rescue Net::OpenTimeout
-    puts "[#{Time.now}] #{@currency.name}: connection timeout"
+  # rescue Net::OpenTimeout
+  #   puts "[#{Time.now}] #{@currency.name}: connection timeout"
   rescue URI::InvalidURIError
     puts "[#{Time.now}] #{@currency.name}: invalid RPC URL"
   rescue Errno::ECONNREFUSED
@@ -39,6 +39,8 @@ class CryptoRPC
     puts "[#{Time.now}] #{@currency.name}: host unreachable"
   rescue Errno::EPIPE
     puts "[#{Time.now}] #{@currency.name}: broken pipe"
+  rescue => e
+    puts "[#{Time.now}] #{@currency.name}: request failed"
   end
 
   def method_missing(method, *args)

@@ -53,7 +53,7 @@ class Pool::Connection < JsonRPC::Server
   end
 
   def send_json(data, close = false)
-    send_data Oj.dump(data, mode: :compat) + "\n"
+    send_data JrJackson::Json.dump(data.to_json) + "\n"
     close_connection_after_writing if close
   end
 
