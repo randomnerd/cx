@@ -39,15 +39,13 @@ class Pool::Util
   end
 
   def self.reverse_bin(data, step = 1)
-    return data.reverse if step == 1
+    return data.unpack('C*').reverse.pack('C*') if step == 1
     result = ''
 
-    (data.size / step).times do |i|
-      n = i * step
-      p = data[n..(n + step - 1)]
-      result << p.reverse
+    (data.bytesize / step).times do |i|
+      chunk   = data.byteslice(i * step, step)
+      result += reverse_bin chunk
     end
-
     return result
   end
 
@@ -57,8 +55,9 @@ class Pool::Util
   end
 
   def self.reverse_hash(data)
+    raise 'Wrong hash' unless data.bytesize == 64
     result = ''
-    (0..63).step(8) { |i| result << data[56-i..63-i] }
+    8.times { |i| result << data.byteslice(64 - (i+1)*8, 8) }
     return result
   end
 
@@ -107,9 +106,10 @@ class Pool::Util
   end
 
   def self.shift(data, bytes)
-    bytes = data.size if bytes > data.size
+    bytes  = data.bytesize if bytes > data.bytesize
     result = data.byteslice(0, bytes)
-    data.replace(data.byteslice(bytes, data.bytesize - 1))
+    cutted = data.byteslice(bytes, data.bytesize - 1)
+    data.replace(cutted) if cutted
     return result
   end
 
@@ -121,14 +121,14 @@ class Pool::Util
   def self.address_to_pubkeyhash(addr)
     addr = b58decode(addr)
     raise 'Invalid address!' unless addr
-    addr = "\x00" + addr if addr.size == 24
+    addr = unhexlify("00" + hexlify(addr)) if addr.bytesize == 24
     ver = addr.bytes.first
 
-    cksumA = addr.byteslice(-4, addr.size-1)
-    cksumB = dblsha(addr.byteslice(0, addr.size-4)).byteslice(0, 4)
+    cksumA = addr.byteslice(-4, addr.bytesize-1)
+    cksumB = dblsha(addr.byteslice(0, addr.bytesize-4)).byteslice(0, 4)
 
     raise 'Address checksum didn`t match!' unless cksumA == cksumB
-    [ver, addr.byteslice(1, addr.size-5)]
+    [ver, addr.byteslice(1, addr.bytesize-5)]
   end
 
   def self.script_to_address(addr)
@@ -159,7 +159,6 @@ class Pool::Util
     len.times do
       obj = klass.new
       obj.deserialize(data)
-      puts obj.inspect
       result << obj
     end
     return result

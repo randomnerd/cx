@@ -1,5 +1,54 @@
-class Pool::Connection < JsonRPC::Server
-  attr_accessor :server, :subscription
+class Pool::Connection
+  include Celluloid::IO
+  finalizer :shutdown
+  attr_accessor :server, :subscription, :host, :port
+
+  def initialize(server, socket)
+    @server = server
+    @socket = socket
+    _, @port, @host = socket.peeraddr
+    @server.log "*** Received connection from #{host}:#{port}"
+    puts socket.class.name
+    async.run
+  end
+
+  def shutdown
+    @subscription.try(:flush_stats, true)
+    @socket.close
+    handle_disconnect
+  end
+
+  def run
+    loop { receive_data(@socket.recv(4096)) }
+
+  rescue Errno::ECONNRESET then handle_disconnect
+  rescue EOFError then handle_disconnect
+  end
+
+  def handle_disconnect
+    server.connections.delete self
+    return unless @subscription
+    @subscription.stats.update_attributes accepted: 0, rejected: 0, blocks: 0
+    @server.log "*** #{@host}:#{@port} disconnected"
+  end
+
+  def receive_data(data)
+    process_request JrJackson::Json.load(data, symbolize_keys: true)
+  rescue => e
+    @socket.puts "Request parsing error"
+    parsing_error e, data
+  end
+
+  def process_request(data)
+    receive_request Pool::Request.new(self, data[:id], data[:method], data[:params])
+  end
+
+  def parsing_error(error, data)
+    puts "Error parsing data: #{data.inspect}"
+    puts error.inspect
+    puts error.backtrace
+  end
+
 
   def receive_request(request)
     case request.rpc_method
@@ -43,19 +92,9 @@ class Pool::Connection < JsonRPC::Server
     )
   end
 
-  def log(message)
-    server.log(message)
-  end
-
-  def unbind
-    server.connections.delete self
-    return unless @subscription
-    @subscription.stats.update_attributes accepted: 0, rejected: 0, blocks: 0
-  end
-
   def send_json(data, close = false)
-    send_data JrJackson.dump(data) + "\n"
-    close_connection_after_writing if close
+    @socket.puts JrJackson::Json.dump(data)
+    @socket.close if close
   end
 
   def send_event(event, params)

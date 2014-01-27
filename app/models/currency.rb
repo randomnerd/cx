@@ -14,6 +14,7 @@ class Currency < ActiveRecord::Base
   scope :by_mining_score, -> { with_mining.non_virtual.public.where(mining_skip_switch: false).order('mining_score desc') }
   scope :with_algo, -> algo { where(algo: algo) }
   scope :virtual, -> { where(virtual: true) }
+  attr_reader :pool
 
   include PusherSync
   def pusher_channel
@@ -259,10 +260,6 @@ class Currency < ActiveRecord::Base
   end
 
   def start_pool
-    EM.run {
-      @pool = Pool::Server.new(self)
-      @pool.start
-      @pool.log "Pool started"
-    }
+    @pool = Pool::Server.new(self)
   end
 end

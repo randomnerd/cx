@@ -149,15 +149,22 @@ class Pool::TemplateRegistry
 
     time_bin = Pool::Util.unhexlify time
     nonce_bin = Pool::Util.unhexlify nonce
+    puts "time_bin: #{Pool::Util.hexlify(time_bin)} | nonce_bin: #{Pool::Util.hexlify(nonce_bin)}"
     extranonce2_bin = Pool::Util.unhexlify extranonce2
+    puts "extranonce2_bin: #{Pool::Util.hexlify(extranonce2_bin)}"
 
     coinbase_bin = job.serialize_coinbase(extranonce1_bin, extranonce2_bin)
+    puts "coinbase_bin: #{Pool::Util.hexlify(coinbase_bin)}"
     coinbase_hash = Pool::Util.dblsha(coinbase_bin)
+    puts "coinbase_hash: #{Pool::Util.hexlify(coinbase_hash)}"
 
     merkleroot_bin = job.merkletree.with_first(coinbase_hash)
+    puts "merkleroot_bin: #{Pool::Util.hexlify(merkleroot_bin)}"
     merkleroot_int = Pool::Util.deser_uint256(merkleroot_bin)
+    puts "merkleroot_int: #{merkleroot_int}"
 
     header_bin = job.serialize_header(merkleroot_int, time_bin, nonce_bin)
+    puts "header_bin: #{Pool::Util.hexlify(header_bin)}"
 
     case @pool.algo
     when 'scrypt'
@@ -165,17 +172,21 @@ class Pool::TemplateRegistry
     when 'sha256'
       hash_bin = Pool::Util.dblsha(Pool::Util.reverse_bin(header_bin, 4))
     end
+    puts "hash_bin: #{Pool::Util.hexlify(hash_bin)}"
 
     hash_int = Pool::Util.deser_uint256(hash_bin)
+    puts "hash_int: #{hash_int}"
     hash_hex = hash_int.to_s(16)
     share[:hash] = sprintf("%064x", hash_int)
     header_hex = Pool::Util.hexlify(header_bin)
 
+    puts "diff_target: #{share[:diff_target]}"
     target_user = diff2target(share[:diff_target])
+    puts  "target_user: #{target_user}"
     share[:diff] = diff2target(hash_int)
 
     if hash_int > target_user
-      share[:reject_reason] = "Share is above target."
+      share[:reject_reason] = "Share is above target"
       conn.reject(share[:reject_reason])
       return @pool.sharelogger.log_share(share)
     end

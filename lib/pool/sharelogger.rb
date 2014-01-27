@@ -37,6 +37,7 @@ class Pool::Sharelogger
     )
     puts b.errors.messages.inspect unless b.valid?
     @last_block_at = Time.now.utc
+    server.currency.update_attribute :last_block_at, b.created_at
     save_block_payouts(b)
   end
 

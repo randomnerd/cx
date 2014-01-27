@@ -10,8 +10,6 @@ module JsonRPC
     end
 
     def reply(result, close = false)
-      return nil if @conn.error?
-
       response = {
         id: id,
         result: result,

@@ -38,6 +38,8 @@ gem 'activerecord-jdbcpostgresql-adapter'
 gem 'jruby-openssl'
 gem 'jrjackson'
 gem "active_model_serializers", github: "erundook/active_model_serializers", branch: 'patch-1'
+gem 'celluloid'
+gem 'celluloid-io'
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 

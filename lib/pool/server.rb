@@ -1,4 +1,6 @@
 class Pool::Server
+  include Celluloid::IO
+  finalizer :shutdown
   attr_accessor :connections, :currency, :rpc, :pos, :algo, :tx_msg,
                 :coinbaser, :sharelogger, :registry, :mining_address,
                 :difficulty, :vardiff_max, :vardiff_window, :switchpool,
@@ -25,27 +27,43 @@ class Pool::Server
     @registry = Pool::TemplateRegistry.new(self)
     @coinbaser = Pool::Coinbaser.new(self)
     @sharelogger = Pool::Sharelogger.new(self)
+    @server = Celluloid::IO::TCPServer.new(@listen, @port)
+    @registry.update_block
+    async.run
   end
 
-  def start
-    @signature = EM.start_server(@listen, @port, Pool::Connection) do |conn|
-      puts "New connection"
-      conn.server = self
-      @connections << conn
-      conn.set_comm_inactivity_timeout 0
-    end
-    @block_updater = EM.add_periodic_timer(1) { @registry.update_block }
-    @hashrate_updater = EM.add_periodic_timer(1.minute) {
-      rate = @currency.worker_stats.active.sum(:hashrate)
-      @currency.update_attribute :hashrate, rate
-      log "Pool hashrate: #{rate}"
-    }
+  def shutdown
+    @server.try :close
+    @connections.each &:shutdown
+  end
+
+  def handle_connection(socket)
+    @connections << Pool::Connection.new(self, socket)
+  end
+
+  def run
+    loop { async.handle_connection @server.accept }
+    # @signature = EM.start_server(@listen, @port, Pool::Connection) do |conn|
+    #   puts "New connection"
+    #   conn.server = self
+    #   @connections << conn
+    # end
+    # @block_updater = EM.add_periodic_timer(1) { @registry.update_block }
+    # @hashrate_updater = EM.add_periodic_timer(1.minute) {
+    #   rate = @currency.worker_stats.active.sum(:hashrate)
+    #   @currency.update_attribute :hashrate, rate
+    #   log "Pool hashrate: #{rate}"
+    # }
+  end
+
+  def listen
+    loop { async.handle_connection(@server.accept_nonblock) }
   end
 
   def stop
-    EM.stop_server(@signature)
-    @block_updater.cancel
-    @hashrate_updater.cancel
+    # EM.stop_server(@signature)
+    # @block_updater.cancel
+    # @hashrate_updater.cancel
   end
 
   def log(message)
