@@ -25,8 +25,6 @@ class CryptoRPC
     raise err if err
     r.parsed_response.try(:[], 'result')
 
-  # rescue Net::OpenTimeout
-  #   puts "[#{Time.now}] #{@currency.name}: connection timeout"
   rescue URI::InvalidURIError
     puts "[#{Time.now}] #{@currency.name}: invalid RPC URL"
   rescue Errno::ECONNREFUSED
@@ -40,7 +38,7 @@ class CryptoRPC
   rescue Errno::EPIPE
     puts "[#{Time.now}] #{@currency.name}: broken pipe"
   rescue => e
-    puts "[#{Time.now}] #{@currency.name}: request failed"
+    puts "[#{Time.now}] #{@currency.name}: request failed: #{e.inspect} #{e.backtrace.join("\n")}"
   end
 
   def method_missing(method, *args)
