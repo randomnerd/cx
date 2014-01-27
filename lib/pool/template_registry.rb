@@ -140,7 +140,7 @@ class Pool::TemplateRegistry
       return @pool.sharelogger.log_share(share)
     end
 
-    unless job.register_submit(username, extranonce1_bin, extranonce2, time, nonce)
+    unless job.register_submit(extranonce1_bin, extranonce2, time, nonce)
       share[:duplicate] = true
       share[:reject_reason] = "Duplicate share"
       # conn.reject(share[:reject_reason])
@@ -203,12 +203,11 @@ class Pool::TemplateRegistry
   end
 
   def submit_block(share, block_hex)
-    puts 'submit_block', block_hex
     begin
       result = @pool.rpc.submitblock(block_hex)
     rescue => e
-      puts e.inspect
-      puts e.backtrace
+      @pool.log e.inspect
+      @pool.log e.backtrace
       submit_block_gbt(share, block_hex)
     else
       block_post_submit share, result
@@ -216,10 +215,11 @@ class Pool::TemplateRegistry
   end
 
   def submit_block_gbt(share, block_hex)
-    puts 'submit_block_gbt'
     begin
       result = @pool.rpc.getblocktemplate({ mode: 'submit', data: block_hex })
     rescue => e
+      @pool.log e.inspect
+      @pool.log e.backtrace
       block_post_submit share, e
     else
       block_post_submit share, result
@@ -242,13 +242,14 @@ class Pool::TemplateRegistry
     puts 'check_found_block'
     block = @pool.rpc.getblock(share[:block_hash])
   rescue => e
+    @pool.log e.inspect
+    @pool.log e.backtrace
     @pool.sharelogger.log_share(share)
   else
     check_block_tx(share, block)
   end
 
   def check_block_tx(share, block)
-    puts 'check_block_tx'
     txid = block.try(:[], 'tx').try(:[], 0)
     raise 'No TXID' unless txid.try(:size) == 64
     tx = @pool.rpc.gettransaction txid
@@ -260,7 +261,9 @@ class Pool::TemplateRegistry
     block['address'] = details['address']
     block['category'] = details['category']
     @pool.sharelogger.log_block(share, block)
-  # rescue => e
-  #   @pool.sharelogger.log_share(share)
+  rescue => e
+    @pool.log e.inspect
+    @pool.log e.backtrace
+    @pool.sharelogger.log_share(share)
   end
 end

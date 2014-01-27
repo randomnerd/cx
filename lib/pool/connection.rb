@@ -1,5 +1,5 @@
 class Pool::Connection < JsonRPC::Server
-  attr_accessor :server
+  attr_accessor :server, :subscription
 
   def receive_request(request)
     case request.rpc_method
@@ -49,6 +49,7 @@ class Pool::Connection < JsonRPC::Server
 
   def unbind
     server.connections.delete self
+    return unless @subscription
     @subscription.stats.update_attributes accepted: 0, rejected: 0, blocks: 0
   end
 

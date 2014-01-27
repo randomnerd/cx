@@ -61,6 +61,10 @@ class Pool::Server
   end
 
   def on_block(share, block)
+    @connections.each { |conn| conn.subscription.flush_stats(true) }
+  end
+
+  def reset_d1a
     @currency.worker_stats.update_all d1a: 0
     @connections.each { |conn| conn.subscription.stats.d1a = 0 }
   end

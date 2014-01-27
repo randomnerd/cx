@@ -13,11 +13,12 @@ class Pool::Sharelogger
   def log_block(share, block)
     log_share(share)
     server.log block.inspect
-    save_block(share, block)
     server.on_block(share, block)
-  # rescue => e
-  #   puts e.inspect
-  #   puts e.backtrace
+    save_block(share, block)
+    server.reset_d1a
+  rescue => e
+    puts e.inspect
+    puts e.backtrace
   end
 
   def save_block(share, block)
@@ -26,6 +27,7 @@ class Pool::Sharelogger
       algo: server.currency.algo,
       diff: block['difficulty'],
       txid: block['tx'][0],
+      number: block['height'],
       reward: block['reward'] * 10**8,
       finder: share[:subscription].user.nickname,
       user_id: share[:subscription].user.id,
@@ -41,12 +43,17 @@ class Pool::Sharelogger
   def save_block_payouts(block)
     scope = server.currency.worker_stats.joins(:worker).where('d1a > 0')
     total_d1a = scope.sum(:d1a)
+    server.log "Saving rewards for #{scope.count} miners"
     scope.group('workers.user_id').
     select('workers.user_id as user_id, sum(d1a) as amount').
     order(nil).each do |stat|
+      prop = stat.amount / total_d1a.to_f
+      user = User.find(stat.user_id)
+      reward = (block.reward * prop / 10 ** 8) .round(2)
+      server.log "Payout for #{user.nickname}: #{reward} #{server.currency.name}"
       block.block_payouts.create(
         user_id: stat.user_id,
-        amount: amount / total_d1a
+        amount: prop
       )
     end
   end

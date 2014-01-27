@@ -6,7 +6,7 @@ class Pool::BlockTemplate < Pool::Halfnode::Block
     @job_id = job_id
     @target = 0
     @curtime = 0
-    @submits = {}
+    @submits = []
     @timedelta = 0
     @merkletree = nil
     @broadcast_args = []
@@ -45,10 +45,8 @@ class Pool::BlockTemplate < Pool::Halfnode::Block
   end
 
   def register_submit(*params)
-    username = params.delete_at 0
-    @submits[username] ||= []
-    return false if @submits[username].include? params
-    @submits[username] << params
+    return false if @submits.include? params
+    @submits << params
   end
 
   def build_broadcast_args

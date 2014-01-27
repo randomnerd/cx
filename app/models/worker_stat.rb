@@ -9,4 +9,9 @@ class WorkerStat < ActiveRecord::Base
   scope :currency_name, -> name {
     joins(:currency).where(currencies: {name: name})
   }
+
+  include PusherSync
+  def pusher_channel
+    "private-worker-stats-#{worker.user_id}"
+  end
 end
