@@ -132,4 +132,8 @@ class Trade < ActiveRecord::Base
   def self.json_fields
     [:id, :created_at, :bid, :rate, :amount, :ask_user_id, :bid_user_id, :trade_pair_id]
   end
+
+  def as_json(options)
+    super(options.merge(only: self.class.json_fields))
+  end
 end

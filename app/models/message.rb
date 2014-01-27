@@ -39,10 +39,10 @@ class Message < ActiveRecord::Base
   end
 
   def self.json_fields
-    [:id, :body, :created_at, :updated_at, :system, 'users.nickname as name']
+    [:id, :body, :created_at, :updated_at, :system]
   end
 
-  def as_json(args)
-    super(args.merge(methods: [:name]))
+  def as_json(options)
+    super(options.merge(only: self.class.json_fields, methods: [:name]))
   end
 end

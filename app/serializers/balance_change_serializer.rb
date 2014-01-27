@@ -1,6 +1,4 @@
 class BalanceChangeSerializer < ActiveModel::Serializer
-  cached
-  delegate :cache_key, to: :object
   attributes :id, :amount, :balance_id, :created_at, :updated_at, :held, :t_held,
              :comment, :t_amount, :subject_type, :vs_currency, :vs_rate, :txid,
              :currency_id, :address, :block_number

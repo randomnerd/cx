@@ -12,4 +12,8 @@ class Notification < ActiveRecord::Base
   def self.json_fields
     [:id, :title, :body, :created_at, :updated_at, :ack, :user_id]
   end
+
+  def as_json(options)
+    super(options.merge(only: self.class.json_fields))
+  end
 end

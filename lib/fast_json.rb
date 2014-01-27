@@ -1,13 +1,10 @@
 class FastJson
-  def self.name_fields(klass)
-    klass.json_fields.map do |field|
-      field.kind_of?(String) ? field.split(' as ').last : field
-    end
-  end
-
   def self.dump(rel)
     data = rel.pluck(*rel.json_fields).map do |attrs|
-      Hash[FastJson.name_fields(rel).zip(attrs)]
+      jattrs = attrs.map do |a|
+        a.kind_of?(ActiveSupport::TimeWithZone) ? a.iso8601 : a
+      end
+      Hash[rel.json_fields.zip(jattrs)]
     end
 
     JrJackson::Json.dump({ rel.name.pluralize.underscore => data })
@@ -17,7 +14,7 @@ class FastJson
     o = Object.const_get("#{obj.class.name}Serializer")
     data = o.new(obj, root: false)
   rescue
-    data = obj.as_json(only: obj.class.try(:json_fields))
+    data = obj
   ensure
     data = { obj.class.name.underscore.pluralize => [data] } if wrap
     return JrJackson::Json.dump(data)

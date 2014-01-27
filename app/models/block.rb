@@ -26,7 +26,7 @@ class Block < ActiveRecord::Base
 
   def pusher_update
     return unless self.class.recent.include? self
-    PusherMsg.perform_async(pusher_channel, "u", BlockSerializer.new(self, root: false))
+    PusherMsg.perform_async(pusher_channel, "u", BlockSerializer.new(self))
   end
 
   def process_payouts

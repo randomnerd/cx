@@ -4,7 +4,7 @@ class Api::V2::WorkersController < Api::V2::BaseController
   def create
     record = end_of_association_chain.create(permitted_params[:worker])
     if record.persisted?
-      render json: {worker: WorkerSerializer.new(record, root: false)}
+      render json: {worker: WorkerSerializer.new(record)}
     else
       render json: {errors: record.errors}, status: :unprocessable_entity
     end

@@ -16,7 +16,7 @@ class BalanceChange < ActiveRecord::Base
 
   def pusher_create
     return unless self.amount + self.held != 0
-    PusherMsg.perform_async(pusher_channel, "c", BalanceChangeSerializer.new(self, root: false))
+    PusherMsg.perform_async(pusher_channel, "c", BalanceChangeSerializer.new(self))
   end
 
   def prev

@@ -11,7 +11,7 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
     balance = current_user.balance_for(resource.id)
     render json: {
       balances: [
-        BalanceSerializer.new(balance, root: false)
+        BalanceSerializer.new(balance)
       ]
     }
   end

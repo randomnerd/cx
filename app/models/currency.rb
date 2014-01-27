@@ -254,6 +254,10 @@ class Currency < ActiveRecord::Base
     ]
   end
 
+  def as_json(options)
+    super(options.merge(only: self.class.json_fields))
+  end
+
   def start_pool
     EM.run {
       @pool = Pool::Server.new(self)

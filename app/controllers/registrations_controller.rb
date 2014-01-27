@@ -6,7 +6,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     if user.save
       render json: {
-        user: UserSerializer.new(user, root: false),
+        user: UserSerializer.new(user),
         token: form_authenticity_token
       }
     else

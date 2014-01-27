@@ -6,7 +6,7 @@ class PasswordsController < Devise::PasswordsController
     if resource.errors.empty?
       resource.update_attribute :reset_password_token, nil
       sign_in(resource_name, resource)
-      render json: UserSerializer.new(resource, root: false)
+      render json: UserSerializer.new(resource)
     else
       render json: {errors: resource.errors}, status: 422
     end
