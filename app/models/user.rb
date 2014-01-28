@@ -38,9 +38,9 @@ class User < ActiveRecord::Base
     return if !name && self.nickname && !self.nickname.try(:empty?)
     name ||= email.split('@').first
     return if name == nickname
-    name += rand(10).to_s while !!User.find_by_nickname(name)
     name.gsub!(/[^\w]/, '')
     return if name.empty?
+    name += rand(10).to_s while !!User.find_by_nickname(name)
     update_attribute :nickname, name
   end
 
