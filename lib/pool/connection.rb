@@ -8,18 +8,17 @@ class Pool::Connection
     @socket = socket
     _, @port, @host = socket.peeraddr
     @server.log "*** Received connection from #{host}:#{port}"
-    puts socket.class.name
     async.run
   end
 
   def shutdown
     @subscription.try(:flush_stats, true)
-    @socket.close
+    @socket.close if @socket
     handle_disconnect
   end
 
   def run
-    loop { receive_data(@socket.recv(4096)) }
+    loop { receive_data(@socket.readline) }
 
   rescue Errno::ECONNRESET then handle_disconnect
   rescue EOFError then handle_disconnect

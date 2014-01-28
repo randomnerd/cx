@@ -15,17 +15,11 @@ set :copy_via, :scp
 # set :log_level, :debug
 set :pty, true
 
-set :unicorn_binary, "#{shared_path}/bin/unicorn"
-set :unicorn_config, "#{current_path}/config/unicorn.rb"
-set :unicorn_pid,    "#{shared_path}/tmp/pids/unicorn.pid"
-set :resque_pid,     "#{shared_path}/tmp/pids/resque.pid"
 set :clockwork_config, "#{current_path}/config/clockwork.rb"
 
 set :linked_files, %w{config/database.yml}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 set :sidekiq_pid, "tmp/pids/sidekiq.pid"
-
-set :sidekiq_processes, 4
 
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 # set :keep_releases, 5
@@ -37,59 +31,21 @@ namespace :clockwork do
   desc "Start clockwork daemon"
   task :start do
     on roles(:app) do
-      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)} bundle exec clockworkd -c #{fetch(:clockwork_config)} --pid-dir tmp/pids -d #{current_path} --log start"
+      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)} jruby -S clockworkd -c #{fetch(:clockwork_config)} --pid-dir tmp/pids -d #{current_path} --log start"
     end
   end
 
   desc "Stop clockwork daemon"
   task :stop do
     on roles(:app) do
-      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)} bundle exec clockworkd -c #{fetch(:clockwork_config)} --pid-dir tmp/pids -d #{current_path} --log stop"
+      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)} jruby -S clockworkd -c #{fetch(:clockwork_config)} --pid-dir tmp/pids -d #{current_path} --log stop"
     end
   end
 
   desc "Restart clockwork daemon"
   task :restart do
     on roles(:app) do
-      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)} bundle exec clockworkd -c #{fetch(:clockwork_config)} --pid-dir tmp/pids -d #{current_path} --log restart"
+      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)} jruby -S clockworkd -c #{fetch(:clockwork_config)} --pid-dir tmp/pids -d #{current_path} --log restart"
     end
   end
-end
-
-namespace :deploy do
-  desc "Start application"
-  task :start do
-    on roles(:app) do
-      execute "cd #{current_path} && #{fetch(:unicorn_binary)} -c #{fetch(:unicorn_config)} -E #{fetch(:rails_env, "production")} -D"
-    end
-  end
-
-  desc "Stop application"
-  task :stop do
-    on roles(:app) do
-      execute "kill `cat #{fetch(:unicorn_pid)}`"
-    end
-  end
-
-  desc "Gracefully stop application"
-  task :graceful_stop do
-    on roles(:app) do
-      execute "kill -s QUIT `cat #{fetch(:unicorn_pid)}`"
-    end
-  end
-
-  desc "Reload the application"
-  task :reload do
-    on roles(:app) do
-      execute "OLDPID=`cat #{fetch(:unicorn_pid)}`; kill -s USR2 $OLDPID"
-    end
-  end
-
-  desc 'Restart application'
-  task :restart do
-    invoke "deploy:reload"
-  end
-
-  after :finishing, 'deploy:cleanup', 'clockwork:restart'
-
 end

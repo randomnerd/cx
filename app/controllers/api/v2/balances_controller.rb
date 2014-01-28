@@ -6,4 +6,8 @@ class Api::V2::BalancesController < Api::V2::BaseController
   def begin_of_association_chain
     current_user
   end
+
+  def collection
+    @collection ||= end_of_association_chain.includes(:currency)
+  end
 end

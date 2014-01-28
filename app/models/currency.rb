@@ -260,6 +260,6 @@ class Currency < ActiveRecord::Base
   end
 
   def start_pool
-    @pool = Pool::Server.new(self)
+    @pool ||= Pool::Server.new(self)
   end
 end

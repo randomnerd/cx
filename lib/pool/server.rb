@@ -27,23 +27,12 @@ class Pool::Server
     @registry = Pool::TemplateRegistry.new(self)
     @coinbaser = Pool::Coinbaser.new(self)
     @sharelogger = Pool::Sharelogger.new(self)
-    @server = Celluloid::IO::TCPServer.new(@listen, @port)
+    @server = TCPServer.new(@listen, @port)
     @registry.update_block
+    async.update_timers
     async.run
-  end
 
-  def shutdown
-    @server.try :close
-    @connections.each &:shutdown
-  end
-
-  def handle_connection(socket)
-    @connections << Pool::Connection.new(self, socket)
-  end
-
-  def run
-    loop { async.handle_connection @server.accept }
-    # @signature = EM.start_server(@listen, @port, Pool::Connection) do |conn|
+        # @signature = EM.start_server(@listen, @port, Pool::Connection) do |conn|
     #   puts "New connection"
     #   conn.server = self
     #   @connections << conn
@@ -54,16 +43,33 @@ class Pool::Server
     #   @currency.update_attribute :hashrate, rate
     #   log "Pool hashrate: #{rate}"
     # }
+
   end
 
-  def listen
-    loop { async.handle_connection(@server.accept_nonblock) }
+  def update_timers
+    @block_updater = every(1) { @registry.update_block }
+    @hashrate_updater = every(1.minute) {
+      rate = @currency.worker_stats.active.sum(:hashrate)
+      @currency.update_attribute :hashrate, rate
+      log "Pool hashrate: #{rate}"
+    }
   end
 
-  def stop
-    # EM.stop_server(@signature)
-    # @block_updater.cancel
-    # @hashrate_updater.cancel
+  def shutdown
+    @block_updater.cancel
+    @server.close if @server
+    @connections.each &:shutdown
+  rescue => e
+    puts e.inspect
+    puts e.backtrace.join("\n")
+  end
+
+  def handle_connection(socket)
+    @connections << Pool::Connection.new(self, socket)
+  end
+
+  def run
+    loop { handle_connection @server.accept }
   end
 
   def log(message)
