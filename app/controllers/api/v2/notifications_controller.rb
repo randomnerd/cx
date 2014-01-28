@@ -16,7 +16,7 @@ class Api::V2::NotificationsController < Api::V2::BaseController
   end
 
   def del_all
-    end_of_association_chain.destroy_all
+    Notification.where(user:current_user).delete_all
     render json: nil
   end
 

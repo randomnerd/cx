@@ -22,6 +22,6 @@ class FastJson
 
   def self.raw_dump(rel, *fields)
     query = rel.select(rel.json_fields).arel
-    JrJackson::Json.dump(rel.connection.select_all(query).to_a)
+    JrJackson::Json.dump(rel.connection.select_rows(query))
   end
 end

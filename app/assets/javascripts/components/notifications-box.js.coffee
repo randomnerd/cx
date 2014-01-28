@@ -18,9 +18,8 @@ Cx.NotificationsBoxComponent = Ember.Component.extend
         url: "/api/v2/notifications/del_all"
         type: "POST"
         success: (data) =>
-          @get('items').forEach =>
-            rec = @get('items.firstObject')
-            rec?.transitionTo('deleted.saved')
+          @get('items').forEach (rec) =>
+            rec.transitionTo('deleted.saved')
 
 
     ack: (n) ->
