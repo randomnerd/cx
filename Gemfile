@@ -5,9 +5,6 @@ gem 'rails', '4.0.2'
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
-
-gem 'torquebox-server'
-gem 'torquebox'
 gem 'activerecord-jdbcpostgresql-adapter'
 gem 'krypt'
 gem 'jrjackson'
@@ -18,10 +15,8 @@ gem 'timers'
 
 gem 'devise'
 gem 'devise-async'
-gem 'cancan'
 gem 'pusher'
 gem "ember-rails", github: "emberjs/ember-rails"
-gem 'quiet_assets'
 
 gem 'inherited_resources', '~> 1.4.1'
 gem 'has_scope'
@@ -46,17 +41,23 @@ gem 'font-awesome-sass'
 
 gem 'multi_json'
 
-gem 'rails-mailgun', git: "git://github.com/code-mancers/rails-mailgun.git"
-
 gem 'will_paginate', '~> 3.0'
 gem 'will_paginate-bootstrap'
 
 gem 'rack-attack'
 
 group :development, :test do
+  gem 'puma'
   gem 'pry'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
   gem 'factory_girl_rails', "~> 4.0"
   gem 'database_cleaner'
+  gem 'quiet_assets'
+end
+
+group :staging, :production do
+  gem 'rails-mailgun', git: "git://github.com/code-mancers/rails-mailgun.git"
+  gem 'torquebox-server'
+  gem 'torquebox'
 end
