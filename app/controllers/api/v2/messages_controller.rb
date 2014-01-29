@@ -1,6 +1,6 @@
 class Api::V2::MessagesController < Api::V2::BaseController
   def index
-    render json: FastJson.dump(Message.recent)
+    render json: JrJackson::Json.dump({ messages: Message.recent })
   end
 
   def create
@@ -8,7 +8,7 @@ class Api::V2::MessagesController < Api::V2::BaseController
     if msg.valid?
       render json: FastJson.dump_one(msg, true)
     else
-      render json: {errors: msg.errors}, status: :unprocessable_entity
+      render json: { errors: msg.errors }, status: :unprocessable_entity
     end
   end
 
