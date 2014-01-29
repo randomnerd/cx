@@ -31,7 +31,7 @@ class Balance < ActiveRecord::Base
       increment :amount, amount
       balance_changes.create(
         subject:  subject,
-        comment:  comment || "add_funds",
+        comment:  comment,
         amount:   amount,
         t_amount: self.amount,
         t_held:   self.held,
@@ -47,7 +47,7 @@ class Balance < ActiveRecord::Base
       decrement :amount, amount
       balance_changes.create(
         subject:  subject,
-        comment:  comment || "take_funds",
+        comment:  comment,
         amount:   -amount,
         t_amount: self.amount,
         t_held:   self.held,
@@ -64,7 +64,6 @@ class Balance < ActiveRecord::Base
       decrement :amount,  lock_amount
       increment :held,    lock_amount
       balance_changes.create(
-        comment: "lock_funds",
         subject:  subject,
         amount:  -lock_amount,
         held:     lock_amount,
@@ -83,7 +82,6 @@ class Balance < ActiveRecord::Base
         decrement :amount, negative
         decrement :held, unlock_amount - negative
         balance_changes.create(
-          comment: "unlock_funds(move=#{move})",
           subject:  subject,
           amount:  -negative,
           held:    -(unlock_amount - negative),
@@ -94,7 +92,6 @@ class Balance < ActiveRecord::Base
         increment :amount,  unlock_amount if move
         decrement :held,    unlock_amount
         balance_changes.create(
-          comment: "unlock_funds(move=#{move})",
           subject:  subject,
           amount:   move ? unlock_amount : 0,
           held:    -unlock_amount,
