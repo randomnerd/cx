@@ -3,7 +3,7 @@ source "http://2edaf45f:4e8fa5c0@www.mikeperham.com/rubygems/"
 
 gem 'rails', '4.0.2'
 gem 'sass-rails', '~> 4.0.0'
-gem 'uglifier', '>= 1.3.0'
+gem 'closure-compiler'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'activerecord-jdbcpostgresql-adapter'
 gem 'krypt'
@@ -12,6 +12,7 @@ gem "active_model_serializers", github: "erundook/active_model_serializers", bra
 gem 'celluloid', github: 'celluloid/celluloid'
 gem 'celluloid-io'
 gem 'timers'
+gem 'therubyrhino'
 
 gem 'devise'
 gem 'devise-async'
