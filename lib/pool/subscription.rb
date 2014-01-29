@@ -1,11 +1,12 @@
 class Pool::Subscription
   attr_accessor :min_diff, :diff, :extranonce1_bin, :extranonce1_hex,
-                :authorized, :user, :worker, :server
+                :authorized, :user, :worker, :server, :stats
 
-  def initialize(connection, request, diff = 32)
+  def initialize(connection, request, diff = 1)
     @key = SecureRandom.hex(16)
     @diff = diff
     @user = nil
+    @stats = nil
     @worker = nil
     @server = connection.server
     @submits = 0
@@ -24,6 +25,7 @@ class Pool::Subscription
   end
 
   def set_diff(diff)
+    diff = 1
     @server.log "Setting diff #{diff} for #{worker.name}"
     @prev_diff = @diff
     @diff = diff
@@ -33,19 +35,19 @@ class Pool::Subscription
     args = @server.registry.get_last_bcast_args
     return unless args
     args[args.size - 1] = true
-    @connection.notify(args)
     stats.diff = @diff
+    @connection.notify(args)
+  rescue => e
+    puts e.inspect
+    puts e.backtrace
   end
 
   def shares_per_min
     @submits / mins_since_last_diff_upd
   end
 
-  def stats
-    @stats ||= worker.worker_stats.where(currency: @currency).first_or_create
-  end
-
   def flush_stats(force = false)
+    return unless stats
     return unless @last_stats_flush <= @flush_interval.seconds.ago.utc || force
     stats.save
     @last_stats_flush = Time.now.utc
@@ -53,10 +55,10 @@ class Pool::Subscription
 
   def update_stats(share)
     if share[:accepted]
-      stats.accepted += share[:diff]
-      stats.d1a += share[:diff]
+      stats.accepted += share[:diff_target]
+      stats.d1a += share[:diff_target]
     else
-      stats.rejected += share[:diff]
+      stats.rejected += share[:diff_target]
     end
     stats.blocks += 1 if share[:upstream]
     update_diff

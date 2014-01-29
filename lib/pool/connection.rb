@@ -1,40 +1,29 @@
 class Pool::Connection
-  include Celluloid::IO
-  finalizer :shutdown
-  attr_accessor :server, :subscription, :host, :port
+  attr_accessor :server, :subscription, :host, :port, :socket
 
   def initialize(server, socket)
     @server = server
     @socket = socket
     _, @port, @host = socket.peeraddr
     @server.log "*** Received connection from #{host}:#{port}"
-    async.run
   end
 
-  def shutdown
-    @subscription.try(:flush_stats, true)
-    @socket.close if @socket
+  def disconnect!
     handle_disconnect
-  end
-
-  def run
-    loop { receive_data(@socket.readline) }
-
-  rescue Errno::ECONNRESET then handle_disconnect
-  rescue EOFError then handle_disconnect
+    @socket.close rescue nil
   end
 
   def handle_disconnect
     server.connections.delete self
     return unless @subscription
-    @subscription.stats.update_attributes accepted: 0, rejected: 0, blocks: 0
+    @subscription.flush_stats(true)
     @server.log "*** #{@host}:#{@port} disconnected"
   end
 
   def receive_data(data)
-    process_request JrJackson::Json.load(data, symbolize_keys: true)
+    process_request JrJackson::Json.load(data.chomp, symbolize_keys: true)
   rescue => e
-    @socket.puts "Request parsing error"
+    return "Request parsing error"
     parsing_error e, data
   end
 
@@ -68,15 +57,18 @@ class Pool::Connection
     user, pass = request.params
     if user && pass && worker = Worker.where(name: user, pass: pass).first
       request.reply(true)
+      stats = worker.worker_stats.where(currency: @server.currency).first_or_create
       @subscription.worker = worker
       @subscription.authorized = true
       @subscription.user = worker.user
+      @subscription.stats = stats
+      @subscription.stats.update_attributes accepted: 0, rejected: 0, blocks: 0
       server.log "Miner authorized: #{user} / #{pass}"
       diff = @subscription.stats.diff
       @subscription.set_diff(diff > 0 ? diff : server.difficulty)
     else
-      request.reply(false, true)
       server.log "Miner rejected: #{user} / #{pass}"
+      request.reply(false, true)
     end
   end
 
@@ -92,8 +84,13 @@ class Pool::Connection
   end
 
   def send_json(data, close = false)
-    @socket.puts JrJackson::Json.dump(data)
-    @socket.close if close
+    server.send_data_async self, JrJackson::Json.dump(data)
+    disconnect! if close
+  rescue => e
+    puts 'send_json rescue'
+    puts e.inspect
+    puts e.backtrace
+    disconnect!
   end
 
   def send_event(event, params)

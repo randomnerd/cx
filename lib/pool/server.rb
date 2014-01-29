@@ -1,6 +1,7 @@
 class Pool::Server
   include Celluloid::IO
   finalizer :shutdown
+  trap_exit :shutdown
   attr_accessor :connections, :currency, :rpc, :pos, :algo, :tx_msg,
                 :coinbaser, :sharelogger, :registry, :mining_address,
                 :difficulty, :vardiff_max, :vardiff_window, :switchpool,
@@ -24,26 +25,13 @@ class Pool::Server
     @vardiff_shares_per_min = 10
 
     @connections = []
-    @registry = Pool::TemplateRegistry.new(self)
-    @coinbaser = Pool::Coinbaser.new(self)
-    @sharelogger = Pool::Sharelogger.new(self)
+    @registry = Pool::TemplateRegistry.new(Celluloid::Actor.current)
+    @coinbaser = Pool::Coinbaser.new(Celluloid::Actor.current)
+    @sharelogger = Pool::Sharelogger.new(Celluloid::Actor.current)
     @server = TCPServer.new(@listen, @port)
     @registry.update_block
     async.update_timers
     async.run
-
-        # @signature = EM.start_server(@listen, @port, Pool::Connection) do |conn|
-    #   puts "New connection"
-    #   conn.server = self
-    #   @connections << conn
-    # end
-    # @block_updater = EM.add_periodic_timer(1) { @registry.update_block }
-    # @hashrate_updater = EM.add_periodic_timer(1.minute) {
-    #   rate = @currency.worker_stats.active.sum(:hashrate)
-    #   @currency.update_attribute :hashrate, rate
-    #   log "Pool hashrate: #{rate}"
-    # }
-
   end
 
   def update_timers
@@ -57,19 +45,40 @@ class Pool::Server
 
   def shutdown
     @block_updater.cancel
-    @server.close if @server
-    @connections.each &:shutdown
+    @server.close rescue nil
+    @connections.each &:disconnect!
+    @connections = []
   rescue => e
     puts e.inspect
     puts e.backtrace.join("\n")
+  ensure
+    terminate rescue nil
   end
 
   def handle_connection(socket)
-    @connections << Pool::Connection.new(self, socket)
+    connection = Pool::Connection.new(Celluloid::Actor.current, socket)
+    @connections << connection
+    loop {
+      request  = socket.readline
+      response = connection.receive_data(request)
+    }
+  rescue
+    connection.disconnect!
+  end
+
+  def send_data_async(connection, data, close = false)
+    async.send_data(connection, data, close = false)
+  end
+
+  def send_data(connection, data, close = false)
+    connection.socket.puts data
+    connection.disconnect! if close
+  rescue => e
+    connection.disconnect!
   end
 
   def run
-    loop { handle_connection @server.accept }
+    loop { async.handle_connection @server.accept }
   end
 
   def log(message)

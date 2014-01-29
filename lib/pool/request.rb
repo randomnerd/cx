@@ -16,17 +16,13 @@ class Pool::Request
     }
 
     @conn.send_json response, close
-  rescue => e
-    puts e.inspect
-    puts e.backtrace
   end
 
   def reject(msg)
-    response = {
+    @conn.send_json({
       id: id,
       result: nil,
       error: [21, msg, nil]
-    }
-    @conn.send_json response
+    })
   end
 end
