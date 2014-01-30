@@ -59,6 +59,5 @@ end
 
 group :staging, :production do
   gem 'rails-mailgun', git: "git://github.com/code-mancers/rails-mailgun.git"
-  gem 'torquebox-server'
-  gem 'torquebox'
+  gem 'torquebox-lite'
 end
