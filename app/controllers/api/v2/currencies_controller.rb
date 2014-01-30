@@ -2,7 +2,13 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
   has_scope :by_name, as: :name
 
   def index
-    render json: FastJson.dump(end_of_association_chain.public)
+    if stale? collection
+      render json: FastJson.dump(collection)
+    end
+  end
+
+  def collection
+    end_of_association_chain.public
   end
 
   def generate_address

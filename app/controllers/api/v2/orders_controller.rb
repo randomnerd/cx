@@ -3,11 +3,15 @@ class Api::V2::OrdersController < Api::V2::BaseController
   before_filter :authenticate_user!, except: [:index, :show]
 
   def index
-    render json: FastJson.dump(collection.active)
+    if stale? collection.active
+      render json: FastJson.dump(collection.active)
+    end
   end
 
   def show
-    render json: FastJson.dump_one(resource)
+    if stale? resource
+      render json: FastJson.dump_one(resource)
+    end
   end
 
   def create

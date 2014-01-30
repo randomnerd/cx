@@ -1,6 +1,6 @@
 class Api::V2::MessagesController < Api::V2::BaseController
-  def index
-    render json: MultiJson.dump({ messages: Message.recent })
+  def collection
+    end_of_association_chain.recent
   end
 
   def create

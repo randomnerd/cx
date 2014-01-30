@@ -3,6 +3,12 @@ class Api::V2::BaseController < InheritedResources::Base
   actions :index, :create, :update, :destroy, :show
   before_filter :authenticate_user!, except: [:index]
 
+  def index
+    if stale? collection
+      render json: FastJson.dump(collection)
+    end
+  end
+
   def create
     @resource = build_resource
     @resource.user = current_user

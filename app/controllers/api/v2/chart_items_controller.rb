@@ -3,6 +3,9 @@ class Api::V2::ChartItemsController < Api::V2::BaseController
 
   def index
     rel = ChartItem.where(trade_pair_id: params[:trade_pair_id])
-    render json: FastJson.raw_dump(rel)
+    if stale?(rel)
+      puts 'stale'
+      render json: FastJson.raw_dump(rel)
+    end
   end
 end

@@ -1,10 +1,20 @@
+[Object, Array, FalseClass, Float, Hash, Integer, NilClass, String, TrueClass].each do |klass|
+  klass.class_eval do
+    def to_json(opts = {})
+      MultiJson::dump(self.as_json(opts), opts)
+    end
+  end
+end
+
 class FastJson
   def self.dump(rel)
-    data = rel.pluck(*rel.json_fields).map do |attrs|
+    fields = rel.try(:json_fields) || rel.attribute_names
+    sfields = fields.map { |f| "#{rel.klass.name.underscore.pluralize}.#{f}" }
+    data = rel.pluck(*sfields).map do |attrs|
       jattrs = attrs.map do |a|
         a.kind_of?(ActiveSupport::TimeWithZone) ? a.iso8601 : a
       end
-      Hash[rel.json_fields.zip(jattrs)]
+      Hash[fields.zip(jattrs)]
     end
 
     MultiJson.dump({ rel.name.pluralize.underscore => data })
@@ -20,8 +30,10 @@ class FastJson
     return MultiJson.dump(data)
   end
 
-  def self.raw_dump(rel, *fields)
-    query = rel.select(rel.json_fields).arel
+  def self.raw_dump(rel)
+    fields = rel.try(:json_fields) || rel.attribute_names
+    fields.map! { |f| "#{rel.klass.name.underscore.pluralize}.#{f}" }
+    query = rel.select(fields).arel
     MultiJson.dump(rel.connection.select_rows(query.to_sql))
   end
 end
