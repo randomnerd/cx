@@ -255,7 +255,7 @@ class Currency < ActiveRecord::Base
     ]
   end
 
-  def as_json(options)
+  def as_json(options = {})
     super(options.merge(only: self.class.json_fields))
   end
 

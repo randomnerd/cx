@@ -3,16 +3,32 @@ source "http://2edaf45f:4e8fa5c0@www.mikeperham.com/rubygems/"
 
 gem 'rails', '4.0.2'
 gem 'sass-rails', '~> 4.0.0'
-gem 'closure-compiler'
 gem 'coffee-rails', '~> 4.0.0'
-gem 'activerecord-jdbcpostgresql-adapter'
-gem 'krypt'
-gem 'jrjackson'
 gem "active_model_serializers", github: "erundook/active_model_serializers", branch: 'patch-1'
 gem 'celluloid', github: 'celluloid/celluloid'
 gem 'celluloid-io'
 gem 'timers'
-gem 'therubyrhino'
+
+platforms :jruby do
+  group :development do
+    gem 'puma'
+  end
+  group :staging, :production do
+    gem 'torquebox-lite'
+  end
+  gem 'closure-compiler'
+  gem 'activerecord-jdbcpostgresql-adapter'
+  gem 'krypt'
+  gem 'jrjackson'
+  gem 'therubyrhino'
+end
+
+platforms :ruby do
+  gem 'pg'
+  gem 'uglifier', '>= 1.3.0'
+  gem 'oj'
+  gem 'unicorn'
+end
 
 gem 'devise'
 gem 'devise-async'
@@ -48,7 +64,6 @@ gem 'will_paginate-bootstrap'
 gem 'rack-attack'
 
 group :development, :test do
-  gem 'puma'
   gem 'pry'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
@@ -59,5 +74,4 @@ end
 
 group :staging, :production do
   gem 'rails-mailgun', git: "git://github.com/code-mancers/rails-mailgun.git"
-  gem 'torquebox-lite'
 end

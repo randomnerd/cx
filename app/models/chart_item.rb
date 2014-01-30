@@ -31,7 +31,7 @@ class ChartItem < ActiveRecord::Base
     [:time, :o, :h, :l, :c, :v]
   end
 
-  def as_json(options)
+  def as_json(options = {})
     super(options.merge(only: self.class.json_fields))
   end
 end

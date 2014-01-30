@@ -29,8 +29,11 @@ module Pool::Scrypt
   def pbkdf2_sha256(pass, salt, c = 1, dk_len = 128)
     raise "pbkdf2_sha256: wrong length." if pass.bytesize != 80 or ![80,128].include?(salt.bytesize)
     raise "pbkdf2_sha256: wrong dk length." if ![128,32].include?(dk_len)
-    # OpenSSL::PKCS5.pbkdf2_hmac(pass, salt, c, dk_len, OpenSSL::Digest::SHA256.new)
-    Krypt::PBKDF2.new(Krypt::Digest::SHA256.new).generate(pass, salt, c, dk_len)
+    if RUBY_PLATFORM == 'java'
+      Krypt::PBKDF2.new(Krypt::Digest::SHA256.new).generate(pass, salt, c, dk_len)
+    else
+      OpenSSL::PKCS5.pbkdf2_hmac(pass, salt, c, dk_len, OpenSSL::Digest::SHA256.new)
+    end
   end
 
   def rotl(a, b)

@@ -7,7 +7,7 @@ class FastJson
       Hash[rel.json_fields.zip(jattrs)]
     end
 
-    JrJackson::Json.dump({ rel.name.pluralize.underscore => data })
+    MultiJson.dump({ rel.name.pluralize.underscore => data })
   end
 
   def self.dump_one(obj, wrap = true)
@@ -17,11 +17,11 @@ class FastJson
     data = obj
   ensure
     data = { obj.class.name.underscore.pluralize => [data] } if wrap
-    return JrJackson::Json.dump(data)
+    return MultiJson.dump(data)
   end
 
   def self.raw_dump(rel, *fields)
     query = rel.select(rel.json_fields).arel
-    JrJackson::Json.dump(rel.connection.select_rows(query))
+    MultiJson.dump(rel.connection.select_rows(query.to_sql))
   end
 end

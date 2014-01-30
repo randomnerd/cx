@@ -10,7 +10,7 @@ class CryptoRPC
       timeout: 30,
       port: @currency.port,
       basic_auth: @auth,
-      body: JrJackson::Json.dump({
+      body: MultiJson.dump({
         id: "cx-#{SecureRandom.hex(16)}",
         jsonrpc: '1.0',
         method: method.to_s,

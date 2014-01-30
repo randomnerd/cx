@@ -21,7 +21,7 @@ class Pool::Connection
   end
 
   def receive_data(data)
-    process_request JrJackson::Json.load(data.chomp, symbolize_keys: true)
+    process_request MultiJson.load(data.chomp, symbolize_keys: true)
   rescue => e
     return "Request parsing error"
     parsing_error e, data
@@ -84,7 +84,7 @@ class Pool::Connection
   end
 
   def send_json(data, close = false)
-    server.send_data_async self, JrJackson::Json.dump(data)
+    server.send_data_async self, MultiJson.dump(data)
     disconnect! if close
   rescue => e
     puts 'send_json rescue'

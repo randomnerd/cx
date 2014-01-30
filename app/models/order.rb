@@ -198,7 +198,7 @@ class Order < ActiveRecord::Base
     [:id, :user_id, :trade_pair_id, :amount, :filled, :bid, :rate, :created_at, :complete, :cancelled, :updated_at]
   end
 
-  def as_json(options)
+  def as_json(options = {})
     super(options.merge(only: self.class.json_fields))
   end
 end

@@ -42,7 +42,7 @@ class Message < ActiveRecord::Base
     [:id, :body, :created_at, :updated_at, :system]
   end
 
-  def as_json(options)
+  def as_json(options = {})
     super(options.merge(only: self.class.json_fields, methods: [:name]))
   end
 end

@@ -42,7 +42,7 @@ class Pool::Sharelogger
   end
 
   def save_block_payouts(block)
-    scope = server.currency.worker_stats.joins(:worker).where('d1a > 0')
+    scope = server.currency.worker_stats.includes(:worker).where('d1a > 0')
     total_d1a = scope.sum(:d1a)
     server.log "Saving rewards for #{scope.count} miners"
     scope.group('workers.user_id').

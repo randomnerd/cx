@@ -1,6 +1,6 @@
 class Api::V2::MessagesController < Api::V2::BaseController
   def index
-    render json: JrJackson::Json.dump({ messages: Message.recent })
+    render json: MultiJson.dump({ messages: Message.recent })
   end
 
   def create
