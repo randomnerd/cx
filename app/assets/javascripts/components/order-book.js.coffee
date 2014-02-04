@@ -1,4 +1,5 @@
 Cx.OrderBookComponent = Ember.Component.extend
+  bookMaxLen: 20
   currBalance:   Em.computed.alias('pair.currency.balance.firstObject.amount')
   marketBalance: Em.computed.alias('pair.market.balance.firstObject.amount')
   orderBook: (->
@@ -10,7 +11,12 @@ Cx.OrderBookComponent = Ember.Component.extend
       o.get('cancelled') == false &&
       o.get('complete') == false
 
-    orders.forEach (order) =>
+    orders = orders.reverse() if @buy
+
+    for order in orders
+      len = _.keys(book).length
+      newlen = !book[order.get('rate')]
+      break if newlen && len == @bookMaxLen
       b = book[order.get('rate')] ||= {amount: 0, marketAmount: 0}
       b.amount = b.amount + order.get('unmatchedAmount') || 0
       b.marketAmount = b.marketAmount + order.get('marketAmount') || 0
@@ -26,7 +32,7 @@ Cx.OrderBookComponent = Ember.Component.extend
     book = _.sortBy(ret, (o) -> o.rate)
     if @buy then book.reverse() else book
 
-  ).property('orders.@each.filled', 'user.id')
+  ).property('orders.@each.filled', 'orders.@each.complete', 'orders.@each.cancelled', 'user.id')
   actions:
     setForms: (order) ->
       rate    = order.rate

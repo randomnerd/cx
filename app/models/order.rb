@@ -13,7 +13,7 @@ class Order < ActiveRecord::Base
   after_commit :process_async, on: :create
 
   scope :recent,   ->     { order('created_at desc').limit(50) }
-  scope :active,   ->     { where(complete: false).where(cancelled: false) }
+  scope :active,   ->     { where(complete: false).where(cancelled: false).order(:rate) }
   scope :tp,       -> tp  { where(trade_pair_id: tp) }
   scope :bid,      -> b   { where(bid: b) }
   scope :bid_sort, -> b   { b ? order('rate asc') : order('rate desc') }
