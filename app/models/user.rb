@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
     name ||= email.split('@').first
     return if name == nickname
     name.gsub!(/[^\w]/, '')
-    name += rand(10).to_s while !!User.where('nickname like ?', name)
+    name += rand(10).to_s while !!User.where('nickname ilike ?', name).first
     return if name.empty?
     update_attribute :nickname, name
   end
