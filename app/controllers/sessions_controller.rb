@@ -2,7 +2,7 @@ class SessionsController < Devise::SessionsController
   def create
     if current_user
       render json: {
-        user: UserSerializer.new(current_user),
+        user: UserSerializer.new(current_user, root: false),
         token: form_authenticity_token
       }
     else
