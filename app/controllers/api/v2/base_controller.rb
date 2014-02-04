@@ -5,9 +5,7 @@ class Api::V2::BaseController < InheritedResources::Base
   before_filter :set_user, only: [:create]
 
   def index
-    if stale? collection
-      render json: FastJson.dump(collection)
-    end
+    render json: FastJson.dump(collection)
   end
 
   def set_user
