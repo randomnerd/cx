@@ -2,6 +2,7 @@ class Api::V2::BaseController < InheritedResources::Base
   respond_to :json
   actions :index, :create, :update, :destroy, :show
   before_filter :authenticate_user!, except: [:index]
+  before_filter :set_user, only: [:create]
 
   def index
     if stale? collection
@@ -9,10 +10,8 @@ class Api::V2::BaseController < InheritedResources::Base
     end
   end
 
-  def create
+  def set_user
     @resource = build_resource
     @resource.user = current_user
-    binding.pry
-    create!
   end
 end

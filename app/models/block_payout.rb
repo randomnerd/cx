@@ -28,4 +28,13 @@ class BlockPayout < ActiveRecord::Base
   def reward_minus_fee
     self.reward - self.fee
   end
+
+  def self.json_fields
+    [:id, :created_at, :updated_at, :block_id, :user_id, :amount]
+  end
+
+  def as_json(options = {})
+    super(options.merge(only: self.class.json_fields))
+  end
+
 end

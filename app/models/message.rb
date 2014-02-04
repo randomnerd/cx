@@ -11,7 +11,7 @@ class Message < ActiveRecord::Base
     "messages"
   end
 
-  scope :recent, -> { order('created_at desc').limit(50) }
+  scope :recent, -> { order('messages.created_at desc').limit(50) }
 
   def user_not_banned
     return unless user.banned?

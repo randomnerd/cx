@@ -126,7 +126,7 @@ class Trade < ActiveRecord::Base
 
     return if Rails.env.test?
     Pusher["chartItems-#{self.trade_pair_id}"].trigger('chartItem#update',
-      FastJson.dump_one(rec, false))
+      rec.as_json)
   end
 
   def self.json_fields

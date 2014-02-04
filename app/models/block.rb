@@ -66,4 +66,13 @@ class Block < ActiveRecord::Base
   rescue => e
     puts e.inspect
   end
+
+  def self.json_fields
+    [:id, :created_at, :updated_at, :currency_id, :number, :category,
+             :reward, :finder, :confirmations, :switchpool]
+  end
+
+  def as_json(options = {})
+    super(options.merge(only: self.class.json_fields))
+  end
 end

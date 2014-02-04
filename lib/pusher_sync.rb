@@ -13,17 +13,17 @@ module PusherSync
 
   def pusher_create
     return if skip_pusher
-    PusherMsg.perform_async(pusher_channel, "c", FastJson.dump_one(self, false))
+    PusherMsg.perform_async(pusher_channel, "c", self.as_json)
   end
 
   def pusher_update
     return if skip_pusher
-    PusherMsg.perform_async(pusher_channel, "u", FastJson.dump_one(self, false))
+    PusherMsg.perform_async(pusher_channel, "u", self.as_json)
   end
 
   def pusher_delete
     return if skip_pusher
-    PusherMsg.perform_async(pusher_channel, "d", FastJson.dump_one(self, false))
+    PusherMsg.perform_async(pusher_channel, "d", self.as_json)
   end
 
   def pusher_channel
