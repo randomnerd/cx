@@ -1,11 +1,11 @@
-// Fetched from channel: canary, with url http://builds.emberjs.com/canary/ember-data.js
-// Fetched on: 2014-01-25T06:14:28Z
+// Fetched from channel: beta, with url http://builds.emberjs.com/beta/ember-data.js
+// Fetched on: 2014-02-04T20:27:42Z
 /*!
  * @overview  Ember Data
  * @copyright Copyright 2011-2014 Tilde Inc. and contributors.
  *            Portions Copyright 2011 LivingSocial Inc.
  * @license   Licensed under MIT license (see license.js)
- * @version   1.0.0-beta.6+canary.348fd13e
+ * @version   1.0.0-beta.6
  */
 
 
@@ -64,11 +64,11 @@ if ('undefined' === typeof DS) {
   /**
     @property VERSION
     @type String
-    @default '1.0.0-beta.6+canary.348fd13e'
+    @default '1.0.0-beta.6'
     @static
   */
   DS = Ember.Namespace.create({
-    VERSION: '1.0.0-beta.6+canary.348fd13e'
+    VERSION: '1.0.0-beta.6'
   });
 
   if ('undefined' !== typeof window) {
@@ -1151,28 +1151,8 @@ DS.DateTransform = DS.Transform.extend({
 
   serialize: function(date) {
     if (date instanceof Date) {
-      var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-      var pad = function(num) {
-        return num < 10 ? "0"+num : ""+num;
-      };
-
-      var utcYear = date.getUTCFullYear(),
-          utcMonth = date.getUTCMonth(),
-          utcDayOfMonth = date.getUTCDate(),
-          utcDay = date.getUTCDay(),
-          utcHours = date.getUTCHours(),
-          utcMinutes = date.getUTCMinutes(),
-          utcSeconds = date.getUTCSeconds();
-
-
-      var dayOfWeek = days[utcDay];
-      var dayOfMonth = pad(utcDayOfMonth);
-      var month = months[utcMonth];
-
-      return dayOfWeek + ", " + dayOfMonth + " " + month + " " + utcYear + " " +
-             pad(utcHours) + ":" + pad(utcMinutes) + ":" + pad(utcSeconds) + " GMT";
+      // Serialize it as a number to maintain millisecond precision
+      return Number(date);
     } else {
       return null;
     }
@@ -4574,7 +4554,7 @@ DS.Errors = Ember.Object.extend(Ember.Enumerable, Ember.Evented, {
 */
 
 var get = Ember.get, set = Ember.set,
-    merge = Ember.merge, once = Ember.run.once;
+    merge = Ember.merge;
 
 var retrieveFromCurrentState = Ember.computed('currentState', function(key, value) {
   return get(get(this, 'currentState'), key);
@@ -5166,6 +5146,7 @@ DS.Model = Ember.Object.extend(Ember.Evented, {
     @private
   */
   updateRecordArrays: function() {
+    this._updatingRecordArraysLater = false;
     get(this, 'store').dataWasUpdated(this.constructor, this);
   },
 
@@ -5280,7 +5261,11 @@ DS.Model = Ember.Object.extend(Ember.Evented, {
     @private
   */
   updateRecordArraysLater: function() {
-    Ember.run.once(this, this.updateRecordArrays);
+    // quick hack (something like this could be pushed into run.once
+    if (this._updatingRecordArraysLater) { return; }
+    this._updatingRecordArraysLater = true;
+
+    Ember.run.schedule('actions', this, this.updateRecordArrays);
   },
 
   /**
@@ -5547,8 +5532,8 @@ DS.Model = Ember.Object.extend(Ember.Evented, {
   },
 
   triggerLater: function() {
-    this._deferredTriggers.push(arguments);
-    once(this, '_triggerDeferredTriggers');
+    if (this._deferredTriggers.push(arguments) !== 1) { return; }
+    Ember.run.schedule('actions', this, '_triggerDeferredTriggers');
   },
 
   _triggerDeferredTriggers: function() {
@@ -5556,7 +5541,7 @@ DS.Model = Ember.Object.extend(Ember.Evented, {
       this.trigger.apply(this, this._deferredTriggers[i]);
     }
 
-    this._deferredTriggers = [];
+    this._deferredTriggers.length = 0;
   }
 });
 
@@ -7239,7 +7224,6 @@ DS.Model.reopen({
 */
 
 var get = Ember.get, set = Ember.set;
-var once = Ember.run.once;
 var forEach = Ember.EnumerableUtils.forEach;
 
 /**
@@ -7258,8 +7242,9 @@ DS.RecordArrayManager = Ember.Object.extend({
   },
 
   recordDidChange: function(record) {
-    this.changedRecords.push(record);
-    once(this, this.updateRecordArrays);
+    if (this.changedRecords.push(record) !== 1) { return; }
+
+    Ember.run.schedule('actions', this, this.updateRecordArrays);
   },
 
   recordArraysForRecord: function(record) {
@@ -7288,7 +7273,7 @@ DS.RecordArrayManager = Ember.Object.extend({
       }
     }, this);
 
-    this.changedRecords = [];
+    this.changedRecords.length = 0;
   },
 
   _recordWasDeleted: function (record) {
