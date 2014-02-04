@@ -10,9 +10,7 @@ gem 'celluloid-io'
 gem 'timers'
 
 platforms :jruby do
-  group :staging, :production do
-    gem 'torquebox-lite'
-  end
+  gem 'puma'
   gem 'closure-compiler'
   gem 'activerecord-jdbcpostgresql-adapter'
   gem 'krypt'
@@ -61,7 +59,6 @@ gem 'will_paginate-bootstrap'
 gem 'rack-attack'
 
 group :development, :test do
-  gem 'puma'
   gem 'pry'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
