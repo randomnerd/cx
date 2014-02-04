@@ -36,10 +36,8 @@ Cx.ChartBoxComponent = Ember.Component.extend
             pointFormat: "<div>{series.name}: {point.y}</div>"
         }
       yAxis: [{
-          min: 0
           labels: { style: { color: '#b94a48' } },
-          title: { text: 'Rate', style: { color: '#CC3300' }
-          }
+          title: { text: 'Rate', style: { color: '#CC3300' } }
         }, {
           min: 0
           title: { text: 'Volume', style: { color: '#4572A7' } },
