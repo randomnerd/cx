@@ -375,6 +375,7 @@ ActiveRecord::Schema.define(version: 20140201184501) do
 
   add_index "worker_stats", ["algo"], name: "index_worker_stats_on_algo", using: :btree
   add_index "worker_stats", ["currency_id"], name: "index_worker_stats_on_currency_id", using: :btree
+  add_index "worker_stats", ["d1a"], name: "index_worker_stats_on_d1a", using: :btree
   add_index "worker_stats", ["switchpool"], name: "index_worker_stats_on_switchpool", using: :btree
   add_index "worker_stats", ["updated_at"], name: "index_worker_stats_on_updated_at", using: :btree
   add_index "worker_stats", ["worker_id"], name: "index_worker_stats_on_worker_id", using: :btree
