@@ -11,6 +11,7 @@ class Block < ActiveRecord::Base
     joins(:currency).where(currencies: {name: name})
   }
   scope :recent, -> { limit(20).order('created_at desc') }
+  scope :with_payouts, -> { joins(:block_payouts) }
   scope :non_switchpool, -> { where(switchpool: false) }
 
   include ApplicationHelper

@@ -234,7 +234,7 @@ class Currency < ActiveRecord::Base
   def update_blocks
     self.blocks.immature.each &:update_confirmations
 
-    self.blocks.orphan.each do |block|
+    self.blocks.orphan.with_payouts.each do |block|
       BlockPayout.where(block: block).delete_all
     end
   end
