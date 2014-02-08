@@ -7,6 +7,6 @@ class Hq::BaseController < InheritedResources::Base
   end
 
   def collection
-    end_of_association_chain.paginate(page: params[:page], per_page: 100)
+    @collection ||= end_of_association_chain.paginate(page: params[:page], per_page: 100)
   end
 end

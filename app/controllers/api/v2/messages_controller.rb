@@ -1,6 +1,6 @@
 class Api::V2::MessagesController < Api::V2::BaseController
   def collection
-    end_of_association_chain.recent
+    @collection ||= end_of_association_chain.recent
   end
 
   def permitted_params

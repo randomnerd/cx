@@ -2,8 +2,12 @@ class Api::V2::WorkerStatsController < Api::V2::BaseController
   before_filter :authenticate_user!
   has_scope :currency_name
 
+  def index
+    render json: collection
+  end
+
   def collection
-    end_of_association_chain.active
+    @collection ||= end_of_association_chain.active
   end
 
   protected

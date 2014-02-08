@@ -2,7 +2,7 @@ class Api::V2::NotificationsController < Api::V2::BaseController
   has_scope :user
 
   def collection
-    end_of_association_chain.recent
+    @collection ||= end_of_association_chain.recent
   end
 
   def permitted_params

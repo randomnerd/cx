@@ -3,7 +3,7 @@ class Api::V2::DepositsController < Api::V2::BaseController
   has_scope :by_currency_name, as: :currency_name
 
   def collection
-    end_of_association_chain.unprocessed
+    @collection ||= end_of_association_chain.unprocessed
   end
 
   protected

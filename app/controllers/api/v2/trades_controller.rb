@@ -4,6 +4,6 @@ class Api::V2::TradesController < Api::V2::BaseController
 
   protected
   def collection
-    @trades ||= end_of_association_chain.limit(50).order('created_at desc')
+    @collection ||= end_of_association_chain.limit(50).order('created_at desc')
   end
 end

@@ -178,7 +178,10 @@ class Balance < ActiveRecord::Base
   def rework
     self.with_lock do
 
-      balance_changes.where('comment != ?', 'migrated balance').where('comment != ?', 'administrative adjustment').delete_all
+      balance_changes.where(subject_id: nil).
+      where('comment not in (?)', ['migrated balance', 'incomes for dumping']).
+      delete_all
+
       verify!
 
       actions = []
