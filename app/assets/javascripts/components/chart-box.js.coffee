@@ -3,7 +3,6 @@ Cx.ChartBoxComponent = Ember.Component.extend
   init: -> Ember.run.later => @fillChart() if @get('pair.id')
   initChart: ->
     groupingUnits = [
-      ['minute',[5, 10, 15, 30]]
       ['hour',[1, 2, 3, 4, 6, 8, 12]]
       ['day',[1,2,3]]
       ['week',[1,2]]
@@ -21,7 +20,6 @@ Cx.ChartBoxComponent = Ember.Component.extend
           { type : 'day', count : 2, text : '2D' }
           { type : 'week', count : 1, text : '1W' }
           { type : 'month', count : 1, text : '1M' }
-          { type : 'all', count : 1, text : 'All' }
         ]
         selected : @defaultButton
         inputEnabled : false
