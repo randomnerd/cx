@@ -1,10 +1,11 @@
 class Api::V2::OrdersController < Api::V2::BaseController
   belongs_to :trade_pair, param: :tradePair, optional: true
+  has_scope :bid
   before_filter :authenticate_user!, except: [:index, :show]
   before_filter :no_global_index
 
   def collection
-    @collection ||= end_of_association_chain.active.order(:rate)
+    @collection ||= end_of_association_chain.active.bid_sort(!params[:bid])
   end
 
   def cancel

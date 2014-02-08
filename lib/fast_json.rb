@@ -2,13 +2,7 @@ class FastJson
   def self.dump(rel)
     fields = rel.try(:json_fields) || rel.attribute_names
     sfields = fields.map { |f| "#{rel.klass.name.underscore.pluralize}.#{f}" }
-    data = rel.pluck(*sfields).map do |attrs|
-      jattrs = attrs.map do |a|
-        a.kind_of?(ActiveSupport::TimeWithZone) ? a.iso8601 : a
-      end
-      Hash[fields.zip(jattrs)]
-    end
-
+    data = rel.pluck(*sfields).map { |attrs| Hash[fields.zip(attrs)] }
     MultiJson.dump({ rel.name.pluralize.underscore => data })
   end
 
