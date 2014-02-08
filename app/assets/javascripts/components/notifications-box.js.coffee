@@ -9,8 +9,7 @@ Cx.NotificationsBoxComponent = Ember.Component.extend
         url: "/api/v2/notifications/ack_all"
         type: "POST"
         success: (data) =>
-          @get('items.unAck').forEach =>
-            rec = @get('items.unAck.firstObject')
+          @get('items.unAck').forEach (rec) =>
             rec?.set 'ack', true
 
     removeAll: ->
