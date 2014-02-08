@@ -6,9 +6,7 @@ class Api::V2::OrdersController < Api::V2::BaseController
   before_filter :set_bid_both
 
   def collection
-    @collection ||= end_of_association_chain.active.scoping do
-      @both ? scoped : bid_sort(@bid)
-    end
+    @collection ||= end_of_association_chain.active.order(rate: :asc)
   end
 
   def book
@@ -38,7 +36,7 @@ class Api::V2::OrdersController < Api::V2::BaseController
   end
 
   def set_bid_both
-    @both ||= params[:bid].present?
+    @both = !params[:bid].present?
     @bid = params[:bid] == 'true'
   end
 end

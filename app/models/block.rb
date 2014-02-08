@@ -26,8 +26,8 @@ class Block < ActiveRecord::Base
   end
 
   def pusher_update
-    return unless self.class.recent.include? self
-    PusherMsg.perform_async(pusher_channel, "u", self.as_json(root: false))
+    return unless currency.blocks.recent.include? self
+    super
   end
 
   def process_payouts

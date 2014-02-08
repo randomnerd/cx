@@ -11,7 +11,8 @@ Cx.OrderBookComponent = Ember.Component.extend
       o.get('cancelled') == false &&
       o.get('complete') == false
 
-    orders = orders.reverse() if @buy
+    orders = _.sortBy(orders, (o) -> o.get('rate'))
+    orders.reverse() if @buy
 
     for order in orders
       len = _.keys(book).length

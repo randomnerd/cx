@@ -24,17 +24,33 @@
 @h.setupPusher = (store, model, key, ctrl, updPush = true) ->
   c = pusher.subscribe(key)
   c.callbacks._callbacks = {}
+  handleUpdate = (data, retries = 0, max_retries = 10, timeout = 100) ->
+    # console.log "handleUpdate #{model} (##{retries})", data
+    obj = store.getById(model, data.id)
+    failed = false
+    if obj
+      for k, v of data.changes
+        cv = obj.get(k)
+        cv = cv.toISOString() if typeof cv?.toISOString == 'function'
+        unless cv == v[0] || cv == undefined
+          failed = true
+          # console.log "#{model}##{data.id} | invalid initial #{k}: #{cv} != #{v[0]}"
+      if not failed
+        obj.set(k, v[1]) for k, v of data.changes
+      else if retries < max_retries
+        setTimeout (-> handleUpdate(data, retries + 1)), timeout
+
+    else if retries < max_retries
+      # console.log 'not found, scheduling'
+      setTimeout (-> handleUpdate(data, retries + 1)), timeout
+
   c.bind "c", (o) ->
     return if store.getById(model, o.id)
     store.pushPayload(model, h.manyHash(model, o))
     obj = store.getById(model, o.id)
     ctrl?.addObject(obj)
 
-  c.bind "u", (o) ->
-    f = store.getById(model, o.id)
-    return if f && +(new Date(f?.get('updated_at'))) > +(new Date(o.updated_at))
-    return if !f && !updPush
-    store.pushPayload(model, h.manyHash(model, o))
+  c.bind "u", (data) -> handleUpdate(data)
 
   c.bind "uu", (o) ->
     f = store.getById(model, o.id)
@@ -45,12 +61,11 @@
       else
         f.set key, value
 
-  c.bind "d", (o) ->
-    Ember.run.next ->
-      obj = store.getById(model, o.id)
-      return unless obj
-      ctrl?.removeObject(obj)
-      obj.deleteRecord()
+  c.bind "d", (oid) ->
+    obj = store.getById(model, oid)
+    return unless obj
+    ctrl?.removeObject(obj)
+    obj.deleteRecord()
 
   return c
 

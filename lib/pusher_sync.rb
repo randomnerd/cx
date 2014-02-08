@@ -18,12 +18,20 @@ module PusherSync
 
   def pusher_update
     return if skip_pusher
-    PusherMsg.perform_async(pusher_channel, "u", FastJson.dump_one(self, false))
+    unless fields = self.class.try(:json_fields)
+      serializer = Object.const_get("#{self.class.name}Serializer")
+      fields = serializer.new(self, root: false).as_json.keys
+    end
+    upd = changes.reject { |k,v| !fields.include? k.to_sym }
+    len = upd.keys.reject { |k, v| %w(created_at updated_at).include? k }.count
+    return unless len > 0
+    puts "#{self.class.name}##{self.id}: #{upd.inspect}"
+    PusherMsg.perform_async(pusher_channel, "u", {id: id, changes: upd})
   end
 
   def pusher_delete
     return if skip_pusher
-    PusherMsg.perform_async(pusher_channel, "d", FastJson.dump_one(self, false))
+    PusherMsg.perform_async(pusher_channel, "d", self.id)
   end
 
   def pusher_channel
