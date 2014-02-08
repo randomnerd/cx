@@ -66,6 +66,7 @@ class Currency < ActiveRecord::Base
   end
 
   def calc_mining_score
+    return [1, 'BTC'] if %w(BTC LTC).include? self.name
     return 0 unless mining_enabled && diff
     rate, market = avg_rate
     return 0 if rate == 0
