@@ -21,7 +21,7 @@ def process_withdrawals(curr, skip = 0, batch = 100, unk = 0)
         w.failed = false
         w.processed = true
         w.save(validate: false)
-        if bc = BalanceChange.find_by({subject: w}, 'amount > 0')
+        if bc = BalanceChange.find_by(subject: w).find_by('amount > 0')
           puts 'was refunded'
           bc.delete
           bc.balance.verify!
