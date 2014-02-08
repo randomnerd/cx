@@ -1,31 +1,25 @@
 class FastJson
-  def self.name_fields(klass)
-    klass.json_fields.map do |field|
-      field.kind_of?(String) ? field.split(' as ').last : field
-    end
-  end
-
   def self.dump(rel)
-    data = rel.pluck(*rel.json_fields).map do |attrs|
-      Hash[FastJson.name_fields(rel).zip(attrs)]
-    end
-
-    hash = { rel.name.pluralize.underscore => data }
-    Oj.dump hash
+    fields = rel.try(:json_fields) || rel.attribute_names
+    sfields = fields.map { |f| "#{rel.klass.name.underscore.pluralize}.#{f}" }
+    data = rel.pluck(*sfields).map { |attrs| Hash[fields.zip(attrs)] }
+    MultiJson.dump({ rel.name.pluralize.underscore => data })
   end
 
   def self.dump_one(obj, wrap = true)
     o = Object.const_get("#{obj.class.name}Serializer")
     data = o.new(obj, root: false)
   rescue
-    data = obj.as_json(only: obj.class.try(:json_fields))
+    data = obj.as_json(root: false)
   ensure
     data = { obj.class.name.underscore.pluralize => [data] } if wrap
-    return Oj.dump(data)
+    return MultiJson.dump(data)
   end
 
-  def self.raw_dump(rel, *fields)
-    query = rel.select(rel.json_fields).arel
-    Oj.dump rel.connection.select_all(query).to_a
+  def self.raw_dump(rel)
+    fields = rel.try(:json_fields) || rel.attribute_names
+    fields.map! { |f| "#{rel.klass.name.underscore.pluralize}.#{f}" }
+    query = rel.select(fields).arel
+    MultiJson.dump(rel.connection.select_rows(query.to_sql))
   end
 end

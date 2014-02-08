@@ -1,22 +1,11 @@
 class Api::V2::OrdersController < Api::V2::BaseController
   belongs_to :trade_pair, param: :tradePair, optional: true
+  has_scope :bid
   before_filter :authenticate_user!, except: [:index, :show]
+  before_filter :no_global_index
 
-  def index
-    render json: FastJson.dump(collection.active)
-  end
-
-  def show
-    render json: FastJson.dump_one(resource)
-  end
-
-  def create
-    order = current_user.orders.create(permitted_params[:order])
-    if order.persisted?
-      render json: FastJson.dump_one(order)
-    else
-      render json: {errors: order.errors}, status: :unprocessable_entity
-    end
+  def collection
+    @collection ||= end_of_association_chain.active.bid_sort(!params[:bid])
   end
 
   def cancel
@@ -30,6 +19,12 @@ class Api::V2::OrdersController < Api::V2::BaseController
   end
 
   def own
-    render json: FastJson.dump(collection.active.where(user_id: current_user.id))
+    render json: FastJson.dump(collection.where(user_id: current_user.id))
+  end
+
+  def no_global_index
+    return unless params[:action] == 'index'
+    return if params[:tradePair]
+    render json: { errors: [{ tradePair: ['Please specify tradePair'] }] }
   end
 end

@@ -1,11 +1,3 @@
-module Rack
-  class Request
-    def trusted_proxy?(ip)
-      ip == '95.211.38.220'
-    end
-  end
-end
-
 Rack::Attack.throttle('req/api/ip', :limit => 1, :period => 1.second) do |req|
   # If the return value is truthy, the cache key for the return value
   # is incremented and compared with the limit. In this case:

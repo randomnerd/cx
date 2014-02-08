@@ -32,4 +32,14 @@ class TradePair < ActiveRecord::Base
     return 0 if t_amt == 0
     (t_mkt_amt / t_amt).round(8).to_f
   end
+
+  def self.json_fields
+    [:id, :buy_fee, :sell_fee, :last_price, :currency_id, :market_id,
+             :url_slug, :rate_min, :rate_max, :currency_volume,
+             :market_volume, :updated_at]
+  end
+
+  def as_json(options = {})
+    super(options.merge(only: self.class.json_fields))
+  end
 end

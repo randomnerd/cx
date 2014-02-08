@@ -1,7 +1,8 @@
 class Api::V2::NotificationsController < Api::V2::BaseController
   has_scope :user
-  def index
-    render json: FastJson.dump(collection.recent)
+
+  def collection
+    @collection ||= end_of_association_chain.recent
   end
 
   def permitted_params
@@ -9,14 +10,12 @@ class Api::V2::NotificationsController < Api::V2::BaseController
   end
 
   def ack_all
-    end_of_association_chain.unack.each do |n|
-      n.update_attribute :ack, true
-    end
+    collection.unack.update_all ack: true
     render json: nil
   end
 
   def del_all
-    end_of_association_chain.destroy_all
+    Notification.where(user:current_user).delete_all
     render json: nil
   end
 

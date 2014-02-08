@@ -14,6 +14,7 @@ class Currency < ActiveRecord::Base
   scope :by_mining_score, -> { with_mining.non_virtual.public.where(mining_skip_switch: false).order('mining_score desc') }
   scope :with_algo, -> algo { where(algo: algo) }
   scope :virtual, -> { where(virtual: true) }
+  attr_reader :pool
 
   include PusherSync
   def pusher_channel
@@ -65,6 +66,7 @@ class Currency < ActiveRecord::Base
   end
 
   def calc_mining_score
+    return [1, 'BTC'] if %w(BTC LTC).include? self.name
     return 0 unless mining_enabled && diff
     rate, market = avg_rate
     return 0 if rate == 0
@@ -233,7 +235,7 @@ class Currency < ActiveRecord::Base
   def update_blocks
     self.blocks.immature.each &:update_confirmations
 
-    self.blocks.orphan.each do |block|
+    self.blocks.orphan.with_payouts.each do |block|
       BlockPayout.where(block: block).delete_all
     end
   end
@@ -252,5 +254,13 @@ class Currency < ActiveRecord::Base
       :mining_score, :mining_score_market, :mining_skip_switch, :virtual,
       :switched_at
     ]
+  end
+
+  def as_json(options = {})
+    super(options.merge(only: self.class.json_fields))
+  end
+
+  def start_pool
+    @pool ||= Pool::Server.new(self)
   end
 end

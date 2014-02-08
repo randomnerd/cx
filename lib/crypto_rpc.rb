@@ -7,15 +7,15 @@ class CryptoRPC
 
   def construct_rpc(method, args)
     {
-      timeout: 30,
+      timeout: 5,
       port: @currency.port,
       basic_auth: @auth,
-      body: {
+      body: MultiJson.dump({
         id: "cx-#{SecureRandom.hex(16)}",
         jsonrpc: '1.0',
         method: method.to_s,
         params: args
-      }.to_json
+      })
     }
   end
 
@@ -25,8 +25,6 @@ class CryptoRPC
     raise err if err
     r.parsed_response.try(:[], 'result')
 
-  rescue Net::OpenTimeout
-    puts "[#{Time.now}] #{@currency.name}: connection timeout"
   rescue URI::InvalidURIError
     puts "[#{Time.now}] #{@currency.name}: invalid RPC URL"
   rescue Errno::ECONNREFUSED
@@ -39,6 +37,11 @@ class CryptoRPC
     puts "[#{Time.now}] #{@currency.name}: host unreachable"
   rescue Errno::EPIPE
     puts "[#{Time.now}] #{@currency.name}: broken pipe"
+  rescue => e
+    info = err ? err : e.inspect
+    puts "[#{Time.now}] #{@currency.name}: request failed: #{info}"
+    puts "method: #{method}, params: #{args.join(', ')}"
+    puts "stack: #{e.backtrace.join("\n")}" unless err
   end
 
   def method_missing(method, *args)

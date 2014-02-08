@@ -126,10 +126,14 @@ class Trade < ActiveRecord::Base
 
     return if Rails.env.test?
     Pusher["chartItems-#{self.trade_pair_id}"].trigger('chartItem#update',
-      rec.as_json(only: [:time, :o, :h, :l, :c, :v]))
+      rec.as_json(root: false))
   end
 
   def self.json_fields
     [:id, :created_at, :bid, :rate, :amount, :ask_user_id, :bid_user_id, :trade_pair_id]
+  end
+
+  def as_json(options = {})
+    super(options.merge(only: self.class.json_fields))
   end
 end

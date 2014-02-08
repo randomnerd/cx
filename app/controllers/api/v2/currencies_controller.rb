@@ -1,8 +1,8 @@
 class Api::V2::CurrenciesController < Api::V2::BaseController
   has_scope :by_name, as: :name
 
-  def index
-    render json: FastJson.dump(end_of_association_chain.public)
+  def collection
+    @collection ||= end_of_association_chain.public
   end
 
   def generate_address
@@ -11,7 +11,7 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
     balance = current_user.balance_for(resource.id)
     render json: {
       balances: [
-        BalanceSerializer.new(balance, root: false)
+        BalanceSerializer.new(balance)
       ]
     }
   end
@@ -43,14 +43,13 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
         title: "#{resource.name} withdrawal queued",
         body: "Withdraw #{params[:amount]} #{resource.name} to #{params[:address]}"
       )
-      render json: FastJson.dump_one(notify)
     else
       errors = w.errors.messages.map {|field, msg| [field,msg].join(' ')}.join(', ')
       notify = current_user.notifications.create(
         title: "#{resource.name} withdrawal failed",
         body: "Errors: #{errors}"
       )
-      render json: FastJson.dump_one(notify)
     end
+    render json: notify
   end
 end

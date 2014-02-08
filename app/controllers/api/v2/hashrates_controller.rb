@@ -2,6 +2,10 @@ class Api::V2::HashratesController < Api::V2::BaseController
   has_scope :currency_name
 
   def index
-    respond_with end_of_association_chain.active
+    render json: collection
+  end
+
+  def collection
+    @collection ||= end_of_association_chain.active
   end
 end

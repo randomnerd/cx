@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
     name ||= email.split('@').first
     return if name == nickname
     name.gsub!(/[^\w]/, '')
+    name += rand(10).to_s while !!User.where('nickname ilike ?', name).first
     return if name.empty?
     name += rand(10).to_s while !!User.find_by_nickname(name)
     update_attribute :nickname, name
@@ -57,7 +58,7 @@ class User < ActiveRecord::Base
   def totp_qrcode_url
     return unless totp
     data = totp.provisioning_uri("CoinEx-#{self.email}")
-    "https://chart.googleapis.​com/chart?chs=200x200&chld=M|0&cht=qr&chl=#{data}"
+    "https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=#{data}"
   end
 
   def totp_verify(code)

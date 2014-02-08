@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140118130354) do
+ActiveRecord::Schema.define(version: 20140201184501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,10 +144,12 @@ ActiveRecord::Schema.define(version: 20140118130354) do
     t.boolean  "mining_skip_switch",  default: false
     t.boolean  "virtual",             default: false
     t.datetime "switched_at"
+    t.integer  "mining_port"
   end
 
   add_index "currencies", ["algo"], name: "index_currencies_on_algo", using: :btree
   add_index "currencies", ["mining_enabled"], name: "index_currencies_on_mining_enabled", using: :btree
+  add_index "currencies", ["mining_port"], name: "index_currencies_on_mining_port", using: :btree
   add_index "currencies", ["mining_skip_switch"], name: "index_currencies_on_mining_skip_switch", using: :btree
   add_index "currencies", ["name"], name: "index_currencies_on_name", using: :btree
   add_index "currencies", ["public"], name: "index_currencies_on_public", using: :btree
@@ -204,7 +206,10 @@ ActiveRecord::Schema.define(version: 20140118130354) do
     t.boolean  "system"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
   end
+
+  add_index "messages", ["created_at"], name: "index_messages_on_created_at", using: :btree
 
   create_table "notifications", force: true do |t|
     t.text     "body"
@@ -365,10 +370,12 @@ ActiveRecord::Schema.define(version: 20140118130354) do
     t.datetime "updated_at"
     t.boolean  "switchpool",            default: false
     t.string   "algo"
+    t.integer  "d1a",         limit: 8, default: 0
   end
 
   add_index "worker_stats", ["algo"], name: "index_worker_stats_on_algo", using: :btree
   add_index "worker_stats", ["currency_id"], name: "index_worker_stats_on_currency_id", using: :btree
+  add_index "worker_stats", ["d1a"], name: "index_worker_stats_on_d1a", using: :btree
   add_index "worker_stats", ["switchpool"], name: "index_worker_stats_on_switchpool", using: :btree
   add_index "worker_stats", ["updated_at"], name: "index_worker_stats_on_updated_at", using: :btree
   add_index "worker_stats", ["worker_id"], name: "index_worker_stats_on_worker_id", using: :btree

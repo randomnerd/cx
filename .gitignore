@@ -16,6 +16,6 @@
 /tmp
 /public/assets
 /config/database.yml
-
-
 /coinex_api.php
+torquebox-lite
+

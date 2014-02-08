@@ -1,15 +1,6 @@
 class Api::V2::MessagesController < Api::V2::BaseController
-  def index
-    render json: FastJson.dump(Message.recent)
-  end
-
-  def create
-    msg = current_user.messages.create(permitted_params[:message])
-    if msg.valid?
-      render json: FastJson.dump_one(msg, true)
-    else
-      render json: {errors: msg.errors}, status: :unprocessable_entity
-    end
+  def collection
+    @collection ||= end_of_association_chain.recent
   end
 
   def permitted_params

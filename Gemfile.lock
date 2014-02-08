@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/celluloid/celluloid.git
+  revision: 9f0924df92767bdd2586691e4371d3b611e3c56e
+  specs:
+    celluloid (0.16.0.pre)
+      timers (~> 2.0.0)
+
+GIT
   remote: git://github.com/code-mancers/rails-mailgun.git
   revision: dc4b0fcaf5dd12d730c45e91d41c1c1d4ee03699
   specs:
@@ -20,9 +27,17 @@ GIT
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
 
+GIT
+  remote: git://github.com/erundook/active_model_serializers.git
+  revision: a43a6a3fe3cd9b9a5d00b529a5d4b98406704cbc
+  branch: patch-1
+  specs:
+    active_model_serializers (0.9.0.alpha1)
+      activemodel (>= 3.2)
+
 GEM
   remote: https://rubygems.org/
-  remote: https://2edaf45f:4e8fa5c0@www.mikeperham.com/rubygems/
+  remote: http://2edaf45f:4e8fa5c0@www.mikeperham.com/rubygems/
   specs:
     actionmailer (4.0.2)
       actionpack (= 4.0.2)
@@ -33,8 +48,6 @@ GEM
       erubis (~> 2.7.0)
       rack (~> 1.5.2)
       rack-test (~> 0.6.2)
-    active_model_serializers (0.8.1)
-      activemodel (>= 3.0)
     activemodel (4.0.2)
       activesupport (= 4.0.2)
       builder (~> 3.1.0)
@@ -44,37 +57,44 @@ GEM
       activesupport (= 4.0.2)
       arel (~> 4.0.0)
     activerecord-deprecated_finders (1.0.3)
+    activerecord-jdbc-adapter (1.3.5)
+      activerecord (>= 2.2)
+    activerecord-jdbcpostgresql-adapter (1.3.5)
+      activerecord-jdbc-adapter (~> 1.3.5)
+      jdbc-postgres (>= 9.1)
     activesupport (4.0.2)
       i18n (~> 0.6, >= 0.6.4)
       minitest (~> 4.2)
       multi_json (~> 1.3)
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
-    addressable (2.3.5)
     arel (4.0.1)
     atomic (1.1.14)
+    atomic (1.1.14-java)
     barber (0.4.2)
       ember-source
       execjs
       handlebars-source
     bcrypt-ruby (3.1.2)
+    bcrypt-ruby (3.1.2-java)
     builder (3.1.4)
-    cancan (1.6.10)
-    capistrano (3.0.1)
+    capistrano (3.1.0)
       i18n
       rake (>= 10.0.0)
       sshkit (>= 0.0.23)
     capistrano-bundler (1.1.1)
       capistrano (~> 3.0)
       sshkit (>= 1.2.0)
-    capistrano-rails (1.1.0)
-      capistrano (>= 3.0.0)
-      capistrano-bundler (>= 1.0.0)
-    celluloid (0.15.2)
-      timers (~> 1.1.0)
+    capistrano-rails (1.1.1)
+      capistrano (~> 3.1)
+      capistrano-bundler (~> 1.1)
+    celluloid-io (0.15.0)
+      celluloid (>= 0.15.0)
+      nio4r (>= 0.5.0)
     clockwork (0.7.0)
       activesupport
       tzinfo (~> 0.3.35)
+    closure-compiler (1.1.10)
     coderay (1.1.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
@@ -84,7 +104,6 @@ GEM
       execjs
     coffee-script-source (1.6.3)
     connection_pool (1.2.0)
-    cookiejar (0.3.0)
     daemons (1.1.9)
     dalli (2.6.4)
     database_cleaner (1.2.0)
@@ -97,37 +116,27 @@ GEM
     devise-async (0.9.0)
       devise (~> 3.2)
     diff-lcs (1.2.5)
-    em-http-request (1.1.2)
-      addressable (>= 2.3.4)
-      cookiejar
-      em-socksify (>= 0.3)
-      eventmachine (>= 1.0.3)
-      http_parser.rb (>= 0.6.0)
-    em-socksify (0.3.0)
-      eventmachine (>= 1.0.0.beta.4)
-    ember-data-source (0.14)
+    ember-data-source (1.0.0.beta.6)
       ember-source
     ember-source (1.2.0.1)
       handlebars-source (~> 1.1.2)
     erubis (2.7.0)
-    eventmachine (1.0.3)
     execjs (2.0.2)
     factory_girl (4.3.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.3.0)
       factory_girl (~> 4.3.0)
       railties (>= 3.0.0)
+    ffi (1.9.3-java)
     font-awesome-sass (4.0.2)
       sass-rails (>= 3.1.1)
-    fork (1.0.0)
-    fork_break (0.1.1)
-      fork
-    handlebars-source (1.1.2)
+    handlebars-source (1.2.1)
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
     hike (1.2.3)
-    http_parser.rb (0.6.0)
+    hitimes (1.2.1)
+    hitimes (1.2.1-java)
     httparty (0.12.0)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
@@ -136,14 +145,19 @@ GEM
     inherited_resources (1.4.1)
       has_scope (~> 0.6.0.rc)
       responders (~> 1.0.0.rc)
-    jbuilder (1.5.3)
-      activesupport (>= 3.0.0)
-      multi_json (>= 1.2.0)
+    jdbc-postgres (9.3.1100)
     jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jrjackson (0.2.6)
     json (1.8.1)
+    json (1.8.1-java)
     kgio (2.8.1)
+    krypt (0.0.1)
+      krypt-core (= 0.0.1)
+    krypt-core (0.0.1-java)
+      krypt-provider-jdk (= 0.0.1)
+    krypt-provider-jdk (0.0.1)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -155,16 +169,24 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
-    newrelic_rpm (3.7.1.180)
-    oj (2.5.1)
-    oj_mimic_json (1.0.0)
+    newrelic_rpm (3.7.1.188)
+    nio4r (1.0.0)
+    nio4r (1.0.0-java)
+    oj (2.5.4)
     orm_adapter (0.5.0)
     pg (0.17.1)
     polyglot (0.3.3)
-    pry (0.9.12.4)
+    pry (0.9.12.5)
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
+    pry (0.9.12.5-java)
+      coderay (~> 1.0)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+      spoon (~> 0.0)
+    puma (2.7.1-java)
+      rack (>= 1.1, < 2.0)
     pusher (0.12.0)
       httpclient (~> 2.3.0)
       multi_json (~> 1.0)
@@ -186,8 +208,6 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.0.2)
       sprockets-rails (~> 2.0.0)
-    rails-patch-json-encode (0.0.1)
-      multi_json
     railties (4.0.2)
       actionpack (= 4.0.2)
       activesupport (= 4.0.2)
@@ -195,9 +215,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     raindrops (0.12.0)
     rake (10.1.1)
-    rdoc (3.12.2)
-      json (~> 1.4)
-    redis (3.0.6)
+    redis (3.0.7)
     redis-namespace (1.4.1)
       redis (~> 3.0.4)
     responders (1.0.0)
@@ -221,10 +239,7 @@ GEM
       railties (>= 4.0.0, < 5.0)
       sass (>= 3.1.10)
       sprockets-rails (~> 2.0.0)
-    sdoc (0.3.20)
-      json (>= 1.1.3)
-      rdoc (~> 3.10)
-    shoulda-matchers (2.4.0)
+    shoulda-matchers (2.5.0)
       activesupport (>= 3.0.0)
     sidekiq (2.17.3)
       celluloid (>= 0.15.2)
@@ -243,6 +258,8 @@ GEM
       temple (~> 0.6.6)
       tilt (>= 1.3.3, < 2.1)
     slop (3.4.7)
+    spoon (0.0.4)
+      ffi
     sprockets (2.10.1)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -259,11 +276,17 @@ GEM
     temple (0.6.7)
     term-ansicolor (1.2.2)
       tins (~> 0.8)
+    therubyrhino (2.0.2)
+      therubyrhino_jar (>= 1.7.3)
+    therubyrhino_jar (1.7.4)
     thor (0.18.1)
     thread_safe (0.1.3)
       atomic
+    thread_safe (0.1.3-java)
+      atomic
     tilt (1.4.1)
-    timers (1.1.0)
+    timers (2.0.0)
+      hitimes
     tins (0.13.1)
     treetop (1.4.15)
       polyglot
@@ -272,12 +295,10 @@ GEM
     uglifier (2.4.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    unicorn (4.7.0)
+    unicorn (4.8.1)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
-    unicorn-worker-killer (0.4.2)
-      unicorn (~> 4)
     warden (1.2.3)
       rack (>= 1.0)
     will_paginate (3.0.5)
@@ -285,51 +306,54 @@ GEM
       will_paginate (>= 3.0.3)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
-  cancan
+  active_model_serializers!
+  activerecord-jdbcpostgresql-adapter
   capistrano
   capistrano-bundler
   capistrano-rails
+  celluloid!
+  celluloid-io
   clockwork
+  closure-compiler
   coffee-rails (~> 4.0.0)
   daemons
   dalli
   database_cleaner
   devise
   devise-async
-  em-http-request
   ember-rails!
   factory_girl_rails (~> 4.0)
   font-awesome-sass
-  fork_break
   has_scope
   httparty
   inherited_resources (~> 1.4.1)
-  jbuilder (~> 1.2)
+  jrjackson
+  krypt
   multi_json
   newrelic_rpm
   oj
-  oj_mimic_json
   pg
   pry
+  puma
   pusher
   quiet_assets
   rack-attack
   rails (= 4.0.2)
   rails-mailgun!
-  rails-patch-json-encode
   rotp
   rspec-rails
   sass-rails (~> 4.0.0)
-  sdoc
   shoulda-matchers
   sidekiq-pro
   sinatra
   slim
+  therubyrhino
+  timers
   uglifier (>= 1.3.0)
   unicorn
-  unicorn-worker-killer
   will_paginate (~> 3.0)
   will_paginate-bootstrap

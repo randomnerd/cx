@@ -320,6 +320,7 @@ group('currencies.name, incomes.currency_id').
 select('sum(amount) as amount, currencies.name, currency_id').
 order('currencies.name').map {|i|
   next unless i.currency.balance_diff_neg > 0;
+  next if i.currency.name == 'UNO';
   User.find_by_email('dumper@coinex.pw').balance_for(i.currency_id).add_funds(i.amount, nil, 'incomes for dumping')
   Income.where(currency_id: i.currency_id).delete_all
   [i.currency.name, i.amount.to_f / 10 ** 8]
@@ -327,7 +328,10 @@ order('currencies.name').map {|i|
 
 
 TradePair.where(market_id: 28).sum(:market_volume).to_f/10**8 # BTC
-TradePair.where(market_id: 33).sum(:market_volume).to_f/10**8 # LTC
+(
+  TradePair.where(market_id: 33).sum(:market_volume) +
+  TradePair.where(currency_id: 33).sum(:currency_volume)
+).to_f/10**8 # LTC
 
 pp User.joins(:balances).where(balances:{currency_id: 28}, last_sign_in_at:nil).order('balances.amount desc').limit(30).map {|u| [u.email, u.balance_for(28).amount.to_f/10**8]};0
 

@@ -11,6 +11,7 @@ class Block < ActiveRecord::Base
     joins(:currency).where(currencies: {name: name})
   }
   scope :recent, -> { limit(20).order('created_at desc') }
+  scope :with_payouts, -> { joins(:block_payouts) }
   scope :non_switchpool, -> { where(switchpool: false) }
 
   include ApplicationHelper
@@ -26,7 +27,7 @@ class Block < ActiveRecord::Base
 
   def pusher_update
     return unless self.class.recent.include? self
-    PusherMsg.perform_async(pusher_channel, "u", BlockSerializer.new(self, root: false))
+    PusherMsg.perform_async(pusher_channel, "u", self.as_json(root: false))
   end
 
   def process_payouts
@@ -65,5 +66,14 @@ class Block < ActiveRecord::Base
     save
   rescue => e
     puts e.inspect
+  end
+
+  def self.json_fields
+    [:id, :created_at, :updated_at, :currency_id, :number, :category,
+             :reward, :finder, :confirmations, :switchpool]
+  end
+
+  def as_json(options = {})
+    super(options.merge(only: self.class.json_fields))
   end
 end

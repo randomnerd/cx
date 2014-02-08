@@ -75,4 +75,14 @@ class Deposit < ActiveRecord::Base
     puts e.inspect
     puts e.backtrace
   end
+
+  def self.json_fields
+    [:id, :created_at, :updated_at, :amount, :txid, :confirmations,
+             :currency_id, :processed]
+  end
+
+  def as_json(options = {})
+    super(options.merge(only: self.class.json_fields))
+  end
+
 end

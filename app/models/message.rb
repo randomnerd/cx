@@ -11,16 +11,12 @@ class Message < ActiveRecord::Base
     "messages"
   end
 
-  scope :recent, -> { includes(:user).order('created_at desc').limit(50) }
+  scope :recent, -> { order('messages.created_at desc').limit(50) }
 
   def user_not_banned
     return unless user.banned?
     expires = time_ago_in_words(user.banned_until)
     errors.add(:user_id, "Banned, ban expires in #{expires}")
-  end
-
-  def name
-    user.try(:nickname)
   end
 
   def account_old_enough
@@ -35,14 +31,15 @@ class Message < ActiveRecord::Base
   end
 
   def set_system
+    self.name = self.user.nickname
     self.system = true if self.user.admin?
   end
 
   def self.json_fields
-    [:id, :body, :created_at, :updated_at, :system, 'users.nickname as name']
+    [:id, :body, :created_at, :updated_at, :system, :name]
   end
 
-  def as_json(args)
-    super(args.merge(methods: [:name]))
+  def as_json(options = {})
+    super(options.merge(only: self.class.json_fields))
   end
 end

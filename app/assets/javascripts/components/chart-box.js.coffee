@@ -36,10 +36,8 @@ Cx.ChartBoxComponent = Ember.Component.extend
             pointFormat: "<div>{series.name}: {point.y}</div>"
         }
       yAxis: [{
-          min: 0
           labels: { style: { color: '#b94a48' } },
-          title: { text: 'Rate', style: { color: '#CC3300' }
-          }
+          title: { text: 'Rate', style: { color: '#CC3300' } }
         }, {
           min: 0
           title: { text: 'Volume', style: { color: '#4572A7' } },
@@ -75,15 +73,15 @@ Cx.ChartBoxComponent = Ember.Component.extend
       type: 'GET'
       success: (data) =>
         for item in data
-          time = +(new Date(item.time.replace(' ','T')+"Z"))
+          time = +(new Date(item[0].replace(' ','T').replace(/\s.*/, '') + "Z"))
           point = [
             time,
-            parseInt(item.o) / Math.pow(10,8),
-            parseInt(item.h) / Math.pow(10,8),
-            parseInt(item.l) / Math.pow(10,8),
-            parseInt(item.c) / Math.pow(10,8)
+            parseInt(item[1]) / Math.pow(10,8),
+            parseInt(item[2]) / Math.pow(10,8),
+            parseInt(item[3]) / Math.pow(10,8),
+            parseInt(item[4]) / Math.pow(10,8)
           ]
-          vpoint = [ time, parseInt(item.v) / Math.pow(10,8) ]
+          vpoint = [ time, parseInt(item[5]) / Math.pow(10,8) ]
           @series.addPoint(point, false, false, false)
           @vseries.addPoint(vpoint, false, false, false)
 
