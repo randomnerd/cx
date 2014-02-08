@@ -3,15 +3,17 @@ class Api::V2::OrdersController < Api::V2::BaseController
   has_scope :bid
   before_filter :authenticate_user!, except: [:index, :show, :book]
   before_filter :no_global_index
+  before_filter :set_bid_both
 
   def collection
-    @collection ||= end_of_association_chain.active.bid_sort(params[:bid] != 'true')
+    @collection ||= end_of_association_chain.active.scoping do
+      @both ? scoped : bid_sort(@bid)
+    end
   end
 
   def book
-    both = !params[:bid].present?
     pair = TradePair.find params[:tradePair]
-    book = both ? pair.order_book_both : pair.order_book(params[:bid] == 'true')
+    book = @both ? pair.order_book_both : pair.order_book(@bid)
     render json: { order_book: book }
   end
 
@@ -33,5 +35,10 @@ class Api::V2::OrdersController < Api::V2::BaseController
     return unless %w(index book).include? params[:action]
     return if params[:tradePair]
     render json: { errors: [{ tradePair: ['Please specify tradePair'] }] }
+  end
+
+  def set_bid_both
+    @both ||= params[:bid].present?
+    @bid = params[:bid] == 'true'
   end
 end
