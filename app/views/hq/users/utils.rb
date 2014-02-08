@@ -21,7 +21,7 @@ def process_withdrawals(curr, skip = 0, batch = 100, unk = 0)
         w.failed = false
         w.processed = true
         w.save(validate: false)
-        if bc = BalanceChange.where(subject: w).where('amount > 0').first
+        if bc = BalanceChange.find_by({subject: w}, 'amount > 0')
           puts 'was refunded'
           bc.delete
           bc.balance.verify!
@@ -182,10 +182,10 @@ map {|bc|
   next if t.ask_user_id == t.bid_user_id
   bcs = BalanceChange.where(subject: t)
   i = {id: bc.subject_id, count: bc.count}
-  i[:ask_cur] = bcs.where(balance: t.ask_user.balance_for(t.currency_id)).first
-  i[:bid_cur] = bcs.where(balance: t.bid_user.balance_for(t.currency_id)).first
-  i[:bid_mkt] = bcs.where(balance: t.bid_user.balance_for(t.market_id)).first
-  i[:ask_mkt] = bcs.where(balance: t.ask_user.balance_for(t.market_id)).first
+  i[:ask_cur] = bcs.find_by(balance: t.ask_user.balance_for(t.currency_id))
+  i[:bid_cur] = bcs.find_by(balance: t.bid_user.balance_for(t.currency_id))
+  i[:bid_mkt] = bcs.find_by(balance: t.bid_user.balance_for(t.market_id))
+  i[:ask_mkt] = bcs.find_by(balance: t.ask_user.balance_for(t.market_id))
   unless i[:ask_cur]
     t.ask_user.balance_for(t.currency_id).unlock_funds(t.amount, t, false)
   end
@@ -362,4 +362,13 @@ def add_deposit(currency, txid)
     currency.add_deposit(deposit)
 
   end
+end
+
+
+def order_book(tp, bid)
+  orders = tp.orders.active.bid(bid)
+  book = orders.group(:rate).order(rate: bid ? :desc : :asc).
+  select(:rate, 'count(id) as count', 'sum(amount-filled)/pow(10,8) as amount')
+  pp book.map { |o| [o.rate, o.amount.round(8), o.market_amount.round(8), o.count] }
+  orders.count
 end

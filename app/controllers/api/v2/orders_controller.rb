@@ -5,7 +5,7 @@ class Api::V2::OrdersController < Api::V2::BaseController
   before_filter :no_global_index
 
   def collection
-    @collection ||= end_of_association_chain.active.bid_sort(!params[:bid])
+    @collection ||= end_of_association_chain.active.bid_sort(params[:bid] != 'true')
   end
 
   def cancel

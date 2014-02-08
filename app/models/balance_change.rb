@@ -54,12 +54,12 @@ class BalanceChange < ActiveRecord::Base
   end
 
   def next
-    balance.balance_changes.where('created_at > ?', self.created_at).first
+    balance.balance_changes.find_by('created_at > ?', self.created_at)
   end
 
   def next_st
-    balance.balance_changes.where(subject: self.subject).
-    where('created_at > ?', self.created_at).first
+    balance.balance_changes.find_by(subject: self.subject).
+    find_by('created_at > ?', self.created_at)
   end
 
 end

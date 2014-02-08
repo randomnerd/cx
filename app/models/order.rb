@@ -12,11 +12,11 @@ class Order < ActiveRecord::Base
   before_save :set_fee
   after_commit :process_async, on: :create
 
-  scope :recent,   ->     { order('created_at desc').limit(50) }
+  scope :recent,   ->     { order(created_at: :desc).limit(50) }
   scope :active,   ->     { where(complete: false).where(cancelled: false) }
   scope :tp,       -> tp  { where(trade_pair_id: tp) }
   scope :bid,      -> b   { where(bid: b) }
-  scope :bid_sort, -> b   { b ? order('rate asc') : order('rate desc') }
+  scope :bid_sort, -> b   { b ? order(rate: :asc) : order(rate: :desc) }
 
   scope :bid_rate, -> b, r {
     b ? where('rate <= ?', r) : where('rate >= ?', r)
@@ -147,7 +147,7 @@ class Order < ActiveRecord::Base
   def check_negatives
     buy_cid = bid ? trade_pair.currency_id : trade_pair.market_id
     # allow order if no negatives
-    return if user.balances.where('amount < 0').empty?
+    return unless user.balances.find_by('amount < 0')
     # allow order if buying back negative currency
     return if user.balance_for(buy_cid).amount < 0 || user.allow_negative_trades
     errors.add(:amount, 'Trading disallowed while you have any negative balances, except buying back on negative currencies')

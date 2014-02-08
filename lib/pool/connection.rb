@@ -55,7 +55,7 @@ class Pool::Connection
 
   def authorize(request)
     user, pass = request.params
-    if user && pass && worker = Worker.where(name: user, pass: pass).first
+    if user && pass && worker = Worker.find_by(name: user, pass: pass)
       request.reply(true)
       stats = worker.worker_stats.where(currency: @server.currency).first_or_create
       @subscription.worker = worker

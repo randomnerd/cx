@@ -31,12 +31,12 @@ class Currency < ActiveRecord::Base
 
   def avg_btc_rate
     return 1 if name == 'BTC'
-    tp = TradePair.where(currency: self, market: Currency.find_by_name('BTC')).first
+    tp = TradePair.find_by(currency: self, market: Currency.find_by_name('BTC'))
     tp.try(:avg_bid_rate) || 0
   end
 
   def avg_ltc_rate
-    tp = TradePair.where(currency: self, market: Currency.find_by_name('LTC')).first
+    tp = TradePair.find_by(currency: self, market: Currency.find_by_name('LTC'))
     tp.try(:avg_bid_rate, 5) || 0
   end
 
