@@ -3,7 +3,7 @@ class Api::V2::OrdersController < Api::V2::BaseController
   before_filter :authenticate_user!, except: [:index, :show]
 
   def collection
-    end_of_association_chain.active
+    end_of_association_chain.active.order(:rate)
   end
 
   def cancel
