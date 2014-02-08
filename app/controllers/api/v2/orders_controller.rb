@@ -1,6 +1,7 @@
 class Api::V2::OrdersController < Api::V2::BaseController
-  belongs_to :trade_pair, param: :tradePair
+  belongs_to :trade_pair, param: :tradePair, optional: true
   before_filter :authenticate_user!, except: [:index, :show]
+  before_filter :no_global_index
 
   def collection
     @collection ||= end_of_association_chain.active.order(:rate)
@@ -18,5 +19,11 @@ class Api::V2::OrdersController < Api::V2::BaseController
 
   def own
     render json: FastJson.dump(collection.where(user_id: current_user.id))
+  end
+
+  def no_global_index
+    return unless params[:action] == 'index'
+    return if params[:tradePair]
+    render json: { errors: [{ tradePair: ['Please specify tradePair'] }] }
   end
 end
