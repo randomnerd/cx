@@ -1,5 +1,5 @@
 class Api::V2::OrdersController < Api::V2::BaseController
-  belongs_to :trade_pair, param: :tradePair, optional: true
+  belongs_to :trade_pair, param: :tradePair
   before_filter :authenticate_user!, except: [:index, :show]
 
   def collection
