@@ -38,7 +38,10 @@ class CryptoRPC
   rescue Errno::EPIPE
     puts "[#{Time.now}] #{@currency.name}: broken pipe"
   rescue => e
-    puts "[#{Time.now}] #{@currency.name}: request failed: #{e.inspect} #{e.backtrace.join("\n")}"
+    info = err ? err : e.inspect
+    puts "[#{Time.now}] #{@currency.name}: request failed: #{info}"
+    puts "method: #{method}, params: #{args.join(', ')}"
+    puts "stack: #{e.backtrace.join("\n")}" unless err
   end
 
   def method_missing(method, *args)

@@ -50,6 +50,6 @@ class Api::V2::CurrenciesController < Api::V2::BaseController
         body: "Errors: #{errors}"
       )
     end
-    respond_with notify.as_json
+    render json: notify
   end
 end
