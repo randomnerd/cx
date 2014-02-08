@@ -16,7 +16,7 @@ class FastJson
     o = Object.const_get("#{obj.class.name}Serializer")
     data = o.new(obj, root: false)
   rescue
-    data = obj
+    data = obj.as_json(root: false)
   ensure
     data = { obj.class.name.underscore.pluralize => [data] } if wrap
     return MultiJson.dump(data)
