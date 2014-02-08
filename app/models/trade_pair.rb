@@ -12,20 +12,26 @@ class TradePair < ActiveRecord::Base
     "tradePairs"
   end
 
-  def order_book(bid = true)
-    orders.active.bid(bid).
-    bid_sort(!bid).group(:rate).
-    select('rate, sum(amount) as amount, (sum(amount-filled)*rate)/pow(10,8) as market_amount').
-    map {|o| [o.rate, o.amount, o.market_amount.round]}
+  def order_book(bid, bid_flag = false, limit = 20)
+    book = orders.active.bid(bid).bid_sort(!bid).group(:rate).limit(20).
+    select(:rate, 'sum(amount-filled) as amount').
+    map do |item|
+      hash = { rate: item.rate, amount: item.amount.to_i }
+      hash[:bid] = bid if bid_flag
+      hash
+    end
+  end
+
+  def order_book_both
+    order_book(false, true) + order_book(true, true)
   end
 
   def avg_bid_rate(cap = 0.2)
     t_amt = 0
     t_mkt_amt = 0
-    order_book.each do |item|
-      rate, amount, market_amount = item
-      t_amt += amount
-      t_mkt_amt += market_amount
+    order_book(true).each do |item|
+      t_amt += item[:amount]
+      t_mkt_amt += (item[:rate] * item[:amount]).to_f / 10**8
       break if t_mkt_amt.to_f/10**8 >= cap
     end
 

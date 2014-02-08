@@ -369,6 +369,6 @@ def order_book(tp, bid)
   orders = tp.orders.active.bid(bid)
   book = orders.group(:rate).order(rate: bid ? :desc : :asc).
   select(:rate, 'count(id) as count', 'sum(amount-filled)/pow(10,8) as amount')
-  pp book.map { |o| [o.rate, o.amount.round(8), o.market_amount.round(8), o.count] }
+  pp book.limit(20).map { |o| [o.rate, o.amount.round(8), o.market_amount.round(8), o.count] }
   orders.count
 end

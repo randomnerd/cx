@@ -41,6 +41,7 @@ Cx::Application.routes.draw do
       resources :orders, only: [:create, :update, :destroy, :index, :show] do
         post :cancel
         collection do
+          get :book
           get :own
         end
       end
