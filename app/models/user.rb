@@ -41,7 +41,6 @@ class User < ActiveRecord::Base
     name.gsub!(/[^\w]/, '')
     name += rand(10).to_s while !!User.where('nickname ilike ?', name).first
     return if name.empty?
-    name += rand(10).to_s while !!User.find_by_nickname(name)
     update_attribute :nickname, name
   end
 
