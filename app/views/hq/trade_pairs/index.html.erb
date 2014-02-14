@@ -36,7 +36,7 @@
               <% if tp.public -%>
                 <%= link_to 'Disable', disable_hq_trade_pair_path(tp), data: { confirm: 'Sure?' }, class: 'btn btn-xs btn-danger' %>
               <% else -%>
-                <%= link_to 'Enable', enable_hq_trade_pair_path(tp), { confirm: 'Sure?' }, class: 'btn btn-xs btn-success' %>
+                <%= link_to 'Enable', enable_hq_trade_pair_path(tp), data: { confirm: 'Sure?' }, class: 'btn btn-xs btn-success' %>
               <% end -%>
             </span>
           </td>
