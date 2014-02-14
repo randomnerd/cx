@@ -45,7 +45,7 @@ class Currency < ActiveRecord::Base
     when 'BTC'  then return 25 * 10**8
     when 'LTC'  then return 25 * 10**8
     when 'LOT'  then return 32896 * 10**8
-    when 'DOGE' then return 500000 * 10**8
+    when 'DOGE' then return 250000 * 10**8
     when 'MOON' then return 1000000 * 10**8
     else
       arr = blocks.limit(10).order('created_at desc').pluck(:reward)
