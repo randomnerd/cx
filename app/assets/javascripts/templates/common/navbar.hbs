@@ -26,6 +26,7 @@
         <li class="">
           {{#link-to 'miningIndex'}}
             Mining
+            <span class="badge badge-info">123 Mh/s</span>
             {{#if currentUser.isSignedIn}}
               {{#if currentUser.hashrate}}
                 <span class="badge badge-info">{{hrate currentUser.hashrate}}</span>
@@ -35,6 +36,10 @@
         </li>
 
       </ul>
+
+    <a class="navbar-banner nomargin" href="https://cryptostocks.com/securities/79" target="_blank">
+      <img src="/images/cryptostocks-banner-narrow.png" alt="" height="40" width="300">
+    </a>
 
       <ul class="nav navbar-nav navbar-right">
         {{#if currentUser.isSignedIn}}
