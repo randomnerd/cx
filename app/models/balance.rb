@@ -241,7 +241,7 @@ class Balance < ActiveRecord::Base
         method, amount, subject = a
         self.send(method, amount, subject)
       end
-
+      self.update_attributes amount: amt, held: held
       { amount: amt, held: held }
     end
   end
