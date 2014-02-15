@@ -11,10 +11,10 @@ class BlockPayout < ActiveRecord::Base
 
   scope :recent, -> { limit(20).order('block_payouts.created_at desc') }
 
-  include PusherSync
-  def pusher_channel
-    "private-blockpayouts-#{user_id}"
-  end
+  # include PusherSync
+  # def pusher_channel
+  #   "private-blockpayouts-#{user_id}"
+  # end
 
   def fee
     return 0 if user.no_fees

@@ -45,10 +45,10 @@ class Block < ActiveRecord::Base
           next
         end
         next unless balance.add_funds(payout.reward_minus_fee, payout)
-        payout.user.notifications.create({
-          title: 'Mining reward',
-          body: "#{n2f payout.reward_minus_fee} #{currency.name} added to your balance"
-        })
+        # payout.user.notifications.create({
+        #   title: 'Mining reward',
+        #   body: "#{n2f payout.reward_minus_fee} #{currency.name} added to your balance"
+        # })
         payout.update_attribute :paid, true
       end
 
