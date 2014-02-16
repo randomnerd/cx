@@ -1,5 +1,7 @@
 class SessionsController < Devise::SessionsController
   def create
+    params[:user][:email].encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+    params[:user][:password].encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
     if current_user
       render json: {
         user: UserSerializer.new(current_user, root: false),
