@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source "http://2edaf45f:4e8fa5c0@www.mikeperham.com/rubygems/"
 
-gem 'rails', '4.0.2'
+gem 'rails', '4.0.3'
 gem 'sass-rails', '~> 4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem "active_model_serializers", github: "erundook/active_model_serializers", branch: 'patch-1'
