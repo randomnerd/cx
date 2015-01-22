@@ -309,7 +309,7 @@ Currency.order(:name).each {|c|
   end
 }
 
-pp Currency.order(:name).map {|c| [c.name, c.balance_diff_neg, c.balances.where('amount < 0').sum(:amount).to_f/10**8]};0
+pp Currency.order(:name).map {|c| [c.name, c.balance_diff_neg, c.rpc.getbalance]};0
 
 pp Income.joins(:currency).group('currencies.name, incomes.currency_id').select('sum(amount) as amount, currencies.name, currency_id').order('currencies.name').map {|i| [i.currency.name, i.amount.to_f / 10 ** 8]}.compact;0
 pp Income.joins(:currency).group('currencies.name, incomes.currency_id').where('incomes.created_at > ?', 1.day.ago).select('sum(amount) as amount, currencies.name, currency_id').order('currencies.name').map {|i| [i.currency.name, i.amount.to_f / 10 ** 8]}.compact;0
@@ -332,8 +332,27 @@ TradePair.where(market_id: 28).sum(:market_volume).to_f/10**8 # BTC
   TradePair.where(market_id: 33).sum(:market_volume) +
   TradePair.where(currency_id: 33).sum(:currency_volume)
 ).to_f/10**8 # LTC
+(
+  TradePair.where(market_id: 42).sum(:market_volume) +
+  TradePair.where(currency_id: 42).sum(:currency_volume)
+).to_f/10**8 # DOGE
 
-pp User.joins(:balances).where(balances:{currency_id: 28}, last_sign_in_at:nil).order('balances.amount desc').limit(30).map {|u| [u.email, u.balance_for(28).amount.to_f/10**8]};0
+# balances for users that never signed in
+# btc
+pp User.joins(:balances).where(balances:{currency_id: 28}, last_sign_in_at:nil).
+order('balances.amount desc').limit(30).
+map { |u| [u.email, u.balance_for(28).amount.to_f/10**8, u.created_at.to_s(:short)]};0
+
+pp User.joins(:balances).where(balances:{currency_id: 28}, last_sign_in_at:nil).
+order('balances.amount desc').sum(:amount).to_f/10**8;0
+
+# ltc
+pp User.joins(:balances).where(balances:{currency_id: 33}, last_sign_in_at:nil).
+order('balances.amount desc').limit(30).
+map { |u| [u.email, u.balance_for(33).amount.to_f/10**8, u.created_at.to_s(:short)]};0
+
+pp User.joins(:balances).where(balances:{currency_id: 33}, last_sign_in_at:nil).
+order('balances.amount desc').sum(:amount).to_f/10**8;0
 
 
 def add_deposit(currency, txid)
